@@ -118,7 +118,7 @@ export async function listFlows(): Promise<HubSpotFlow[]> {
     `${getBaseUrl()}/automation/v4/flows`,
     { method: "GET", headers: getHeaders() }
   );
-  return data.flows;
+  return data.results;
 }
 
 /**
