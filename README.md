@@ -165,11 +165,16 @@ claude mcp add --transport http hubspot-ma \
 
 ### Claude.ai（Web）
 
+URLにトークンをクエリパラメータとして含めることで、カスタムヘッダー不要で接続できます。
+
 ```
-設定 → コネクタ → カスタムコネクタを追加 → URL を貼り付け
+https://hubspot-ma-mcp.vercel.app/api/mcp?token=pat-na1-xxxx...
 ```
 
-> ⚠ Claude.ai Web ではカスタムヘッダーを設定できないため、自前デプロイ + api_key モードが必要です。
+1. 設定 → コネクタ → 「カスタムコネクタを追加」
+2. 上のURL（トークン部分を自分のものに置換）を貼り付けて「追加」
+
+> ⚠ URLにトークンが含まれます。共有PCでの利用にはご注意ください。
 
 ### Anthropic API（MCP Connector Beta）
 
