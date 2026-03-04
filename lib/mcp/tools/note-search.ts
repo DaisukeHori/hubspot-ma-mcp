@@ -43,8 +43,7 @@ export function registerNoteSearch(server: McpServer) {
           "hs_attachment_ids", "hs_createdate",
         ];
         const result = await crmSearch(
-          "notes" as any, query ?? "", defaultProps, filterGroups, limit ?? 10, after
-        );
+          "notes" as any, query ?? "", defaultProps, filterGroups, limit ?? 10, after, sorts);
         return {
           content: [{
             type: "text" as const,

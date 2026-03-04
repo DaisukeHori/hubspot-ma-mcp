@@ -29,7 +29,7 @@ export function registerTicketSearch(server: McpServer) {
           "subject", "content", "hs_pipeline", "hs_pipeline_stage",
           "hs_ticket_priority", "hubspot_owner_id", "createdate",
         ];
-        const result = await crmSearch("tickets", query ?? "", defaultProps, filterGroups, limit ?? 10, after);
+        const result = await crmSearch("tickets", query ?? "", defaultProps, filterGroups, limit ?? 10, after, sorts);
         return { content: [{ type: "text" as const, text: JSON.stringify({ total: result.total, count: result.results.length, paging: result.paging, results: result.results }, null, 2) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);

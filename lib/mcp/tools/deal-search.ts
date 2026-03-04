@@ -29,7 +29,7 @@ export function registerDealSearch(server: McpServer) {
           "dealname", "amount", "dealstage", "pipeline", "closedate",
           "hubspot_owner_id", "createdate",
         ];
-        const result = await crmSearch("deals", query ?? "", defaultProps, filterGroups, limit ?? 10, after);
+        const result = await crmSearch("deals", query ?? "", defaultProps, filterGroups, limit ?? 10, after, sorts);
         return { content: [{ type: "text" as const, text: JSON.stringify({ total: result.total, count: result.results.length, paging: result.paging, results: result.results }, null, 2) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);

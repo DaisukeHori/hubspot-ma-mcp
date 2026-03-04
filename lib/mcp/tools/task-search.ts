@@ -44,8 +44,7 @@ export function registerTaskSearch(server: McpServer) {
           "hubspot_owner_id", "hs_task_reminders",
         ];
         const result = await crmSearch(
-          "tasks" as any, query ?? "", defaultProps, filterGroups, limit ?? 10, after
-        );
+          "tasks" as any, query ?? "", defaultProps, filterGroups, limit ?? 10, after, sorts);
         return {
           content: [{
             type: "text" as const,

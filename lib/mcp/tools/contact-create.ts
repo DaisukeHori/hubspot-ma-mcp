@@ -6,7 +6,7 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerContactCreate(server: McpServer) {
   server.tool(
     "contact_create",
-    `HubSpot に新しいコンタクトを作成する。emailは必須。既存メールアドレスと重複するとエラー。
+    `HubSpot に新しいコンタクトを作成する。emailは推奨（重複判定キー）。既にあるメールアドレスと重複するとエラー。
 
 返却: 作成されたコンタクトのID, プロパティ, URL。
 additionalPropertiesでカスタムプロパティも設定可能（properties_listツールでプロパティ名を確認）。`,
@@ -22,7 +22,8 @@ additionalPropertiesでカスタムプロパティも設定可能（properties_l
     },
     async ({ email, firstname, lastname, phone, company, jobtitle, lifecyclestage, additionalProperties }) => {
       try {
-        const properties: Record<string, string> = { email };
+        const properties: Record<string, string> = {};
+        if (email) properties.email = email;
         if (firstname) properties.firstname = firstname;
         if (lastname) properties.lastname = lastname;
         if (phone) properties.phone = phone;

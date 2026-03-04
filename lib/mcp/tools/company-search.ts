@@ -29,7 +29,7 @@ export function registerCompanySearch(server: McpServer) {
           "name", "domain", "industry", "phone", "city", "state", "country",
           "numberofemployees", "annualrevenue", "lifecyclestage", "createdate",
         ];
-        const result = await crmSearch("companies", query ?? "", defaultProps, filterGroups, limit ?? 10, after);
+        const result = await crmSearch("companies", query ?? "", defaultProps, filterGroups, limit ?? 10, after, sorts);
         return { content: [{ type: "text" as const, text: JSON.stringify({ total: result.total, count: result.results.length, paging: result.paging, results: result.results }, null, 2) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);

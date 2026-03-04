@@ -6,7 +6,7 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerCompanyCreate(server: McpServer) {
   server.tool(
     "company_create",
-    `HubSpot に新しい会社レコードを作成する。nameは必須。
+    `HubSpot に新しい会社レコードを作成する。nameは推奨。
 
 返却: 作成された会社のID, プロパティ, URL。
 additionalPropertiesでカスタムプロパティも設定可能。industryはHubSpot定義の列挙値のみ（例: COMPUTER_SOFTWARE, INFORMATION_TECHNOLOGY_AND_SERVICES）。`,
@@ -22,7 +22,8 @@ additionalPropertiesでカスタムプロパティも設定可能。industryはH
     },
     async ({ name, domain, industry, phone, city, state, country, additionalProperties }) => {
       try {
-        const properties: Record<string, string> = { name };
+        const properties: Record<string, string> = {};
+        if (name) properties.name = name;
         if (domain) properties.domain = domain;
         if (industry) properties.industry = industry;
         if (phone) properties.phone = phone;

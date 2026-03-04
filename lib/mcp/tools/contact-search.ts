@@ -41,8 +41,7 @@ export function registerContactSearch(server: McpServer) {
           "lifecyclestage", "hs_lead_status", "createdate",
         ];
         const result = await crmSearch(
-          "contacts", query ?? "", defaultProps, filterGroups, limit ?? 10, after
-        );
+          "contacts", query ?? "", defaultProps, filterGroups, limit ?? 10, after, sorts);
         return {
           content: [
             {
