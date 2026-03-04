@@ -39,6 +39,21 @@ const TOOLS = [
   { name: "workflow_update", desc: "ワークフロー更新", icon: "🔄" },
   { name: "workflow_delete", desc: "ワークフロー削除", icon: "🗑" },
   { name: "workflow_batch_read", desc: "一括取得", icon: "📦" },
+  { name: "contact_search", desc: "コンタクト検索", icon: "🔎" },
+  { name: "contact_get", desc: "コンタクト詳細取得", icon: "👤" },
+  { name: "contact_create", desc: "コンタクト作成", icon: "➕" },
+  { name: "contact_update", desc: "コンタクト更新", icon: "✏️" },
+  { name: "company_search", desc: "会社検索", icon: "🏢" },
+  { name: "company_get", desc: "会社詳細取得", icon: "🏛" },
+  { name: "company_create", desc: "会社作成", icon: "🏗" },
+  { name: "deal_search", desc: "取引検索", icon: "💰" },
+  { name: "deal_get", desc: "取引詳細取得", icon: "📊" },
+  { name: "deal_create", desc: "取引作成", icon: "🤝" },
+  { name: "deal_update", desc: "取引更新", icon: "💹" },
+  { name: "ticket_search", desc: "チケット検索", icon: "🎫" },
+  { name: "ticket_create", desc: "チケット作成", icon: "🎟" },
+  { name: "pipeline_list", desc: "パイプライン一覧", icon: "🔧" },
+  { name: "properties_list", desc: "プロパティ定義一覧", icon: "📑" },
 ];
 
 function CopyBtn({ text, label }: { text: string; label: string }) {
@@ -135,7 +150,7 @@ export default function Home() {
         .hs-steps{padding:16px 0 12px 20px;font-size:14px;line-height:1.8;color:var(--hs-text)}
         .hs-callout{background:#FEF3E2;border-left:3px solid #F5A623;border-radius:4px;padding:10px 14px;font-size:13px;color:#7A5100;margin-bottom:12px;line-height:1.6}
         .hs-code{background:var(--hs-obsidian);color:#E2E8F0;border-radius:var(--hs-radius);padding:16px 20px;overflow-x:auto;font-size:12px;line-height:1.7;font-family:'SF Mono','Fira Code',monospace;margin-bottom:16px}
-        .hs-tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+        .hs-tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
         .hs-tool-card{background:var(--hs-white);border:1px solid var(--hs-border);border-radius:var(--hs-radius-lg);padding:22px;transition:all 0.2s}
         .hs-tool-card:hover{border-color:var(--hs-orange);box-shadow:var(--hs-shadow-md);transform:translateY(-2px)}
         .hs-tool-card__icon{font-size:26px;margin-bottom:10px}
@@ -236,7 +251,7 @@ export default function Home() {
         <div className="hs-section__label"><Sprocket size={14} /> TECH SPECS</div>
         <h2 className="hs-section__title">技術仕様</h2>
         <div className="hs-specs">
-          {[{l:"Framework",v:"Next.js 15"},{l:"Transport",v:"Streamable HTTP"},{l:"Protocol",v:"MCP 2025-03-26"},{l:"Auth",v:"2 Modes"},{l:"API",v:"HubSpot v4 Beta"},{l:"Hosting",v:"Vercel"}].map((s) => (
+          {[{l:"Framework",v:"Next.js 15"},{l:"Transport",v:"Streamable HTTP"},{l:"Protocol",v:"MCP 2025-03-26"},{l:"Auth",v:"2 Modes"},{l:"API",v:"CRM v3 + Automation v4"},{l:"Hosting",v:"Vercel"}].map((s) => (
             <div key={s.l} className="hs-spec"><div className="hs-spec__label">{s.l}</div><div className="hs-spec__value">{s.v}</div></div>
           ))}
         </div>
