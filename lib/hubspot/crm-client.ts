@@ -1,8 +1,9 @@
 /**
  * HubSpot CRM API v3 クライアント
  *
- * コンタクト・会社・取引・チケット・パイプライン・プロパティの
- * CRUD/検索操作を提供する。
+ * コンタクト・会社・取引・チケット・Line Item・Product・
+ * パイプライン・プロパティの CRUD/検索操作を提供する。
+ * CMS API（ブログ・ランディングページ・サイトページ）も含む。
  */
 
 import { getHubSpotToken } from "./auth-context";
@@ -119,15 +120,13 @@ export interface CrmProperty {
   createdAt: string;
   updatedAt: string;
   archived: boolean;
+  hasUniqueValue?: boolean;
 }
 
 // ── CRM 汎用操作 ──
 
-type ObjectType = "contacts" | "companies" | "deals" | "tickets";
+export type ObjectType = "contacts" | "companies" | "deals" | "tickets" | "line_items" | "products";
 
-/**
- * CRM オブジェクトを検索する
- */
 export async function crmSearch(
   objectType: ObjectType,
   query: string,
@@ -154,9 +153,6 @@ export async function crmSearch(
   );
 }
 
-/**
- * CRM オブジェクトを ID で取得する
- */
 export async function crmGet(
   objectType: ObjectType,
   objectId: string,
@@ -174,9 +170,6 @@ export async function crmGet(
   );
 }
 
-/**
- * CRM オブジェクトを作成する
- */
 export async function crmCreate(
   objectType: ObjectType,
   properties: Record<string, string>,
@@ -197,9 +190,6 @@ export async function crmCreate(
   );
 }
 
-/**
- * CRM オブジェクトを更新する
- */
 export async function crmUpdate(
   objectType: ObjectType,
   objectId: string,
@@ -215,11 +205,18 @@ export async function crmUpdate(
   );
 }
 
+export async function crmDelete(
+  objectType: ObjectType,
+  objectId: string
+): Promise<void> {
+  return fetchWithRetry<void>(
+    `${BASE_URL}/crm/v3/objects/${objectType}/${objectId}`,
+    { method: "DELETE", headers: getHeaders() }
+  );
+}
+
 // ── パイプライン ──
 
-/**
- * パイプライン一覧を取得する
- */
 export async function listPipelines(
   objectType: "deals" | "tickets"
 ): Promise<Pipeline[]> {
@@ -230,17 +227,182 @@ export async function listPipelines(
   return data.results;
 }
 
+export async function createPipeline(
+  objectType: "deals" | "tickets",
+  label: string,
+  displayOrder: number,
+  stages: Array<{ label: string; displayOrder: number; metadata: Record<string, string> }>
+): Promise<Pipeline> {
+  return fetchWithRetry<Pipeline>(
+    `${BASE_URL}/crm/v3/pipelines/${objectType}`,
+    {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify({ label, displayOrder, stages }),
+    }
+  );
+}
+
+export async function updatePipeline(
+  objectType: "deals" | "tickets",
+  pipelineId: string,
+  updates: { label?: string; displayOrder?: number; stages?: Array<{ id?: string; label: string; displayOrder: number; metadata: Record<string, string> }> }
+): Promise<Pipeline> {
+  return fetchWithRetry<Pipeline>(
+    `${BASE_URL}/crm/v3/pipelines/${objectType}/${pipelineId}`,
+    {
+      method: "PATCH",
+      headers: getHeaders(),
+      body: JSON.stringify(updates),
+    }
+  );
+}
+
 // ── プロパティ ──
 
-/**
- * オブジェクトのプロパティ一覧を取得する
- */
 export async function listProperties(
-  objectType: ObjectType
+  objectType: string
 ): Promise<CrmProperty[]> {
   const data = await fetchWithRetry<{ results: CrmProperty[] }>(
     `${BASE_URL}/crm/v3/properties/${objectType}`,
     { method: "GET", headers: getHeaders() }
   );
   return data.results;
+}
+
+export async function createProperty(
+  objectType: string,
+  property: {
+    name: string;
+    label: string;
+    type: string;
+    fieldType: string;
+    groupName: string;
+    description?: string;
+    hasUniqueValue?: boolean;
+    options?: Array<{ label: string; value: string; displayOrder: number }>;
+  }
+): Promise<CrmProperty> {
+  return fetchWithRetry<CrmProperty>(
+    `${BASE_URL}/crm/v3/properties/${objectType}`,
+    {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify(property),
+    }
+  );
+}
+
+export async function updateProperty(
+  objectType: string,
+  propertyName: string,
+  updates: {
+    label?: string;
+    description?: string;
+    groupName?: string;
+    options?: Array<{ label: string; value: string; displayOrder: number }>;
+  }
+): Promise<CrmProperty> {
+  return fetchWithRetry<CrmProperty>(
+    `${BASE_URL}/crm/v3/properties/${objectType}/${propertyName}`,
+    {
+      method: "PATCH",
+      headers: getHeaders(),
+      body: JSON.stringify(updates),
+    }
+  );
+}
+
+export async function deleteProperty(
+  objectType: string,
+  propertyName: string
+): Promise<void> {
+  return fetchWithRetry<void>(
+    `${BASE_URL}/crm/v3/properties/${objectType}/${propertyName}`,
+    { method: "DELETE", headers: getHeaders() }
+  );
+}
+
+// ── CMS API ──
+
+export interface CmsPage {
+  id: string;
+  name: string;
+  slug: string;
+  state: string;
+  publishDate?: string;
+  createdAt: string;
+  updatedAt: string;
+  [key: string]: unknown;
+}
+
+export interface CmsBlogPost {
+  id: string;
+  name: string;
+  slug: string;
+  state: string;
+  publishDate?: string;
+  htmlTitle?: string;
+  postBody?: string;
+  metaDescription?: string;
+  tagIds?: number[];
+  createdAt: string;
+  updatedAt: string;
+  [key: string]: unknown;
+}
+
+export async function listCmsPages(
+  pageType: "landing-pages" | "site-pages",
+  limit: number = 20,
+  after?: string
+): Promise<{ total: number; results: CmsPage[]; paging?: { next?: { after: string } } }> {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (after) params.set("after", after);
+
+  return fetchWithRetry(
+    `${BASE_URL}/cms/v3/pages/${pageType}?${params.toString()}`,
+    { method: "GET", headers: getHeaders() }
+  );
+}
+
+export async function listBlogPosts(
+  limit: number = 20,
+  after?: string
+): Promise<{ total: number; results: CmsBlogPost[]; paging?: { next?: { after: string } } }> {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (after) params.set("after", after);
+
+  return fetchWithRetry(
+    `${BASE_URL}/cms/v3/blogs/posts?${params.toString()}`,
+    { method: "GET", headers: getHeaders() }
+  );
+}
+
+export async function updateBlogPost(
+  postId: string,
+  updates: Record<string, unknown>
+): Promise<CmsBlogPost> {
+  return fetchWithRetry<CmsBlogPost>(
+    `${BASE_URL}/cms/v3/blogs/posts/${postId}`,
+    {
+      method: "PATCH",
+      headers: getHeaders(),
+      body: JSON.stringify(updates),
+    }
+  );
+}
+
+export async function updateCmsPage(
+  pageType: "landing-pages" | "site-pages",
+  pageId: string,
+  updates: Record<string, unknown>
+): Promise<CmsPage> {
+  return fetchWithRetry<CmsPage>(
+    `${BASE_URL}/cms/v3/pages/${pageType}/${pageId}`,
+    {
+      method: "PATCH",
+      headers: getHeaders(),
+      body: JSON.stringify(updates),
+    }
+  );
 }

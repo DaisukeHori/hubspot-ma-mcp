@@ -1,6 +1,6 @@
 /**
  * MCP サーバー初期化
- * 全ツールを一括登録する
+ * 全ツールを一括登録する（35 tools）
  */
 
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -34,9 +34,31 @@ import { registerDealUpdate } from "./tools/deal-update";
 import { registerTicketSearch } from "./tools/ticket-search";
 import { registerTicketCreate } from "./tools/ticket-create";
 
-// ── Pipelines & Properties ──
-import { registerPipelineList } from "./tools/pipeline-list";
+// ── Properties（CRUD）──
 import { registerPropertiesList } from "./tools/properties-list";
+import { registerPropertyCreate } from "./tools/property-create";
+import { registerPropertyUpdate } from "./tools/property-update";
+import { registerPropertyDelete } from "./tools/property-delete";
+
+// ── Pipelines（CRUD）──
+import { registerPipelineList } from "./tools/pipeline-list";
+import { registerPipelineCreate } from "./tools/pipeline-create";
+import { registerPipelineUpdate } from "./tools/pipeline-update";
+
+// ── Line Items ──
+import { registerLineItemSearch } from "./tools/lineitem-search";
+import { registerLineItemCreate } from "./tools/lineitem-create";
+import { registerLineItemUpdate } from "./tools/lineitem-update";
+
+// ── Products ──
+import { registerProductSearch } from "./tools/product-search";
+import { registerProductCreate } from "./tools/product-create";
+
+// ── CMS（Blog & Pages）──
+import { registerCmsBlogList } from "./tools/cms-blog-list";
+import { registerCmsBlogUpdate } from "./tools/cms-blog-update";
+import { registerCmsPageList } from "./tools/cms-page-list";
+import { registerCmsPageUpdate } from "./tools/cms-page-update";
 
 /**
  * MCP サーバーに全ツールを登録する
@@ -71,7 +93,29 @@ export function registerAllTools(server: McpServer) {
   registerTicketSearch(server);
   registerTicketCreate(server);
 
-  // Pipelines & Properties（2 tools）
-  registerPipelineList(server);
+  // Properties（4 tools）
   registerPropertiesList(server);
+  registerPropertyCreate(server);
+  registerPropertyUpdate(server);
+  registerPropertyDelete(server);
+
+  // Pipelines（3 tools）
+  registerPipelineList(server);
+  registerPipelineCreate(server);
+  registerPipelineUpdate(server);
+
+  // Line Items（3 tools）
+  registerLineItemSearch(server);
+  registerLineItemCreate(server);
+  registerLineItemUpdate(server);
+
+  // Products（2 tools）
+  registerProductSearch(server);
+  registerProductCreate(server);
+
+  // CMS（4 tools）
+  registerCmsBlogList(server);
+  registerCmsBlogUpdate(server);
+  registerCmsPageList(server);
+  registerCmsPageUpdate(server);
 }
