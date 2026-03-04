@@ -188,19 +188,19 @@ export default function Home() {
 
       <div className="hs-divider" />
       <section id="auth" className="hs-section">
-        <div className="hs-section__label"><Sprocket size={14} /> AUTHENTICATION</div>
-        <h2 className="hs-section__title">認証方式</h2>
-        <p className="hs-section__desc">自分のHubSpot Private Appトークンを指定するだけ。サーバーのデプロイ不要で、誰でも自分のアカウントを操作できます。</p>
+        <div className="hs-section__label"><Sprocket size={14} /> AUTH MODES</div>
+        <h2 className="hs-section__title">認証モード</h2>
+        <p className="hs-section__desc">環境変数 <code>AUTH_MODE</code> で認証方式を切り替え。公開サーバーと組織専用サーバーに対応。</p>
         <div className="hs-auth-grid">
           <div className="hs-auth-card">
-            <span className="hs-auth-card__badge hs-auth-card__badge--rec">推奨</span>
-            <h4>Bearer Token</h4>
-            <p>MCPクライアントの設定で <code>Authorization: Bearer &lt;token&gt;</code> ヘッダーを指定。サーバーデプロイ不要。</p>
+            <span className="hs-auth-card__badge hs-auth-card__badge--rec">① hubspot_token</span>
+            <h4>HubSpot トークン直接渡し</h4>
+            <p>各ユーザーが <code>Authorization: Bearer &lt;HubSpot PAT&gt;</code> で自分のトークンを渡す。MCPサーバー自体への認証はなし。公開サーバー・個人利用向け。</p>
           </div>
           <div className="hs-auth-card">
-            <span className="hs-auth-card__badge hs-auth-card__badge--alt">代替</span>
-            <h4>環境変数フォールバック</h4>
-            <p>自前デプロイ時に <code>HUBSPOT_ACCESS_TOKEN</code> を設定。チーム共用に最適。</p>
+            <span className="hs-auth-card__badge hs-auth-card__badge--alt">② api_key</span>
+            <h4>APIキーでゲート</h4>
+            <p><code>MCP_API_KEY</code> でサーバーアクセスを制限。HubSpot トークンは環境変数に固定。<strong>デプロイした組織だけ</strong>が使えるセキュアな構成。</p>
           </div>
         </div>
       </section>
@@ -236,15 +236,15 @@ export default function Home() {
         <div className="hs-section__label"><Sprocket size={14} /> TECH SPECS</div>
         <h2 className="hs-section__title">技術仕様</h2>
         <div className="hs-specs">
-          {[{l:"Framework",v:"Next.js 15"},{l:"Transport",v:"Streamable HTTP"},{l:"Protocol",v:"MCP 2025-03-26"},{l:"Auth",v:"Bearer Token"},{l:"API",v:"HubSpot v4 Beta"},{l:"Hosting",v:"Vercel"}].map((s) => (
+          {[{l:"Framework",v:"Next.js 15"},{l:"Transport",v:"Streamable HTTP"},{l:"Protocol",v:"MCP 2025-03-26"},{l:"Auth",v:"2 Modes"},{l:"API",v:"HubSpot v4 Beta"},{l:"Hosting",v:"Vercel"}].map((s) => (
             <div key={s.l} className="hs-spec"><div className="hs-spec__label">{s.l}</div><div className="hs-spec__value">{s.v}</div></div>
           ))}
         </div>
         <div className="hs-cta-banner">
-          <h3>自分のサーバーをデプロイしよう</h3>
-          <p>ワンクリックで自分専用のMCPサーバーをVercelにデプロイ。HubSpot Private App トークンを入力するだけ。</p>
+          <h3>組織専用サーバーをデプロイしよう</h3>
+          <p>ワンクリックで自分専用のMCPサーバーをVercelにデプロイ。認証モードとトークンを設定するだけ。</p>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp&env=HUBSPOT_ACCESS_TOKEN&envDescription=HubSpot%20Private%20App%20Token&envLink=https%3A%2F%2Fdevelopers.hubspot.com%2Fdocs%2Fapi%2Fprivate-apps&project-name=hubspot-ma-mcp&repository-name=hubspot-ma-mcp" target="_blank" rel="noopener noreferrer" className="hs-btn hs-btn--primary" style={{ fontSize: 15, padding: "12px 28px" }}>▲ Deploy with Vercel</a>
+            <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp&env=AUTH_MODE%2CHUBSPOT_ACCESS_TOKEN%2CMCP_API_KEY&envDescription=AUTH_MODE%3A+hubspot_token%28%E3%83%87%E3%83%95%E3%82%A9%E3%83%AB%E3%83%88%29+or+api_key+%7C+HUBSPOT_ACCESS_TOKEN%3A+api_key%E3%83%A2%E3%83%BC%E3%83%89%E6%99%82%E3%81%AB%E5%BF%85%E9%A0%88+%7C+MCP_API_KEY%3A+api_key%E3%83%A2%E3%83%BC%E3%83%89%E6%99%82%E3%81%AB%E5%BF%85%E9%A0%88&envLink=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp%23%E8%AA%8D%E8%A8%BC%E3%83%A2%E3%83%BC%E3%83%89&project-name=hubspot-ma-mcp&repository-name=hubspot-ma-mcp" target="_blank" rel="noopener noreferrer" className="hs-btn hs-btn--primary" style={{ fontSize: 15, padding: "12px 28px" }}>▲ Deploy with Vercel</a>
             <a href="https://github.com/DaisukeHori/hubspot-ma-mcp" target="_blank" rel="noopener noreferrer" className="hs-btn" style={{ fontSize: 15, padding: "12px 28px", background: "rgba(255,255,255,0.1)", color: "white", border: "1px solid rgba(255,255,255,0.2)" }}>GitHub →</a>
           </div>
         </div>
