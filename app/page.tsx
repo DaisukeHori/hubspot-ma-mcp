@@ -32,29 +32,68 @@ const CLIENTS: ClientConfig[] = [
   { id: "api", name: "Anthropic API", icon: "⬢", description: "MCP Connector Beta", copyContent: JSON.stringify({ mcp_servers: [{ type: "url", url: MCP_URL, name: "hubspot-ma", authorization_token: `Bearer ${TOKEN_PLACEHOLDER}` }], tools: [{ type: "mcp_toolset", mcp_server_name: "hubspot-ma" }] }, null, 2), copyLabel: "JSONをコピー", instructions: ["messages API bodyに追加", '"anthropic-beta": "mcp-client-2025-11-20"'] },
 ];
 
-const TOOLS = [
-  { name: "workflow_list", desc: "ワークフロー一覧取得", icon: "📋" },
-  { name: "workflow_get", desc: "ワークフロー詳細取得", icon: "🔍" },
-  { name: "workflow_create", desc: "ワークフロー作成", icon: "✨" },
-  { name: "workflow_update", desc: "ワークフロー更新", icon: "🔄" },
-  { name: "workflow_delete", desc: "ワークフロー削除", icon: "🗑" },
-  { name: "workflow_batch_read", desc: "一括取得", icon: "📦" },
-  { name: "contact_search", desc: "コンタクト検索", icon: "🔎" },
-  { name: "contact_get", desc: "コンタクト詳細取得", icon: "👤" },
-  { name: "contact_create", desc: "コンタクト作成", icon: "➕" },
-  { name: "contact_update", desc: "コンタクト更新", icon: "✏️" },
-  { name: "company_search", desc: "会社検索", icon: "🏢" },
-  { name: "company_get", desc: "会社詳細取得", icon: "🏛" },
-  { name: "company_create", desc: "会社作成", icon: "🏗" },
-  { name: "deal_search", desc: "取引検索", icon: "💰" },
-  { name: "deal_get", desc: "取引詳細取得", icon: "📊" },
-  { name: "deal_create", desc: "取引作成", icon: "🤝" },
-  { name: "deal_update", desc: "取引更新", icon: "💹" },
-  { name: "ticket_search", desc: "チケット検索", icon: "🎫" },
-  { name: "ticket_create", desc: "チケット作成", icon: "🎟" },
-  { name: "pipeline_list", desc: "パイプライン一覧", icon: "🔧" },
-  { name: "properties_list", desc: "プロパティ定義一覧", icon: "📑" },
+interface ToolDef { name: string; desc: string; icon: string; detail: string; api: string; }
+interface ToolCategory { category: string; emoji: string; tools: ToolDef[]; }
+
+const TOOL_CATEGORIES: ToolCategory[] = [
+  { category: "Workflow", emoji: "⚙️", tools: [
+    { name: "workflow_list", desc: "ワークフロー一覧取得", icon: "📋", detail: "アカウント内の全ワークフローを一覧で取得します。ID、名前、有効/無効状態、オブジェクトタイプなどの基本情報を返します。", api: "GET /automation/v4/flows" },
+    { name: "workflow_get", desc: "ワークフロー詳細取得", icon: "🔍", detail: "指定したワークフローの完全な定義（アクション、登録条件、分岐ロジック等）を取得します。", api: "GET /automation/v4/flows/{flowId}" },
+    { name: "workflow_create", desc: "ワークフロー作成", icon: "✨", detail: "新しいワークフローを作成します。トリガー条件、アクション、遅延などを定義できます。デフォルトは無効状態で作成されます。", api: "POST /automation/v4/flows" },
+    { name: "workflow_update", desc: "ワークフロー更新", icon: "🔄", detail: "既存ワークフローを更新します。revisionIdは自動取得されるため、競合を気にせず更新できます。", api: "PUT /automation/v4/flows/{flowId}" },
+    { name: "workflow_delete", desc: "ワークフロー削除", icon: "🗑", detail: "ワークフローを削除します。安全のため confirm=true パラメータが必須です。", api: "DELETE /automation/v4/flows/{flowId}" },
+    { name: "workflow_batch_read", desc: "ワークフロー一括取得", icon: "📦", detail: "複数のワークフローIDを指定して一括取得します。比較や監査に便利です。", api: "POST /automation/v4/flows/batch/read" },
+  ]},
+  { category: "Contacts", emoji: "👥", tools: [
+    { name: "contact_search", desc: "コンタクト検索", icon: "🔎", detail: "名前・メールアドレス・会社名などのキーワードやプロパティフィルターでコンタクトを検索します。ページネーション対応。", api: "POST /crm/v3/objects/contacts/search" },
+    { name: "contact_get", desc: "コンタクト詳細取得", icon: "👤", detail: "IDを指定してコンタクトの詳細情報を取得します。関連する会社・取引・チケットも同時に取得可能です。", api: "GET /crm/v3/objects/contacts/{id}" },
+    { name: "contact_create", desc: "コンタクト作成", icon: "➕", detail: "新しいコンタクトを作成します。メールアドレスは必須。名前、電話番号、会社名、ライフサイクルステージなどを設定できます。", api: "POST /crm/v3/objects/contacts" },
+    { name: "contact_update", desc: "コンタクト更新", icon: "✏️", detail: "既存コンタクトの任意のプロパティを更新します。カスタムプロパティも変更可能です。", api: "PATCH /crm/v3/objects/contacts/{id}" },
+  ]},
+  { category: "Companies", emoji: "🏢", tools: [
+    { name: "company_search", desc: "会社検索", icon: "🏢", detail: "会社名・ドメイン・業種などで会社レコードを検索します。フィルターで詳細な条件指定も可能。", api: "POST /crm/v3/objects/companies/search" },
+    { name: "company_get", desc: "会社詳細取得", icon: "🏛", detail: "IDを指定して会社の詳細情報を取得。関連コンタクトや取引も一緒に取得できます。", api: "GET /crm/v3/objects/companies/{id}" },
+    { name: "company_create", desc: "会社作成", icon: "🏗", detail: "新しい会社レコードを作成します。会社名は必須。ドメイン、業種、住所などを設定できます。", api: "POST /crm/v3/objects/companies" },
+  ]},
+  { category: "Deals", emoji: "💰", tools: [
+    { name: "deal_search", desc: "取引検索", icon: "💰", detail: "取引名・金額・ステージなどの条件で取引を検索します。パイプライン横断で検索可能。", api: "POST /crm/v3/objects/deals/search" },
+    { name: "deal_get", desc: "取引詳細取得", icon: "📊", detail: "IDを指定して取引の詳細を取得。関連コンタクト・会社も同時取得可能。", api: "GET /crm/v3/objects/deals/{id}" },
+    { name: "deal_create", desc: "取引作成", icon: "🤝", detail: "新しい取引を作成します。取引名は必須。金額、ステージ、パイプライン、クローズ日を設定できます。", api: "POST /crm/v3/objects/deals" },
+    { name: "deal_update", desc: "取引更新", icon: "💹", detail: "取引のステージ移動、金額変更など任意のプロパティを更新します。", api: "PATCH /crm/v3/objects/deals/{id}" },
+  ]},
+  { category: "Tickets", emoji: "🎫", tools: [
+    { name: "ticket_search", desc: "チケット検索", icon: "🎫", detail: "件名・ステータス・優先度などでサポートチケットを検索します。", api: "POST /crm/v3/objects/tickets/search" },
+    { name: "ticket_create", desc: "チケット作成", icon: "🎟", detail: "新しいサポートチケットを作成します。件名は必須。パイプライン、ステージ、優先度を設定できます。", api: "POST /crm/v3/objects/tickets" },
+  ]},
+  { category: "Pipelines & Properties", emoji: "🔧", tools: [
+    { name: "pipeline_list", desc: "パイプライン一覧", icon: "🔧", detail: "Deals または Tickets のパイプライン一覧を取得します。各パイプラインのステージ定義も含みます。", api: "GET /crm/v3/pipelines/{objectType}" },
+    { name: "properties_list", desc: "プロパティ定義一覧", icon: "📑", detail: "指定オブジェクト（contacts, companies, deals, tickets）のプロパティ定義を一覧取得。カスタムプロパティも含みます。", api: "GET /crm/v3/properties/{objectType}" },
+  ]},
 ];
+
+function ToolCard({ tool }: { tool: ToolDef }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className={`hs-tool-card ${open ? "hs-tool-card--open" : ""}`} onClick={() => setOpen(!open)} style={{ cursor: "pointer" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div className="hs-tool-card__icon">{tool.icon}</div>
+          <div>
+            <div className="hs-tool-card__name">{tool.name}</div>
+            <div className="hs-tool-card__desc">{tool.desc}</div>
+          </div>
+        </div>
+        <svg className={`hs-accordion__chevron ${open ? "hs-accordion__chevron--open" : ""}`} width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+      </div>
+      {open && (
+        <div className="hs-tool-card__detail">
+          <p style={{ margin: "12px 0 8px", fontSize: 13, color: "var(--hs-text)", lineHeight: 1.6 }}>{tool.detail}</p>
+          <code className="hs-tool-card__api">{tool.api}</code>
+        </div>
+      )}
+    </div>
+  );
+}
 
 function CopyBtn({ text, label }: { text: string; label: string }) {
   const [copied, setCopied] = useState(false);
@@ -150,12 +189,18 @@ export default function Home() {
         .hs-steps{padding:16px 0 12px 20px;font-size:14px;line-height:1.8;color:var(--hs-text)}
         .hs-callout{background:#FEF3E2;border-left:3px solid #F5A623;border-radius:4px;padding:10px 14px;font-size:13px;color:#7A5100;margin-bottom:12px;line-height:1.6}
         .hs-code{background:var(--hs-obsidian);color:#E2E8F0;border-radius:var(--hs-radius);padding:16px 20px;overflow-x:auto;font-size:12px;line-height:1.7;font-family:'SF Mono','Fira Code',monospace;margin-bottom:16px}
-        .hs-tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
-        .hs-tool-card{background:var(--hs-white);border:1px solid var(--hs-border);border-radius:var(--hs-radius-lg);padding:22px;transition:all 0.2s}
-        .hs-tool-card:hover{border-color:var(--hs-orange);box-shadow:var(--hs-shadow-md);transform:translateY(-2px)}
-        .hs-tool-card__icon{font-size:26px;margin-bottom:10px}
-        .hs-tool-card__name{font-family:'SF Mono','Fira Code',monospace;font-size:13px;color:var(--hs-obsidian);font-weight:600;margin-bottom:4px}
-        .hs-tool-card__desc{font-size:13px;color:var(--hs-text-light)}
+        .hs-tool-category{margin-bottom:28px}
+        .hs-tool-category__title{font-size:16px;font-weight:700;color:var(--hs-obsidian);margin:0 0 14px;display:flex;align-items:center;gap:8px}
+        .hs-tool-category__count{background:var(--hs-orange);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:4px}
+        .hs-tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px}
+        .hs-tool-card{background:var(--hs-white);border:1px solid var(--hs-border);border-radius:var(--hs-radius-lg);padding:16px 18px;transition:all 0.2s;user-select:none}
+        .hs-tool-card:hover{border-color:var(--hs-orange);box-shadow:var(--hs-shadow-md)}
+        .hs-tool-card--open{border-color:var(--hs-orange);background:rgba(255,122,89,0.03)}
+        .hs-tool-card__icon{font-size:22px;flex-shrink:0}
+        .hs-tool-card__name{font-family:'SF Mono','Fira Code',monospace;font-size:13px;color:var(--hs-obsidian);font-weight:600}
+        .hs-tool-card__desc{font-size:12px;color:var(--hs-text-light);margin-top:1px}
+        .hs-tool-card__detail{border-top:1px solid var(--hs-border);margin-top:12px;padding-top:4px}
+        .hs-tool-card__api{display:inline-block;background:var(--hs-bg);border:1px solid var(--hs-border);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--hs-orange);font-family:'SF Mono','Fira Code',monospace}
         .hs-specs{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
         .hs-spec{background:var(--hs-bg);border-radius:var(--hs-radius);padding:18px 20px}
         .hs-spec__label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--hs-text-light);margin-bottom:4px}
@@ -234,16 +279,15 @@ export default function Home() {
       <section id="tools" className="hs-section">
         <div className="hs-section__label"><Sprocket size={14} /> AVAILABLE TOOLS</div>
         <h2 className="hs-section__title">利用可能なツール</h2>
-        <p className="hs-section__desc">HubSpot Automation API v4を通じて、ワークフローのCRUD操作をAIから実行。</p>
-        <div className="hs-tools-grid">
-          {TOOLS.map((t) => (
-            <div key={t.name} className="hs-tool-card">
-              <div className="hs-tool-card__icon">{t.icon}</div>
-              <div className="hs-tool-card__name">{t.name}</div>
-              <div className="hs-tool-card__desc">{t.desc}</div>
+        <p className="hs-section__desc">HubSpot CRM v3 + Automation v4 API を通じて、21のツールをAIから実行。クリックで詳細を表示。</p>
+        {TOOL_CATEGORIES.map((cat) => (
+          <div key={cat.category} className="hs-tool-category">
+            <h3 className="hs-tool-category__title"><span>{cat.emoji}</span> {cat.category}<span className="hs-tool-category__count">{cat.tools.length}</span></h3>
+            <div className="hs-tools-grid">
+              {cat.tools.map((t) => <ToolCard key={t.name} tool={t} />)}
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </section>
 
       <div className="hs-divider" />
@@ -267,7 +311,7 @@ export default function Home() {
 
       <footer className="hs-footer">
         <a href="https://github.com/DaisukeHori/hubspot-ma-mcp" target="_blank" rel="noopener noreferrer">GitHub</a>
-        {" · "}Revol Corporation{" · "}MIT License
+        {" · "}Revol Store Co., Ltd{" · "}MIT License
       </footer>
     </>
   );
