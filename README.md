@@ -296,5 +296,5 @@ npm run dev
 ---
 
 <p align="center">
-  <sub>Built by <strong>Revol Corporation</strong> · MIT License</sub>
+  <sub>Built by <strong>Revol Store Co., Ltd</strong> · MIT License</sub>
 </p>
