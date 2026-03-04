@@ -125,7 +125,7 @@ export interface CrmProperty {
 
 // ── CRM 汎用操作 ──
 
-export type ObjectType = "contacts" | "companies" | "deals" | "tickets" | "line_items" | "products";
+export type ObjectType = "contacts" | "companies" | "deals" | "tickets" | "line_items" | "products" | "notes" | "tasks";
 
 export async function crmSearch(
   objectType: ObjectType,
@@ -404,5 +404,70 @@ export async function updateCmsPage(
       headers: getHeaders(),
       body: JSON.stringify(updates),
     }
+  );
+}
+
+
+// ── Associations API（v4）──
+
+export interface AssociationResult {
+  results: Array<{
+    toObjectId: number;
+    associationTypes: Array<{
+      category: string;
+      typeId: number;
+      label: string | null;
+    }>;
+  }>;
+  paging?: { next?: { after: string } };
+}
+
+export async function listAssociations(
+  fromObjectType: string,
+  fromObjectId: string,
+  toObjectType: string,
+  limit: number = 100,
+  after?: string
+): Promise<AssociationResult> {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (after) params.set("after", after);
+
+  return fetchWithRetry<AssociationResult>(
+    `${BASE_URL}/crm/v4/objects/${fromObjectType}/${fromObjectId}/associations/${toObjectType}?${params.toString()}`,
+    { method: "GET", headers: getHeaders() }
+  );
+}
+
+export async function createAssociation(
+  fromObjectType: string,
+  fromObjectId: string,
+  toObjectType: string,
+  toObjectId: string,
+  associationTypeId?: number
+): Promise<unknown> {
+  if (associationTypeId !== undefined) {
+    // v3 labeled association
+    return fetchWithRetry<unknown>(
+      `${BASE_URL}/crm/v3/objects/${fromObjectType}/${fromObjectId}/associations/${toObjectType}/${toObjectId}/${associationTypeId}`,
+      { method: "PUT", headers: getHeaders() }
+    );
+  } else {
+    // v4 default (unlabeled) association
+    return fetchWithRetry<unknown>(
+      `${BASE_URL}/crm/v4/objects/${fromObjectType}/${fromObjectId}/associations/default/${toObjectType}/${toObjectId}`,
+      { method: "PUT", headers: getHeaders() }
+    );
+  }
+}
+
+export async function deleteAssociation(
+  fromObjectType: string,
+  fromObjectId: string,
+  toObjectType: string,
+  toObjectId: string
+): Promise<void> {
+  return fetchWithRetry<void>(
+    `${BASE_URL}/crm/v4/objects/${fromObjectType}/${fromObjectId}/associations/${toObjectType}/${toObjectId}`,
+    { method: "DELETE", headers: getHeaders() }
   );
 }
