@@ -32,68 +32,79 @@ const CLIENTS: ClientConfig[] = [
   { id: "api", name: "Anthropic API", icon: "⬢", description: "MCP Connector Beta", copyContent: JSON.stringify({ mcp_servers: [{ type: "url", url: MCP_URL, name: "hubspot-ma", authorization_token: `Bearer ${TOKEN_PLACEHOLDER}` }], tools: [{ type: "mcp_toolset", mcp_server_name: "hubspot-ma" }] }, null, 2), copyLabel: "JSONをコピー", instructions: ["messages API bodyに追加", '"anthropic-beta": "mcp-client-2025-11-20"'] },
 ];
 
-interface ToolDef { name: string; desc: string; icon: string; detail: string; api: string; }
-interface ToolCategory { category: string; emoji: string; tools: ToolDef[]; }
+interface ToolDef {
+  name: string;
+  desc: string;
+  icon: string;
+  api: string;
+  params: { name: string; required: boolean; desc: string }[];
+}
+
+interface ToolCategory {
+  category: string;
+  color: string;
+  tools: ToolDef[];
+}
 
 const TOOL_CATEGORIES: ToolCategory[] = [
-  { category: "Workflow", emoji: "⚙️", tools: [
-    { name: "workflow_list", desc: "ワークフロー一覧取得", icon: "📋", detail: "アカウント内の全ワークフローを一覧で取得します。ID、名前、有効/無効状態、オブジェクトタイプなどの基本情報を返します。", api: "GET /automation/v4/flows" },
-    { name: "workflow_get", desc: "ワークフロー詳細取得", icon: "🔍", detail: "指定したワークフローの完全な定義（アクション、登録条件、分岐ロジック等）を取得します。", api: "GET /automation/v4/flows/{flowId}" },
-    { name: "workflow_create", desc: "ワークフロー作成", icon: "✨", detail: "新しいワークフローを作成します。トリガー条件、アクション、遅延などを定義できます。デフォルトは無効状態で作成されます。", api: "POST /automation/v4/flows" },
-    { name: "workflow_update", desc: "ワークフロー更新", icon: "🔄", detail: "既存ワークフローを更新します。revisionIdは自動取得されるため、競合を気にせず更新できます。", api: "PUT /automation/v4/flows/{flowId}" },
-    { name: "workflow_delete", desc: "ワークフロー削除", icon: "🗑", detail: "ワークフローを削除します。安全のため confirm=true パラメータが必須です。", api: "DELETE /automation/v4/flows/{flowId}" },
-    { name: "workflow_batch_read", desc: "ワークフロー一括取得", icon: "📦", detail: "複数のワークフローIDを指定して一括取得します。比較や監査に便利です。", api: "POST /automation/v4/flows/batch/read" },
-  ]},
-  { category: "Contacts", emoji: "👥", tools: [
-    { name: "contact_search", desc: "コンタクト検索", icon: "🔎", detail: "名前・メールアドレス・会社名などのキーワードやプロパティフィルターでコンタクトを検索します。ページネーション対応。", api: "POST /crm/v3/objects/contacts/search" },
-    { name: "contact_get", desc: "コンタクト詳細取得", icon: "👤", detail: "IDを指定してコンタクトの詳細情報を取得します。関連する会社・取引・チケットも同時に取得可能です。", api: "GET /crm/v3/objects/contacts/{id}" },
-    { name: "contact_create", desc: "コンタクト作成", icon: "➕", detail: "新しいコンタクトを作成します。メールアドレスは必須。名前、電話番号、会社名、ライフサイクルステージなどを設定できます。", api: "POST /crm/v3/objects/contacts" },
-    { name: "contact_update", desc: "コンタクト更新", icon: "✏️", detail: "既存コンタクトの任意のプロパティを更新します。カスタムプロパティも変更可能です。", api: "PATCH /crm/v3/objects/contacts/{id}" },
-  ]},
-  { category: "Companies", emoji: "🏢", tools: [
-    { name: "company_search", desc: "会社検索", icon: "🏢", detail: "会社名・ドメイン・業種などで会社レコードを検索します。フィルターで詳細な条件指定も可能。", api: "POST /crm/v3/objects/companies/search" },
-    { name: "company_get", desc: "会社詳細取得", icon: "🏛", detail: "IDを指定して会社の詳細情報を取得。関連コンタクトや取引も一緒に取得できます。", api: "GET /crm/v3/objects/companies/{id}" },
-    { name: "company_create", desc: "会社作成", icon: "🏗", detail: "新しい会社レコードを作成します。会社名は必須。ドメイン、業種、住所などを設定できます。", api: "POST /crm/v3/objects/companies" },
-  ]},
-  { category: "Deals", emoji: "💰", tools: [
-    { name: "deal_search", desc: "取引検索", icon: "💰", detail: "取引名・金額・ステージなどの条件で取引を検索します。パイプライン横断で検索可能。", api: "POST /crm/v3/objects/deals/search" },
-    { name: "deal_get", desc: "取引詳細取得", icon: "📊", detail: "IDを指定して取引の詳細を取得。関連コンタクト・会社も同時取得可能。", api: "GET /crm/v3/objects/deals/{id}" },
-    { name: "deal_create", desc: "取引作成", icon: "🤝", detail: "新しい取引を作成します。取引名は必須。金額、ステージ、パイプライン、クローズ日を設定できます。", api: "POST /crm/v3/objects/deals" },
-    { name: "deal_update", desc: "取引更新", icon: "💹", detail: "取引のステージ移動、金額変更など任意のプロパティを更新します。", api: "PATCH /crm/v3/objects/deals/{id}" },
-  ]},
-  { category: "Tickets", emoji: "🎫", tools: [
-    { name: "ticket_search", desc: "チケット検索", icon: "🎫", detail: "件名・ステータス・優先度などでサポートチケットを検索します。", api: "POST /crm/v3/objects/tickets/search" },
-    { name: "ticket_create", desc: "チケット作成", icon: "🎟", detail: "新しいサポートチケットを作成します。件名は必須。パイプライン、ステージ、優先度を設定できます。", api: "POST /crm/v3/objects/tickets" },
-  ]},
-  { category: "Pipelines & Properties", emoji: "🔧", tools: [
-    { name: "pipeline_list", desc: "パイプライン一覧", icon: "🔧", detail: "Deals または Tickets のパイプライン一覧を取得します。各パイプラインのステージ定義も含みます。", api: "GET /crm/v3/pipelines/{objectType}" },
-    { name: "properties_list", desc: "プロパティ定義一覧", icon: "📑", detail: "指定オブジェクト（contacts, companies, deals, tickets）のプロパティ定義を一覧取得。カスタムプロパティも含みます。", api: "GET /crm/v3/properties/{objectType}" },
-  ]},
+  {
+    category: "Workflow（Automation v4）",
+    color: "#FF7A59",
+    tools: [
+      { name: "workflow_list", desc: "ワークフロー一覧取得", icon: "📋", api: "GET /automation/v4/flows", params: [] },
+      { name: "workflow_get", desc: "ワークフロー詳細取得", icon: "🔍", api: "GET /automation/v4/flows/{flowId}", params: [{ name: "flowId", required: true, desc: "ワークフロー ID" }] },
+      { name: "workflow_create", desc: "ワークフロー作成", icon: "✨", api: "POST /automation/v4/flows", params: [{ name: "name", required: true, desc: "ワークフロー名" }, { name: "type", required: true, desc: "CONTACT_FLOW / PLATFORM_FLOW" }, { name: "objectTypeId", required: true, desc: "オブジェクトタイプ ID" }, { name: "isEnabled", required: false, desc: "有効化（デフォルト: false）" }, { name: "actions", required: false, desc: "アクション定義（JSON）" }] },
+      { name: "workflow_update", desc: "ワークフロー更新", icon: "🔄", api: "PUT /automation/v4/flows/{flowId}", params: [{ name: "flowId", required: true, desc: "ワークフロー ID" }, { name: "updates", required: true, desc: "更新内容（JSON）" }] },
+      { name: "workflow_delete", desc: "ワークフロー削除", icon: "🗑", api: "DELETE /automation/v4/flows/{flowId}", params: [{ name: "flowId", required: true, desc: "ワークフロー ID" }, { name: "confirm", required: true, desc: "削除確認（true 必須）" }] },
+      { name: "workflow_batch_read", desc: "複数ワークフロー一括取得", icon: "📦", api: "POST /automation/v4/flows/batch/read", params: [{ name: "flowIds", required: true, desc: "ID 配列" }] },
+    ],
+  },
+  {
+    category: "CRM Contacts（v3）",
+    color: "#00A4BD",
+    tools: [
+      { name: "contact_search", desc: "コンタクト検索", icon: "🔎", api: "POST /crm/v3/objects/contacts/search", params: [{ name: "query", required: false, desc: "検索キーワード（名前・メール等）" }, { name: "filterGroups", required: false, desc: "フィルター条件" }, { name: "properties", required: false, desc: "取得プロパティ名" }, { name: "limit", required: false, desc: "件数（最大100）" }, { name: "after", required: false, desc: "ページネーション" }] },
+      { name: "contact_get", desc: "コンタクト詳細取得", icon: "👤", api: "GET /crm/v3/objects/contacts/{id}", params: [{ name: "contactId", required: true, desc: "コンタクト ID" }, { name: "properties", required: false, desc: "取得プロパティ" }, { name: "associations", required: false, desc: "関連取得（companies, deals等）" }] },
+      { name: "contact_create", desc: "コンタクト作成", icon: "➕", api: "POST /crm/v3/objects/contacts", params: [{ name: "email", required: true, desc: "メールアドレス" }, { name: "firstname", required: false, desc: "名" }, { name: "lastname", required: false, desc: "姓" }, { name: "phone", required: false, desc: "電話番号" }, { name: "company", required: false, desc: "会社名" }, { name: "jobtitle", required: false, desc: "役職" }] },
+      { name: "contact_update", desc: "コンタクト更新", icon: "✏️", api: "PATCH /crm/v3/objects/contacts/{id}", params: [{ name: "contactId", required: true, desc: "コンタクト ID" }, { name: "properties", required: true, desc: "更新プロパティ（キー:値）" }] },
+    ],
+  },
+  {
+    category: "CRM Companies（v3）",
+    color: "#00BDA5",
+    tools: [
+      { name: "company_search", desc: "会社検索", icon: "🏢", api: "POST /crm/v3/objects/companies/search", params: [{ name: "query", required: false, desc: "検索キーワード" }, { name: "filterGroups", required: false, desc: "フィルター条件" }, { name: "properties", required: false, desc: "取得プロパティ" }, { name: "limit", required: false, desc: "件数（最大100）" }] },
+      { name: "company_get", desc: "会社詳細取得", icon: "🏛", api: "GET /crm/v3/objects/companies/{id}", params: [{ name: "companyId", required: true, desc: "会社 ID" }, { name: "properties", required: false, desc: "取得プロパティ" }, { name: "associations", required: false, desc: "関連取得" }] },
+      { name: "company_create", desc: "会社作成", icon: "🏗", api: "POST /crm/v3/objects/companies", params: [{ name: "name", required: true, desc: "会社名" }, { name: "domain", required: false, desc: "ドメイン" }, { name: "industry", required: false, desc: "業種" }, { name: "phone", required: false, desc: "電話番号" }] },
+    ],
+  },
+  {
+    category: "CRM Deals（v3）",
+    color: "#6A78D1",
+    tools: [
+      { name: "deal_search", desc: "取引検索", icon: "💰", api: "POST /crm/v3/objects/deals/search", params: [{ name: "query", required: false, desc: "検索キーワード" }, { name: "filterGroups", required: false, desc: "フィルター条件" }, { name: "properties", required: false, desc: "取得プロパティ" }, { name: "limit", required: false, desc: "件数（最大100）" }] },
+      { name: "deal_get", desc: "取引詳細取得", icon: "📊", api: "GET /crm/v3/objects/deals/{id}", params: [{ name: "dealId", required: true, desc: "取引 ID" }, { name: "properties", required: false, desc: "取得プロパティ" }, { name: "associations", required: false, desc: "関連取得" }] },
+      { name: "deal_create", desc: "取引作成", icon: "🤝", api: "POST /crm/v3/objects/deals", params: [{ name: "dealname", required: true, desc: "取引名" }, { name: "amount", required: false, desc: "金額" }, { name: "dealstage", required: false, desc: "ステージ ID" }, { name: "pipeline", required: false, desc: "パイプライン ID" }, { name: "closedate", required: false, desc: "クローズ日" }] },
+      { name: "deal_update", desc: "取引更新", icon: "💹", api: "PATCH /crm/v3/objects/deals/{id}", params: [{ name: "dealId", required: true, desc: "取引 ID" }, { name: "properties", required: true, desc: "更新プロパティ（キー:値）" }] },
+    ],
+  },
+  {
+    category: "CRM Tickets（v3）",
+    color: "#F5C26B",
+    tools: [
+      { name: "ticket_search", desc: "チケット検索", icon: "🎫", api: "POST /crm/v3/objects/tickets/search", params: [{ name: "query", required: false, desc: "検索キーワード" }, { name: "filterGroups", required: false, desc: "フィルター条件" }, { name: "limit", required: false, desc: "件数（最大100）" }] },
+      { name: "ticket_create", desc: "チケット作成", icon: "🎟", api: "POST /crm/v3/objects/tickets", params: [{ name: "subject", required: true, desc: "件名" }, { name: "content", required: false, desc: "内容" }, { name: "hs_pipeline", required: false, desc: "パイプライン ID" }, { name: "hs_pipeline_stage", required: false, desc: "ステージ ID" }, { name: "hs_ticket_priority", required: false, desc: "優先度（LOW/MEDIUM/HIGH）" }] },
+    ],
+  },
+  {
+    category: "Pipelines & Properties",
+    color: "#516F90",
+    tools: [
+      { name: "pipeline_list", desc: "パイプライン一覧", icon: "🔧", api: "GET /crm/v3/pipelines/{objectType}", params: [{ name: "objectType", required: true, desc: "deals または tickets" }] },
+      { name: "properties_list", desc: "プロパティ定義一覧", icon: "📑", api: "GET /crm/v3/properties/{objectType}", params: [{ name: "objectType", required: true, desc: "contacts / companies / deals / tickets" }] },
+    ],
+  },
 ];
-
-function ToolCard({ tool }: { tool: ToolDef }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className={`hs-tool-card ${open ? "hs-tool-card--open" : ""}`} onClick={() => setOpen(!open)} style={{ cursor: "pointer" }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div className="hs-tool-card__icon">{tool.icon}</div>
-          <div>
-            <div className="hs-tool-card__name">{tool.name}</div>
-            <div className="hs-tool-card__desc">{tool.desc}</div>
-          </div>
-        </div>
-        <svg className={`hs-accordion__chevron ${open ? "hs-accordion__chevron--open" : ""}`} width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-      </div>
-      {open && (
-        <div className="hs-tool-card__detail">
-          <p style={{ margin: "12px 0 8px", fontSize: 13, color: "var(--hs-text)", lineHeight: 1.6 }}>{tool.detail}</p>
-          <code className="hs-tool-card__api">{tool.api}</code>
-        </div>
-      )}
-    </div>
-  );
-}
 
 function CopyBtn({ text, label }: { text: string; label: string }) {
   const [copied, setCopied] = useState(false);
@@ -129,9 +140,74 @@ function ClientRow({ c }: { c: ClientConfig }) {
   );
 }
 
+function ToolCard({ tool, accentColor }: { tool: ToolDef; accentColor: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div
+      className="hs-tool-card"
+      style={{ cursor: "pointer", borderColor: open ? accentColor : undefined, boxShadow: open ? `0 4px 16px ${accentColor}18` : undefined }}
+      onClick={() => setOpen(!open)}
+    >
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ fontSize: 22 }}>{tool.icon}</span>
+          <div>
+            <div className="hs-tool-card__name">{tool.name}</div>
+            <div className="hs-tool-card__desc">{tool.desc}</div>
+          </div>
+        </div>
+        <svg
+          width="16" height="16" viewBox="0 0 20 20" fill="none"
+          style={{ transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "rotate(0deg)", flexShrink: 0, color: "#516F90" }}
+        >
+          <path d="M5 8l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </div>
+      {open && (
+        <div
+          style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #EAF0F6", animation: "slideIn 0.2s ease" }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div style={{ fontFamily: "'SF Mono','Fira Code',monospace", fontSize: 11, color: accentColor, background: `${accentColor}0D`, padding: "4px 10px", borderRadius: 4, display: "inline-block", marginBottom: 12, fontWeight: 600 }}>
+            {tool.api}
+          </div>
+          {tool.params.length > 0 && (
+            <table style={{ width: "100%", fontSize: 12, borderCollapse: "collapse" }}>
+              <thead>
+                <tr style={{ borderBottom: "1px solid #EAF0F6", textAlign: "left" }}>
+                  <th style={{ padding: "6px 8px", color: "#516F90", fontWeight: 600 }}>パラメータ</th>
+                  <th style={{ padding: "6px 8px", color: "#516F90", fontWeight: 600, width: 50 }}></th>
+                  <th style={{ padding: "6px 8px", color: "#516F90", fontWeight: 600 }}>説明</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tool.params.map((p) => (
+                  <tr key={p.name} style={{ borderBottom: "1px solid #F5F8FA" }}>
+                    <td style={{ padding: "5px 8px", fontFamily: "'SF Mono','Fira Code',monospace", color: "#2D3E50", fontWeight: 500 }}>{p.name}</td>
+                    <td style={{ padding: "5px 8px" }}>
+                      {p.required
+                        ? <span style={{ fontSize: 10, fontWeight: 700, color: "#E8603C", background: "#FFF1EE", padding: "2px 6px", borderRadius: 3 }}>必須</span>
+                        : <span style={{ fontSize: 10, fontWeight: 600, color: "#516F90", background: "#F5F8FA", padding: "2px 6px", borderRadius: 3 }}>任意</span>}
+                    </td>
+                    <td style={{ padding: "5px 8px", color: "#516F90" }}>{p.desc}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          {tool.params.length === 0 && (
+            <div style={{ fontSize: 12, color: "#516F90", fontStyle: "italic" }}>パラメータなし</div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Home() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
+  const totalTools = TOOL_CATEGORIES.reduce((sum, c) => sum + c.tools.length, 0);
   return (
     <>
       <style>{`
@@ -157,11 +233,11 @@ export default function Home() {
         .hs-hero h1 span{color:var(--hs-orange)}
         .hs-hero__sub{font-size:18px;color:var(--hs-text-light);font-weight:400;max-width:540px;margin:0 auto 36px;line-height:1.7}
         .hs-hero__endpoint{display:inline-flex;align-items:center;gap:12px;background:var(--hs-white);border:1px solid var(--hs-border);border-radius:var(--hs-radius);padding:12px 14px 12px 20px;font-family:'SF Mono','Fira Code',monospace;font-size:14px;color:var(--hs-obsidian);box-shadow:var(--hs-shadow-md)}
-        .hs-section{max-width:860px;margin:0 auto;padding:64px 24px}
+        .hs-section{max-width:960px;margin:0 auto;padding:64px 24px}
         .hs-section__label{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--hs-orange);margin-bottom:8px}
         .hs-section__title{font-size:28px;font-weight:700;color:var(--hs-obsidian);letter-spacing:-0.025em;margin-bottom:12px}
-        .hs-section__desc{font-size:15px;color:var(--hs-text-light);max-width:560px;margin-bottom:32px;line-height:1.7}
-        .hs-divider{max-width:860px;margin:0 auto;height:1px;background:var(--hs-border)}
+        .hs-section__desc{font-size:15px;color:var(--hs-text-light);max-width:600px;margin-bottom:32px;line-height:1.7}
+        .hs-divider{max-width:960px;margin:0 auto;height:1px;background:var(--hs-border)}
         .hs-auth-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
         .hs-auth-card{background:var(--hs-white);border:1px solid var(--hs-border);border-radius:var(--hs-radius-lg);padding:28px;transition:box-shadow 0.2s,border-color 0.2s}
         .hs-auth-card:hover{box-shadow:var(--hs-shadow-lg);border-color:var(--hs-orange)}
@@ -189,18 +265,15 @@ export default function Home() {
         .hs-steps{padding:16px 0 12px 20px;font-size:14px;line-height:1.8;color:var(--hs-text)}
         .hs-callout{background:#FEF3E2;border-left:3px solid #F5A623;border-radius:4px;padding:10px 14px;font-size:13px;color:#7A5100;margin-bottom:12px;line-height:1.6}
         .hs-code{background:var(--hs-obsidian);color:#E2E8F0;border-radius:var(--hs-radius);padding:16px 20px;overflow-x:auto;font-size:12px;line-height:1.7;font-family:'SF Mono','Fira Code',monospace;margin-bottom:16px}
-        .hs-tool-category{margin-bottom:28px}
-        .hs-tool-category__title{font-size:16px;font-weight:700;color:var(--hs-obsidian);margin:0 0 14px;display:flex;align-items:center;gap:8px}
-        .hs-tool-category__count{background:var(--hs-orange);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:4px}
-        .hs-tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px}
-        .hs-tool-card{background:var(--hs-white);border:1px solid var(--hs-border);border-radius:var(--hs-radius-lg);padding:16px 18px;transition:all 0.2s;user-select:none}
+        .hs-tool-card{background:var(--hs-white);border:1px solid var(--hs-border);border-radius:var(--hs-radius-lg);padding:18px 20px;transition:all 0.2s;user-select:none}
         .hs-tool-card:hover{border-color:var(--hs-orange);box-shadow:var(--hs-shadow-md)}
-        .hs-tool-card--open{border-color:var(--hs-orange);background:rgba(255,122,89,0.03)}
-        .hs-tool-card__icon{font-size:22px;flex-shrink:0}
         .hs-tool-card__name{font-family:'SF Mono','Fira Code',monospace;font-size:13px;color:var(--hs-obsidian);font-weight:600}
         .hs-tool-card__desc{font-size:12px;color:var(--hs-text-light);margin-top:1px}
-        .hs-tool-card__detail{border-top:1px solid var(--hs-border);margin-top:12px;padding-top:4px}
-        .hs-tool-card__api{display:inline-block;background:var(--hs-bg);border:1px solid var(--hs-border);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--hs-orange);font-family:'SF Mono','Fira Code',monospace}
+        .hs-cat-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;margin-top:28px}
+        .hs-cat-header:first-child{margin-top:0}
+        .hs-cat-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+        .hs-cat-label{font-size:14px;font-weight:700;color:var(--hs-obsidian);letter-spacing:-0.01em}
+        .hs-cat-count{font-size:12px;color:var(--hs-text-light);font-weight:500}
         .hs-specs{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
         .hs-spec{background:var(--hs-bg);border-radius:var(--hs-radius);padding:18px 20px}
         .hs-spec__label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--hs-text-light);margin-bottom:4px}
@@ -209,7 +282,7 @@ export default function Home() {
         .hs-cta-banner h3{font-size:24px;font-weight:700;color:white;margin-bottom:12px;letter-spacing:-0.02em}
         .hs-cta-banner p{font-size:15px;color:#A3B8CC;margin-bottom:24px}
         .hs-cta-banner .hs-btn--primary{font-size:15px;padding:12px 28px}
-        .hs-footer{max-width:860px;margin:0 auto;padding:32px 24px 48px;text-align:center;font-size:13px;color:var(--hs-text-light)}
+        .hs-footer{max-width:960px;margin:0 auto;padding:32px 24px 48px;text-align:center;font-size:13px;color:var(--hs-text-light)}
         .hs-footer a{color:var(--hs-text-light);text-decoration:underline;text-underline-offset:3px}
         .hs-footer a:hover{color:var(--hs-orange)}
         .hs-fade{opacity:0;transform:translateY(16px);transition:opacity 0.6s ease,transform 0.6s ease}
@@ -236,8 +309,8 @@ export default function Home() {
             <span className="hs-hero__tag-icon">⚡</span>
             MCP Protocol 2025-03-26 · Streamable HTTP
           </div>
-          <h1>AIから<span>ワークフロー</span>を<br />直接操作しよう</h1>
-          <p className="hs-hero__sub">HubSpot Marketing Automationを Claude・Cursor・VS Code など あらゆるAIツールからシームレスに操作できるMCPサーバー。</p>
+          <h1>AIから<span>HubSpot CRM</span>を<br />直接操作しよう</h1>
+          <p className="hs-hero__sub">ワークフロー・コンタクト・取引・チケットを Claude・Cursor・VS Code などあらゆるAIツールから操作できるMCPサーバー。</p>
           <div className="hs-hero__endpoint">
             <span style={{ color: "var(--hs-text-light)", fontSize: 12 }}>ENDPOINT</span>
             <span>{MCP_URL}</span>
@@ -278,13 +351,19 @@ export default function Home() {
       <div className="hs-divider" />
       <section id="tools" className="hs-section">
         <div className="hs-section__label"><Sprocket size={14} /> AVAILABLE TOOLS</div>
-        <h2 className="hs-section__title">利用可能なツール</h2>
-        <p className="hs-section__desc">HubSpot CRM v3 + Automation v4 API を通じて、21のツールをAIから実行。クリックで詳細を表示。</p>
+        <h2 className="hs-section__title">利用可能なツール <span style={{ fontSize: 16, fontWeight: 500, color: "var(--hs-text-light)" }}>— {totalTools} tools</span></h2>
+        <p className="hs-section__desc">各ツールをクリックすると、APIエンドポイントとパラメータの詳細が表示されます。</p>
         {TOOL_CATEGORIES.map((cat) => (
-          <div key={cat.category} className="hs-tool-category">
-            <h3 className="hs-tool-category__title"><span>{cat.emoji}</span> {cat.category}<span className="hs-tool-category__count">{cat.tools.length}</span></h3>
-            <div className="hs-tools-grid">
-              {cat.tools.map((t) => <ToolCard key={t.name} tool={t} />)}
+          <div key={cat.category}>
+            <div className="hs-cat-header">
+              <span className="hs-cat-dot" style={{ background: cat.color }} />
+              <span className="hs-cat-label">{cat.category}</span>
+              <span className="hs-cat-count">{cat.tools.length} tools</span>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 8 }}>
+              {cat.tools.map((t) => (
+                <ToolCard key={t.name} tool={t} accentColor={cat.color} />
+              ))}
             </div>
           </div>
         ))}
@@ -311,7 +390,7 @@ export default function Home() {
 
       <footer className="hs-footer">
         <a href="https://github.com/DaisukeHori/hubspot-ma-mcp" target="_blank" rel="noopener noreferrer">GitHub</a>
-        {" · "}Revol Store Co., Ltd{" · "}MIT License
+        {" · "}<a href="https://revol.co.jp" target="_blank" rel="noopener noreferrer">Revol Co., Ltd.</a>{" · "}MIT License
       </footer>
     </>
   );
