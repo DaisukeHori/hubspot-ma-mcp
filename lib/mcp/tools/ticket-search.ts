@@ -13,9 +13,7 @@ export function registerTicketSearch(server: McpServer) {
     {
       query: z.string().optional().describe("フリーテキスト検索キーワード。チケット名等の主要フィールドを横断検索。filterGroupsと併用可能"),
       filterGroups: z
-        .array(z.object({ filters: z.array(z.object({ propertyName: z.string().describe("フィルタ対象プロパティ名（例: subject, hs_ticket_priority, hs_pipeline_stage）"), operator: z.string().describe("比較演算子: EQ, NEQ, LT, LTE, GT, GTE, CONTAINS_TOKEN, HAS_PROPERTY, NOT_HAS_PROPERTY, IN, NOT_IN, BETWEEN"), value: z.string().optional().describe("比較値。HAS_PROPERTY/NOT_HAS_PROPERTY以外で必須") })).describe("AND条件フィルタの配列") }))
-        values: z.array(z.string()).optional().describe("値の配列（IN/NOT_IN演算子用。値は小文字必須）"),
-        highValue: z.string().optional().describe("範囲上限値（BETWEEN演算子用。valueが下限、highValueが上限）"),
+        .array(z.object({ filters: z.array(z.object({ propertyName: z.string().describe("フィルタ対象プロパティ名（例: subject, hs_ticket_priority, hs_pipeline_stage）"), operator: z.string().describe("比較演算子: EQ, NEQ, LT, LTE, GT, GTE, CONTAINS_TOKEN, HAS_PROPERTY, NOT_HAS_PROPERTY, IN, NOT_IN, BETWEEN"), value: z.string().optional().describe("比較値（EQ/NEQ/LT/GT等で使用）"), values: z.array(z.string()).optional().describe("値の配列（IN/NOT_IN演算子用。値は小文字必須）"), highValue: z.string().optional().describe("範囲上限値（BETWEEN演算子用。valueが下限、highValueが上限）") })).describe("AND条件フィルタの配列") }))
         .optional().describe("高度なフィルター条件。例: [{filters:[{propertyName:'hs_ticket_priority',operator:'EQ',value:'HIGH'}]}]。operator: EQ, NEQ, LT, GT, CONTAINS_TOKEN 等"),
       properties: z.array(z.string()).optional().describe("取得するプロパティ名の配列（例: ['subject','content','hs_pipeline_stage','hs_ticket_priority']）。省略時はデフォルトプロパティのみ"),
       limit: z.number().min(1).max(200).optional().describe("取得件数（デフォルト10、最大200）"),
