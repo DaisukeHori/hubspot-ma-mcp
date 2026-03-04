@@ -28,11 +28,11 @@ const mcpHandler = createMcpHandler(
 /**
  * リクエストの Authorization ヘッダーから Bearer トークンを抽出し、
  * AsyncLocalStorage 経由でツールハンドラーに渡すラッパー。
+ *
+ * createMcpHandler は (request: Request) => Promise<Response> を返すため
+ * 引数は request のみ。
  */
-async function handler(
-  request: Request,
-  context: { params: Promise<{ transport: string }> }
-): Promise<Response> {
+async function handler(request: Request): Promise<Response> {
   // Authorization: Bearer xxx からトークンを抽出
   const authHeader = request.headers.get("authorization") || "";
   const bearerMatch = authHeader.match(/^Bearer\s+(.+)$/i);
@@ -42,12 +42,12 @@ async function handler(
   if (bearerToken) {
     return authStorage.run(
       { hubspotAccessToken: bearerToken },
-      () => mcpHandler(request, context)
+      () => mcpHandler(request)
     );
   }
 
   // Bearer Token がない場合はそのまま実行（環境変数フォールバック）
-  return mcpHandler(request, context);
+  return mcpHandler(request);
 }
 
 export { handler as GET, handler as POST };
