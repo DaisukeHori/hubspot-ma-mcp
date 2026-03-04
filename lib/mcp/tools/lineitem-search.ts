@@ -17,8 +17,8 @@ export function registerLineItemSearch(server: McpServer) {
         filters: z.array(z.object({
           propertyName: z.string().describe("フィルタ対象プロパティ名（例: name, quantity, price, hs_product_id）"),
           operator: z.string().describe("比較演算子: EQ, NEQ, LT, LTE, GT, GTE, CONTAINS_TOKEN, HAS_PROPERTY, NOT_HAS_PROPERTY"),
-          value: z.string().optional(),
-        })),
+          value: z.string().optional().describe("比較値"),
+        })).describe("AND条件フィルタの配列"),
       })).optional().describe("高度なフィルター条件（OR条件の配列。各グループ内のfiltersはAND結合）"),
       properties: z.array(z.string()).optional().describe("取得するプロパティ名の配列（例: ['name','quantity']）。省略時はデフォルトプロパティのみ"),
       limit: z.number().optional().describe("取得件数（デフォルト10、最大100）"),

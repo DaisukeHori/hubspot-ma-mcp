@@ -16,7 +16,7 @@ additionalPropertiesでカスタムプロパティも設定可能。industryはH
       industry: z.string().optional().describe("業種（HubSpot定義の列挙値。例: COMPUTER_SOFTWARE, INFORMATION_TECHNOLOGY_AND_SERVICES, MARKETING_AND_ADVERTISING等。properties_listで全値を確認可能）"),
       phone: z.string().optional().describe("電話番号（例: '+81-48-123-4567'）"),
       city: z.string().optional().describe("市区町村（例: '川口市'）"),
-      state: z.string().optional().describe("都道府県（例: '埼玉県'）"),
+      state: z.string().optional().describe("都道府県 / 州（例: '埼玉県', 'California'）"),
       country: z.string().optional().describe("国（例: 'Japan'）"),
       additionalProperties: z.record(z.string()).optional().describe("追加プロパティ（キー:値）。カスタムプロパティ名はproperties_listツールで確認可能"),
     },

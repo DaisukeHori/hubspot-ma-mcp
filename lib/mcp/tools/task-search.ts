@@ -19,9 +19,9 @@ export function registerTaskSearch(server: McpServer) {
               z.object({
                 propertyName: z.string().describe("フィルタ対象プロパティ名（例: hs_task_subject, hs_task_status, hs_task_priority）"),
                 operator: z.string().describe("EQ, NEQ, LT, LTE, GT, GTE, CONTAINS_TOKEN, HAS_PROPERTY, NOT_HAS_PROPERTY"),
-                value: z.string().optional(),
+                value: z.string().optional().describe("比較値"),
               })
-            ),
+            ).describe("AND条件フィルタの配列"),
           })
         )
         .optional()

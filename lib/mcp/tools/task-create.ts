@@ -21,10 +21,10 @@ export function registerTaskCreate(server: McpServer) {
             to: z.object({ id: z.string().describe("関連先レコードID") }).describe("関連先レコード"),
             types: z.array(
               z.object({
-                associationCategory: z.string().describe("HUBSPOT_DEFINED（標準ラベル）または USER_DEFINED（カスタムラベル）").describe("HUBSPOT_DEFINED"),
-                associationTypeId: z.number().describe("関連タイプID。association_labelsツールのlistで取得可能").describe("関連タイプ ID（例: 204=task_to_contact, 192=task_to_company, 216=task_to_deal）"),
+                associationCategory: z.string().describe("HUBSPOT_DEFINED（標準ラベル）/ USER_DEFINED（カスタムラベル）"),
+                associationTypeId: z.number().describe("関連タイプID（例: 204=task→contact, 192=task→company, 216=task→deal）。association_labelsツールのlistで取得可能"),
               })
-            ),
+            ).describe("関連タイプ定義の配列。各要素にassociationCategory + associationTypeIdを指定"),
           })
         )
         .optional()

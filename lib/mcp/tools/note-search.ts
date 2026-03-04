@@ -19,9 +19,9 @@ export function registerNoteSearch(server: McpServer) {
               z.object({
                 propertyName: z.string().describe("フィルタ対象プロパティ名（例: hs_note_body, hs_timestamp, hs_object_id）"),
                 operator: z.string().describe("EQ, NEQ, LT, LTE, GT, GTE, CONTAINS_TOKEN, HAS_PROPERTY, NOT_HAS_PROPERTY"),
-                value: z.string().optional(),
+                value: z.string().optional().describe("比較値"),
               })
-            ),
+            ).describe("AND条件フィルタの配列"),
           })
         )
         .optional()
