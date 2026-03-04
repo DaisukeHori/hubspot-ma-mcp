@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  HubSpot CRM・ワークフロー・メモ・タスク・関連付け・CMS を AI アシスタントから直接操作する MCP サーバー（58ツール）
+  HubSpot CRM・ワークフロー・メモ・タスク・関連付け・CMS を AI アシスタントから直接操作する MCP サーバー（78ツール）
 </p>
 
 <p align="center">
@@ -214,7 +214,7 @@ curl https://api.anthropic.com/v1/messages \
 
 ---
 
-## ツール一覧（58ツール）
+## ツール一覧（78ツール）
 
 ### Workflow（Automation v4）— 6ツール
 
@@ -330,6 +330,50 @@ curl https://api.anthropic.com/v1/messages \
 | `product_update` | 商品更新 |
 | `product_delete` | 商品削除 |
 
+### Owners — 2ツール 🆕
+
+| Tool | Description |
+|------|-------------|
+| `owner_list` | 担当者（オーナー）一覧取得 |
+| `owner_get` | 担当者詳細取得 |
+
+### Emails（メールエンゲージメント）— 5ツール 🆕
+
+| Tool | Description |
+|------|-------------|
+| `email_search` | メールエンゲージメント検索 |
+| `email_get` | メールエンゲージメント詳細取得 |
+| `email_create` | メールエンゲージメント作成 |
+| `email_update` | メールエンゲージメント更新 |
+| `email_delete` | メールエンゲージメント削除 |
+
+### Meetings（ミーティング）— 5ツール 🆕
+
+| Tool | Description |
+|------|-------------|
+| `meeting_search` | ミーティング検索 |
+| `meeting_get` | ミーティング詳細取得 |
+| `meeting_create` | ミーティング作成 |
+| `meeting_update` | ミーティング更新 |
+| `meeting_delete` | ミーティング削除 |
+
+### Calls（通話）— 5ツール 🆕
+
+| Tool | Description |
+|------|-------------|
+| `call_search` | 通話記録検索 |
+| `call_get` | 通話記録詳細取得 |
+| `call_create` | 通話記録作成 |
+| `call_update` | 通話記録更新 |
+| `call_delete` | 通話記録削除 |
+
+### Quotes（見積もり）— 2ツール 🆕
+
+| Tool | Description |
+|------|-------------|
+| `quote_search` | 見積もり検索 |
+| `quote_get` | 見積もり詳細取得 |
+
 ### CMS（Blog & Pages）— 4ツール
 
 | ツール | 説明 |
@@ -374,7 +418,7 @@ npm run dev
 | Framework | Next.js 15 (App Router) |
 | MCP Handler | mcp-handler (Streamable HTTP / SSE) |
 | Auth | 2モード: hubspot_token / api_key |
-| API | HubSpot CRM v3 + CMS v3 + Automation v4 (Beta) |
+| API | HubSpot CRM v3 + CMS v3 + Automation v4 (Beta) + Owners API |
 | Hosting | Vercel (Fluid Compute) |
 | Language | TypeScript |
 

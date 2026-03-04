@@ -183,7 +183,66 @@ const TOOL_CATEGORIES: ToolCategory[] = [
       { name: "cms_page_list", desc: "ページ一覧", icon: "📄", api: "GET /cms/v3/pages/{type}", params: [{ name: "pageType", required: true, desc: "landing-pages / site-pages" }] },
       { name: "cms_page_update", desc: "ページ更新", icon: "🖊", api: "PATCH /cms/v3/pages/{type}/{id}", params: [{ name: "pageType", required: true, desc: "landing-pages / site-pages" }, { name: "pageId", required: true, desc: "ページ ID" }] },
     ],
+  },,
+  {
+    name: "Owners",
+    icon: "👤",
+    description: "担当者一覧・詳細",
+    color: "#7C8DB5",
+    tools: [
+      { name: "owner_list", desc: "担当者（オーナー）一覧取得", api: "GET /crm/v3/owners" },
+      { name: "owner_get", desc: "担当者詳細取得", api: "GET /crm/v3/owners/:id" },
+    ],
   },
+  {
+    name: "Emails",
+    icon: "📧",
+    description: "メールエンゲージメント CRUD",
+    color: "#00BDA5",
+    tools: [
+      { name: "email_search", desc: "メール検索", api: "POST /crm/v3/objects/emails/search" },
+      { name: "email_get", desc: "メール詳細取得", api: "GET /crm/v3/objects/emails/:id" },
+      { name: "email_create", desc: "メール作成", api: "POST /crm/v3/objects/emails" },
+      { name: "email_update", desc: "メール更新", api: "PATCH /crm/v3/objects/emails/:id" },
+      { name: "email_delete", desc: "メール削除", api: "DELETE /crm/v3/objects/emails/:id" },
+    ],
+  },
+  {
+    name: "Meetings",
+    icon: "📅",
+    description: "ミーティングエンゲージメント CRUD",
+    color: "#00A4BD",
+    tools: [
+      { name: "meeting_search", desc: "ミーティング検索", api: "POST /crm/v3/objects/meetings/search" },
+      { name: "meeting_get", desc: "ミーティング詳細取得", api: "GET /crm/v3/objects/meetings/:id" },
+      { name: "meeting_create", desc: "ミーティング作成", api: "POST /crm/v3/objects/meetings" },
+      { name: "meeting_update", desc: "ミーティング更新", api: "PATCH /crm/v3/objects/meetings/:id" },
+      { name: "meeting_delete", desc: "ミーティング削除", api: "DELETE /crm/v3/objects/meetings/:id" },
+    ],
+  },
+  {
+    name: "Calls",
+    icon: "📞",
+    description: "通話エンゲージメント CRUD",
+    color: "#516F90",
+    tools: [
+      { name: "call_search", desc: "通話検索", api: "POST /crm/v3/objects/calls/search" },
+      { name: "call_get", desc: "通話詳細取得", api: "GET /crm/v3/objects/calls/:id" },
+      { name: "call_create", desc: "通話作成", api: "POST /crm/v3/objects/calls" },
+      { name: "call_update", desc: "通話更新", api: "PATCH /crm/v3/objects/calls/:id" },
+      { name: "call_delete", desc: "通話削除", api: "DELETE /crm/v3/objects/calls/:id" },
+    ],
+  },
+  {
+    name: "Quotes",
+    icon: "💰",
+    description: "見積もり（読み取り専用）",
+    color: "#F5A623",
+    tools: [
+      { name: "quote_search", desc: "見積もり検索", api: "POST /crm/v3/objects/quotes/search" },
+      { name: "quote_get", desc: "見積もり詳細取得", api: "GET /crm/v3/objects/quotes/:id" },
+    ],
+  }
 ];
 
 function CopyBtn({ text, label }: { text: string; label: string }) {
@@ -407,7 +466,7 @@ export default function Home() {
             MCP Protocol 2025-03-26 · Streamable HTTP
           </div>
           <h1>AIから<span>HubSpot CRM</span>を<br />直接操作しよう</h1>
-          <p className="hs-hero__sub">ワークフロー・CRM・商品・明細行・プロパティ・パイプライン・CMS をAIツールから直接操作できるMCPサーバー。59ツール搭載。</p>
+          <p className="hs-hero__sub">ワークフロー・CRM・商品・明細行・プロパティ・パイプライン・CMS をAIツールから直接操作できるMCPサーバー。78ツール搭載。</p>
           <div className="hs-hero__endpoint">
             <span style={{ color: "var(--hs-text-light)", fontSize: 12 }}>ENDPOINT</span>
             <span>{MCP_URL}</span>
