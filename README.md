@@ -15,6 +15,7 @@
   <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/transport-Streamable_HTTP-A5F3FC?style=flat-square" alt="Transport" /></a>
   <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/auth-2_modes-FF7A59?style=flat-square" alt="Auth" /></a>
   <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/protocol-MCP_2025--03--26-FF7A59?style=flat-square" alt="Protocol" /></a>
+  <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/tools-21-FF7A59?style=flat-square" alt="Tools" /></a>
   <a href="https://vercel.com"><img src="https://img.shields.io/badge/deployed_on-Vercel-000?style=flat-square&logo=vercel" alt="Vercel" /></a>
   <img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License" />
 </p>
@@ -200,7 +201,9 @@ curl https://api.anthropic.com/v1/messages \
 
 ---
 
-## ツール一覧
+## ツール一覧（21ツール）
+
+### Workflow（Automation v4 API）
 
 | ツール | 説明 |
 |---|---|
@@ -210,6 +213,46 @@ curl https://api.anthropic.com/v1/messages \
 | `workflow_update` | ワークフロー更新（revisionId 自動取得） |
 | `workflow_delete` | ワークフロー削除（`confirm=true` 必須） |
 | `workflow_batch_read` | 複数ワークフロー一括取得 |
+
+### CRM Contacts（v3 API）
+
+| ツール | 説明 |
+|---|---|
+| `contact_search` | コンタクト検索（名前・メール・プロパティフィルター） |
+| `contact_get` | コンタクト詳細取得（関連オブジェクト取得可） |
+| `contact_create` | コンタクト新規作成 |
+| `contact_update` | コンタクト更新 |
+
+### CRM Companies（v3 API）
+
+| ツール | 説明 |
+|---|---|
+| `company_search` | 会社検索（名前・ドメイン等） |
+| `company_get` | 会社詳細取得 |
+| `company_create` | 会社新規作成 |
+
+### CRM Deals（v3 API）
+
+| ツール | 説明 |
+|---|---|
+| `deal_search` | 取引検索 |
+| `deal_get` | 取引詳細取得 |
+| `deal_create` | 取引新規作成 |
+| `deal_update` | 取引更新（ステージ変更・金額変更等） |
+
+### CRM Tickets（v3 API）
+
+| ツール | 説明 |
+|---|---|
+| `ticket_search` | チケット検索 |
+| `ticket_create` | チケット新規作成 |
+
+### Pipelines & Properties
+
+| ツール | 説明 |
+|---|---|
+| `pipeline_list` | パイプライン一覧取得（Deals/Tickets） |
+| `properties_list` | オブジェクトプロパティ定義一覧取得 |
 
 ---
 
