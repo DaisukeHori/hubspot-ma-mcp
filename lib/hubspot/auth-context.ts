@@ -4,9 +4,9 @@
  * AsyncLocalStorage を使って、リクエストごとの HubSpot Access Token を
  * ツールハンドラーまで伝播する。
  *
- * 優先順位:
- *  1. リクエストの Authorization: Bearer ヘッダー（ユーザー指定）
- *  2. 環境変数 HUBSPOT_ACCESS_TOKEN（サーバーデフォルト）
+ * Bearer Token 必須:
+ *  - リクエストの Authorization: Bearer ヘッダーでトークンを指定
+ *  - 環境変数フォールバックは無効（公開サーバー保護のため）
  */
 
 import { AsyncLocalStorage } from "node:async_hooks";
@@ -19,7 +19,7 @@ export const authStorage = new AsyncLocalStorage<AuthContext>();
 
 /**
  * 現在のリクエストスコープから HubSpot Access Token を取得する。
- * AsyncLocalStorage にトークンがあればそれを、なければ環境変数を使う。
+ * Bearer Token が必須。環境変数へのフォールバックは行わない。
  */
 export function getHubSpotToken(): string {
   const ctx = authStorage.getStore();
@@ -27,14 +27,10 @@ export function getHubSpotToken(): string {
     return ctx.hubspotAccessToken;
   }
 
-  const envToken = process.env.HUBSPOT_ACCESS_TOKEN;
-  if (envToken) {
-    return envToken;
-  }
-
   throw new Error(
     "HubSpot Access Token が見つかりません。" +
-      "MCP クライアントの設定で Authorization: Bearer ヘッダーを指定するか、" +
-      "サーバーの環境変数 HUBSPOT_ACCESS_TOKEN を設定してください。"
+      "MCP クライアントの設定で Authorization: Bearer <your-hubspot-private-app-token> " +
+      "ヘッダーを指定してください。" +
+      "トークンは HubSpot > 設定 > 連携 > 非公開アプリ から作成できます。"
   );
 }
