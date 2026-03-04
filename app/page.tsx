@@ -53,9 +53,9 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     tools: [
       { name: "workflow_list", desc: "ワークフロー一覧取得", icon: "📋", api: "GET /automation/v4/flows", params: [] },
       { name: "workflow_get", desc: "ワークフロー詳細取得", icon: "🔍", api: "GET /automation/v4/flows/{flowId}", params: [{ name: "flowId", required: true, desc: "ワークフロー ID" }] },
-      { name: "workflow_create", desc: "ワークフロー作成", icon: "✨", api: "POST /automation/v4/flows", params: [{ name: "name", required: true, desc: "ワークフロー名" }, { name: "type", required: true, desc: "CONTACT_FLOW / PLATFORM_FLOW" }, { name: "objectTypeId", required: true, desc: "オブジェクトタイプ ID" }, { name: "isEnabled", required: false, desc: "有効化（デフォルト: false）" }, { name: "actions", required: false, desc: "アクション定義（JSON）" }] },
-      { name: "workflow_update", desc: "ワークフロー更新", icon: "🔄", api: "PUT /automation/v4/flows/{flowId}", params: [{ name: "flowId", required: true, desc: "ワークフロー ID" }, { name: "updates", required: true, desc: "更新内容（JSON）" }] },
-      { name: "workflow_delete", desc: "ワークフロー削除", icon: "🗑", api: "DELETE /automation/v4/flows/{flowId}", params: [{ name: "flowId", required: true, desc: "ワークフロー ID" }, { name: "confirm", required: true, desc: "削除確認（true 必須）" }] },
+      { name: "workflow_create", desc: "ワークフロー作成", icon: "✨", api: "POST /automation/v4/flows", params: [{ name: "name", required: true, desc: "ワークフロー名" }, { name: "type", required: true, desc: "CONTACT_FLOW / PLATFORM_FLOW" }, { name: "objectTypeId", required: true, desc: "オブジェクトタイプ ID" }] },
+      { name: "workflow_update", desc: "ワークフロー更新", icon: "🔄", api: "PUT /automation/v4/flows/{flowId}", params: [{ name: "flowId", required: true, desc: "ワークフロー ID" }] },
+      { name: "workflow_delete", desc: "ワークフロー削除", icon: "🗑", api: "DELETE /automation/v4/flows/{flowId}", params: [{ name: "flowId", required: true, desc: "ワークフロー ID" }, { name: "confirm", required: true, desc: "削除確認（true）" }] },
       { name: "workflow_batch_read", desc: "複数ワークフロー一括取得", icon: "📦", api: "POST /automation/v4/flows/batch/read", params: [{ name: "flowIds", required: true, desc: "ID 配列" }] },
     ],
   },
@@ -63,54 +63,90 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     category: "CRM Contacts（v3）",
     color: "#00A4BD",
     tools: [
-      { name: "contact_search", desc: "コンタクト検索", icon: "🔎", api: "POST /crm/v3/objects/contacts/search", params: [{ name: "query", required: false, desc: "検索キーワード（名前・メール等）" }, { name: "filterGroups", required: false, desc: "フィルター条件" }, { name: "properties", required: false, desc: "取得プロパティ名" }, { name: "limit", required: false, desc: "件数（最大100）" }, { name: "after", required: false, desc: "ページネーション" }] },
-      { name: "contact_get", desc: "コンタクト詳細取得", icon: "👤", api: "GET /crm/v3/objects/contacts/{id}", params: [{ name: "contactId", required: true, desc: "コンタクト ID" }, { name: "properties", required: false, desc: "取得プロパティ" }, { name: "associations", required: false, desc: "関連取得（companies, deals等）" }] },
-      { name: "contact_create", desc: "コンタクト作成", icon: "➕", api: "POST /crm/v3/objects/contacts", params: [{ name: "email", required: true, desc: "メールアドレス" }, { name: "firstname", required: false, desc: "名" }, { name: "lastname", required: false, desc: "姓" }, { name: "phone", required: false, desc: "電話番号" }, { name: "company", required: false, desc: "会社名" }, { name: "jobtitle", required: false, desc: "役職" }] },
-      { name: "contact_update", desc: "コンタクト更新", icon: "✏️", api: "PATCH /crm/v3/objects/contacts/{id}", params: [{ name: "contactId", required: true, desc: "コンタクト ID" }, { name: "properties", required: true, desc: "更新プロパティ（キー:値）" }] },
+      { name: "contact_search", desc: "コンタクト検索", icon: "🔎", api: "POST /crm/v3/objects/contacts/search", params: [{ name: "query", required: false, desc: "検索キーワード" }, { name: "after", required: false, desc: "ページネーション" }] },
+      { name: "contact_get", desc: "コンタクト詳細取得", icon: "👤", api: "GET /crm/v3/objects/contacts/{id}", params: [{ name: "contactId", required: true, desc: "コンタクト ID" }, { name: "associations", required: false, desc: "関連取得" }] },
+      { name: "contact_create", desc: "コンタクト作成", icon: "➕", api: "POST /crm/v3/objects/contacts", params: [{ name: "email", required: true, desc: "メールアドレス" }] },
+      { name: "contact_update", desc: "コンタクト更新", icon: "✏️", api: "PATCH /crm/v3/objects/contacts/{id}", params: [{ name: "contactId", required: true, desc: "コンタクト ID" }, { name: "properties", required: true, desc: "更新プロパティ" }] },
+      { name: "contact_delete", desc: "コンタクト削除", icon: "🗑", api: "DELETE /crm/v3/objects/contacts/{id}", params: [{ name: "contactId", required: true, desc: "コンタクト ID" }, { name: "confirm", required: true, desc: "削除確認（true）" }] },
     ],
   },
   {
     category: "CRM Companies（v3）",
     color: "#00BDA5",
     tools: [
-      { name: "company_search", desc: "会社検索", icon: "🏢", api: "POST /crm/v3/objects/companies/search", params: [{ name: "query", required: false, desc: "検索キーワード" }, { name: "filterGroups", required: false, desc: "フィルター条件" }, { name: "properties", required: false, desc: "取得プロパティ" }, { name: "limit", required: false, desc: "件数（最大100）" }] },
-      { name: "company_get", desc: "会社詳細取得", icon: "🏛", api: "GET /crm/v3/objects/companies/{id}", params: [{ name: "companyId", required: true, desc: "会社 ID" }, { name: "properties", required: false, desc: "取得プロパティ" }, { name: "associations", required: false, desc: "関連取得" }] },
-      { name: "company_create", desc: "会社作成", icon: "🏗", api: "POST /crm/v3/objects/companies", params: [{ name: "name", required: true, desc: "会社名" }, { name: "domain", required: false, desc: "ドメイン" }, { name: "industry", required: false, desc: "業種" }, { name: "phone", required: false, desc: "電話番号" }] },
+      { name: "company_search", desc: "会社検索", icon: "🏢", api: "POST /crm/v3/objects/companies/search", params: [{ name: "query", required: false, desc: "検索キーワード" }] },
+      { name: "company_get", desc: "会社詳細取得", icon: "🏛", api: "GET /crm/v3/objects/companies/{id}", params: [{ name: "companyId", required: true, desc: "会社 ID" }] },
+      { name: "company_create", desc: "会社作成", icon: "🏗", api: "POST /crm/v3/objects/companies", params: [{ name: "name", required: true, desc: "会社名" }] },
+      { name: "company_update", desc: "会社更新", icon: "✏️", api: "PATCH /crm/v3/objects/companies/{id}", params: [{ name: "companyId", required: true, desc: "会社 ID" }, { name: "properties", required: true, desc: "更新プロパティ" }] },
+      { name: "company_delete", desc: "会社削除", icon: "🗑", api: "DELETE /crm/v3/objects/companies/{id}", params: [{ name: "companyId", required: true, desc: "会社 ID" }, { name: "confirm", required: true, desc: "削除確認（true）" }] },
     ],
   },
   {
     category: "CRM Deals（v3）",
     color: "#6A78D1",
     tools: [
-      { name: "deal_search", desc: "取引検索", icon: "💰", api: "POST /crm/v3/objects/deals/search", params: [{ name: "query", required: false, desc: "検索キーワード" }, { name: "filterGroups", required: false, desc: "フィルター条件" }, { name: "properties", required: false, desc: "取得プロパティ" }, { name: "limit", required: false, desc: "件数（最大100）" }] },
-      { name: "deal_get", desc: "取引詳細取得", icon: "📊", api: "GET /crm/v3/objects/deals/{id}", params: [{ name: "dealId", required: true, desc: "取引 ID" }, { name: "properties", required: false, desc: "取得プロパティ" }, { name: "associations", required: false, desc: "関連取得" }] },
-      { name: "deal_create", desc: "取引作成", icon: "🤝", api: "POST /crm/v3/objects/deals", params: [{ name: "dealname", required: true, desc: "取引名" }, { name: "amount", required: false, desc: "金額" }, { name: "dealstage", required: false, desc: "ステージ ID" }, { name: "pipeline", required: false, desc: "パイプライン ID" }, { name: "closedate", required: false, desc: "クローズ日" }] },
-      { name: "deal_update", desc: "取引更新", icon: "💹", api: "PATCH /crm/v3/objects/deals/{id}", params: [{ name: "dealId", required: true, desc: "取引 ID" }, { name: "properties", required: true, desc: "更新プロパティ（キー:値）" }] },
+      { name: "deal_search", desc: "取引検索", icon: "💰", api: "POST /crm/v3/objects/deals/search", params: [{ name: "query", required: false, desc: "検索キーワード" }] },
+      { name: "deal_get", desc: "取引詳細取得", icon: "📊", api: "GET /crm/v3/objects/deals/{id}", params: [{ name: "dealId", required: true, desc: "取引 ID" }] },
+      { name: "deal_create", desc: "取引作成", icon: "🤝", api: "POST /crm/v3/objects/deals", params: [{ name: "dealname", required: true, desc: "取引名" }] },
+      { name: "deal_update", desc: "取引更新", icon: "💹", api: "PATCH /crm/v3/objects/deals/{id}", params: [{ name: "dealId", required: true, desc: "取引 ID" }, { name: "properties", required: true, desc: "更新プロパティ" }] },
+      { name: "deal_delete", desc: "取引削除", icon: "🗑", api: "DELETE /crm/v3/objects/deals/{id}", params: [{ name: "dealId", required: true, desc: "取引 ID" }, { name: "confirm", required: true, desc: "削除確認（true）" }] },
     ],
   },
   {
     category: "CRM Tickets（v3）",
     color: "#F5C26B",
     tools: [
-      { name: "ticket_search", desc: "チケット検索", icon: "🎫", api: "POST /crm/v3/objects/tickets/search", params: [{ name: "query", required: false, desc: "検索キーワード" }, { name: "filterGroups", required: false, desc: "フィルター条件" }, { name: "limit", required: false, desc: "件数（最大100）" }] },
-      { name: "ticket_create", desc: "チケット作成", icon: "🎟", api: "POST /crm/v3/objects/tickets", params: [{ name: "subject", required: true, desc: "件名" }, { name: "content", required: false, desc: "内容" }, { name: "hs_pipeline", required: false, desc: "パイプライン ID" }, { name: "hs_pipeline_stage", required: false, desc: "ステージ ID" }, { name: "hs_ticket_priority", required: false, desc: "優先度（LOW/MEDIUM/HIGH）" }] },
+      { name: "ticket_search", desc: "チケット検索", icon: "🎫", api: "POST /crm/v3/objects/tickets/search", params: [{ name: "query", required: false, desc: "検索キーワード" }] },
+      { name: "ticket_get", desc: "チケット詳細取得", icon: "🔍", api: "GET /crm/v3/objects/tickets/{id}", params: [{ name: "ticketId", required: true, desc: "チケット ID" }] },
+      { name: "ticket_create", desc: "チケット作成", icon: "🎟", api: "POST /crm/v3/objects/tickets", params: [{ name: "subject", required: true, desc: "件名" }] },
+      { name: "ticket_update", desc: "チケット更新", icon: "✏️", api: "PATCH /crm/v3/objects/tickets/{id}", params: [{ name: "ticketId", required: true, desc: "チケット ID" }, { name: "properties", required: true, desc: "更新プロパティ" }] },
+      { name: "ticket_delete", desc: "チケット削除", icon: "🗑", api: "DELETE /crm/v3/objects/tickets/{id}", params: [{ name: "ticketId", required: true, desc: "チケット ID" }, { name: "confirm", required: true, desc: "削除確認（true）" }] },
+    ],
+  },
+  {
+    category: "Notes（メモ / v3）",
+    color: "#33475B",
+    tools: [
+      { name: "note_search", desc: "メモ検索", icon: "🔎", api: "POST /crm/v3/objects/notes/search", params: [{ name: "query", required: false, desc: "検索キーワード" }, { name: "after", required: false, desc: "ページネーション" }] },
+      { name: "note_get", desc: "メモ詳細取得", icon: "📝", api: "GET /crm/v3/objects/notes/{id}", params: [{ name: "noteId", required: true, desc: "メモ ID" }, { name: "associations", required: false, desc: "関連取得" }] },
+      { name: "note_create", desc: "メモ作成（関連付け可）", icon: "✏️", api: "POST /crm/v3/objects/notes", params: [{ name: "body", required: true, desc: "メモ本文" }, { name: "associations", required: false, desc: "関連付け先" }] },
+      { name: "note_update", desc: "メモ更新", icon: "🔄", api: "PATCH /crm/v3/objects/notes/{id}", params: [{ name: "noteId", required: true, desc: "メモ ID" }, { name: "properties", required: true, desc: "更新プロパティ" }] },
+    ],
+  },
+  {
+    category: "Tasks（タスク / v3）",
+    color: "#425B76",
+    tools: [
+      { name: "task_search", desc: "タスク検索", icon: "🔎", api: "POST /crm/v3/objects/tasks/search", params: [{ name: "query", required: false, desc: "検索キーワード" }, { name: "after", required: false, desc: "ページネーション" }] },
+      { name: "task_get", desc: "タスク詳細取得", icon: "📋", api: "GET /crm/v3/objects/tasks/{id}", params: [{ name: "taskId", required: true, desc: "タスク ID" }, { name: "associations", required: false, desc: "関連取得" }] },
+      { name: "task_create", desc: "タスク作成（関連付け可）", icon: "✅", api: "POST /crm/v3/objects/tasks", params: [{ name: "subject", required: true, desc: "タスク件名" }, { name: "status", required: false, desc: "NOT_STARTED / IN_PROGRESS / COMPLETED" }, { name: "priority", required: false, desc: "LOW / MEDIUM / HIGH" }] },
+      { name: "task_update", desc: "タスク更新", icon: "🔄", api: "PATCH /crm/v3/objects/tasks/{id}", params: [{ name: "taskId", required: true, desc: "タスク ID" }, { name: "properties", required: true, desc: "更新プロパティ" }] },
+    ],
+  },
+  {
+    category: "Associations（関連付け / v4）",
+    color: "#2D3E50",
+    tools: [
+      { name: "association_list", desc: "関連レコード一覧", icon: "🔗", api: "GET /crm/v4/objects/{type}/{id}/associations/{toType}", params: [{ name: "fromObjectType", required: true, desc: "元オブジェクト" }, { name: "fromObjectId", required: true, desc: "元 ID" }, { name: "toObjectType", required: true, desc: "関連先オブジェクト" }] },
+      { name: "association_create", desc: "関連付け作成", icon: "🔗", api: "PUT /crm/v4/.../associations/default/...", params: [{ name: "fromObjectType", required: true, desc: "元オブジェクト" }, { name: "fromObjectId", required: true, desc: "元 ID" }, { name: "toObjectType", required: true, desc: "関連先オブジェクト" }, { name: "toObjectId", required: true, desc: "関連先 ID" }] },
+      { name: "association_delete", desc: "関連付け削除", icon: "✂️", api: "DELETE /crm/v4/.../associations/...", params: [{ name: "fromObjectType", required: true, desc: "元オブジェクト" }, { name: "fromObjectId", required: true, desc: "元 ID" }, { name: "toObjectType", required: true, desc: "関連先オブジェクト" }, { name: "toObjectId", required: true, desc: "関連先 ID" }] },
     ],
   },
   {
     category: "Properties（CRUD）",
     color: "#516F90",
     tools: [
-      { name: "properties_list", desc: "プロパティ定義一覧", icon: "📑", api: "GET /crm/v3/properties/{objectType}", params: [{ name: "objectType", required: true, desc: "contacts / companies / deals / tickets / line_items / products" }] },
-      { name: "property_create", desc: "カスタムプロパティ作成", icon: "🏷", api: "POST /crm/v3/properties/{objectType}", params: [{ name: "objectType", required: true, desc: "対象オブジェクト" }, { name: "name", required: true, desc: "内部名" }, { name: "label", required: true, desc: "表示ラベル" }, { name: "type", required: true, desc: "型: string/number/date/enumeration" }, { name: "fieldType", required: true, desc: "フィールド種別: text/select/checkbox等" }, { name: "groupName", required: true, desc: "グループ名" }] },
-      { name: "property_update", desc: "プロパティ更新", icon: "✏️", api: "PATCH /crm/v3/properties/{objectType}/{name}", params: [{ name: "objectType", required: true, desc: "対象オブジェクト" }, { name: "propertyName", required: true, desc: "プロパティ内部名" }, { name: "label", required: false, desc: "新ラベル" }] },
-      { name: "property_delete", desc: "プロパティ削除", icon: "🗑", api: "DELETE /crm/v3/properties/{objectType}/{name}", params: [{ name: "objectType", required: true, desc: "対象オブジェクト" }, { name: "propertyName", required: true, desc: "プロパティ内部名" }, { name: "confirm", required: true, desc: "削除確認（true 必須）" }] },
+      { name: "properties_list", desc: "プロパティ定義一覧", icon: "📑", api: "GET /crm/v3/properties/{objectType}", params: [{ name: "objectType", required: true, desc: "contacts / companies / deals / tickets 等" }] },
+      { name: "property_create", desc: "カスタムプロパティ作成", icon: "🏷", api: "POST /crm/v3/properties/{objectType}", params: [{ name: "objectType", required: true, desc: "対象オブジェクト" }, { name: "name", required: true, desc: "内部名" }, { name: "label", required: true, desc: "表示ラベル" }, { name: "type", required: true, desc: "型" }, { name: "fieldType", required: true, desc: "フィールド種別" }, { name: "groupName", required: true, desc: "グループ名" }] },
+      { name: "property_update", desc: "プロパティ更新", icon: "✏️", api: "PATCH /crm/v3/properties/{objectType}/{name}", params: [{ name: "objectType", required: true, desc: "対象オブジェクト" }, { name: "propertyName", required: true, desc: "プロパティ内部名" }] },
+      { name: "property_delete", desc: "プロパティ削除", icon: "🗑", api: "DELETE /crm/v3/properties/{objectType}/{name}", params: [{ name: "objectType", required: true, desc: "対象オブジェクト" }, { name: "propertyName", required: true, desc: "プロパティ内部名" }, { name: "confirm", required: true, desc: "削除確認（true）" }] },
     ],
   },
   {
     category: "Pipelines（CRUD）",
     color: "#7C98B6",
     tools: [
-      { name: "pipeline_list", desc: "パイプライン一覧", icon: "🔧", api: "GET /crm/v3/pipelines/{objectType}", params: [{ name: "objectType", required: true, desc: "deals または tickets" }] },
+      { name: "pipeline_list", desc: "パイプライン一覧", icon: "🔧", api: "GET /crm/v3/pipelines/{objectType}", params: [{ name: "objectType", required: true, desc: "deals / tickets" }] },
       { name: "pipeline_create", desc: "パイプライン作成", icon: "🔨", api: "POST /crm/v3/pipelines/{objectType}", params: [{ name: "objectType", required: true, desc: "deals / tickets" }, { name: "label", required: true, desc: "パイプライン名" }, { name: "stages", required: true, desc: "ステージ定義" }] },
       { name: "pipeline_update", desc: "パイプライン更新", icon: "🔄", api: "PATCH /crm/v3/pipelines/{objectType}/{id}", params: [{ name: "objectType", required: true, desc: "deals / tickets" }, { name: "pipelineId", required: true, desc: "パイプライン ID" }] },
     ],
@@ -119,17 +155,22 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     category: "Line Items（v3）",
     color: "#F2545B",
     tools: [
-      { name: "lineitem_search", desc: "明細行検索", icon: "🔎", api: "POST /crm/v3/objects/line_items/search", params: [{ name: "query", required: false, desc: "検索キーワード" }, { name: "filterGroups", required: false, desc: "フィルター条件" }] },
-      { name: "lineitem_create", desc: "明細行作成", icon: "➕", api: "POST /crm/v3/objects/line_items", params: [{ name: "name", required: true, desc: "名前" }, { name: "quantity", required: false, desc: "数量" }, { name: "price", required: false, desc: "単価" }, { name: "dealId", required: false, desc: "紐付け取引 ID" }] },
-      { name: "lineitem_update", desc: "明細行更新", icon: "✏️", api: "PATCH /crm/v3/objects/line_items/{id}", params: [{ name: "lineItemId", required: true, desc: "Line Item ID" }, { name: "properties", required: true, desc: "更新プロパティ" }] },
+      { name: "lineitem_search", desc: "明細行検索", icon: "🔎", api: "POST /crm/v3/objects/line_items/search", params: [{ name: "query", required: false, desc: "検索キーワード" }] },
+      { name: "lineitem_get", desc: "明細行詳細取得", icon: "📋", api: "GET /crm/v3/objects/line_items/{id}", params: [{ name: "lineItemId", required: true, desc: "明細行 ID" }] },
+      { name: "lineitem_create", desc: "明細行作成", icon: "➕", api: "POST /crm/v3/objects/line_items", params: [{ name: "name", required: true, desc: "名前" }, { name: "dealId", required: false, desc: "紐付け取引 ID" }] },
+      { name: "lineitem_update", desc: "明細行更新", icon: "✏️", api: "PATCH /crm/v3/objects/line_items/{id}", params: [{ name: "lineItemId", required: true, desc: "明細行 ID" }] },
+      { name: "lineitem_delete", desc: "明細行削除", icon: "🗑", api: "DELETE /crm/v3/objects/line_items/{id}", params: [{ name: "lineItemId", required: true, desc: "明細行 ID" }, { name: "confirm", required: true, desc: "削除確認（true）" }] },
     ],
   },
   {
     category: "Products（v3）",
     color: "#00BDA5",
     tools: [
-      { name: "product_search", desc: "商品検索", icon: "🛍", api: "POST /crm/v3/objects/products/search", params: [{ name: "query", required: false, desc: "検索キーワード" }, { name: "filterGroups", required: false, desc: "フィルター条件" }] },
-      { name: "product_create", desc: "商品登録", icon: "📦", api: "POST /crm/v3/objects/products", params: [{ name: "name", required: true, desc: "商品名" }, { name: "price", required: false, desc: "価格" }, { name: "hs_sku", required: false, desc: "SKU" }] },
+      { name: "product_search", desc: "商品検索", icon: "🛍", api: "POST /crm/v3/objects/products/search", params: [{ name: "query", required: false, desc: "検索キーワード" }] },
+      { name: "product_get", desc: "商品詳細取得", icon: "📦", api: "GET /crm/v3/objects/products/{id}", params: [{ name: "productId", required: true, desc: "商品 ID" }] },
+      { name: "product_create", desc: "商品登録", icon: "➕", api: "POST /crm/v3/objects/products", params: [{ name: "name", required: true, desc: "商品名" }] },
+      { name: "product_update", desc: "商品更新", icon: "✏️", api: "PATCH /crm/v3/objects/products/{id}", params: [{ name: "productId", required: true, desc: "商品 ID" }, { name: "properties", required: true, desc: "更新プロパティ" }] },
+      { name: "product_delete", desc: "商品削除", icon: "🗑", api: "DELETE /crm/v3/objects/products/{id}", params: [{ name: "productId", required: true, desc: "商品 ID" }, { name: "confirm", required: true, desc: "削除確認（true）" }] },
     ],
   },
   {
@@ -137,9 +178,9 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     color: "#FF8F59",
     tools: [
       { name: "cms_blog_list", desc: "ブログ記事一覧", icon: "📝", api: "GET /cms/v3/blogs/posts", params: [{ name: "limit", required: false, desc: "件数" }] },
-      { name: "cms_blog_update", desc: "ブログ記事更新", icon: "✍️", api: "PATCH /cms/v3/blogs/posts/{id}", params: [{ name: "postId", required: true, desc: "記事 ID" }, { name: "name", required: false, desc: "タイトル" }, { name: "postBody", required: false, desc: "本文（HTML）" }, { name: "state", required: false, desc: "DRAFT / PUBLISHED" }] },
+      { name: "cms_blog_update", desc: "ブログ記事更新", icon: "✍️", api: "PATCH /cms/v3/blogs/posts/{id}", params: [{ name: "postId", required: true, desc: "記事 ID" }] },
       { name: "cms_page_list", desc: "ページ一覧", icon: "📄", api: "GET /cms/v3/pages/{type}", params: [{ name: "pageType", required: true, desc: "landing-pages / site-pages" }] },
-      { name: "cms_page_update", desc: "ページ更新", icon: "🖊", api: "PATCH /cms/v3/pages/{type}/{id}", params: [{ name: "pageType", required: true, desc: "landing-pages / site-pages" }, { name: "pageId", required: true, desc: "ページ ID" }, { name: "name", required: false, desc: "ページ名" }, { name: "state", required: false, desc: "DRAFT / PUBLISHED" }] },
+      { name: "cms_page_update", desc: "ページ更新", icon: "🖊", api: "PATCH /cms/v3/pages/{type}/{id}", params: [{ name: "pageType", required: true, desc: "landing-pages / site-pages" }, { name: "pageId", required: true, desc: "ページ ID" }] },
     ],
   },
 ];
@@ -463,7 +504,7 @@ export default function Home() {
         <div className="hs-section__label"><Sprocket size={14} /> TECH SPECS</div>
         <h2 className="hs-section__title">技術仕様</h2>
         <div className="hs-specs">
-          {[{l:"Framework",v:"Next.js 15"},{l:"Transport",v:"Streamable HTTP"},{l:"Protocol",v:"MCP 2025-03-26"},{l:"Auth",v:"2 Modes"},{l:"API",v:"CRM v3 + CMS v3 + Automation v4"},{l:"Hosting",v:"Vercel"}].map((s) => (
+          {[{l:"Framework",v:"Next.js 15"},{l:"Transport",v:"Streamable HTTP"},{l:"Protocol",v:"MCP 2025-03-26"},{l:"Auth",v:"2 Modes"},{l:"API",v:"CRM v3 + Associations v4 + CMS v3 + Automation v4"},{l:"Hosting",v:"Vercel"}].map((s) => (
             <div key={s.l} className="hs-spec"><div className="hs-spec__label">{s.l}</div><div className="hs-spec__value">{s.v}</div></div>
           ))}
         </div>
