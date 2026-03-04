@@ -34,7 +34,13 @@ export interface HubSpotEnrollmentCriteria {
 // ── API レスポンス型 ──
 
 export interface HubSpotFlowListResponse {
-  flows: HubSpotFlow[];
+  results: HubSpotFlow[];
+  paging?: {
+    next?: {
+      after: string;
+      link: string;
+    };
+  };
 }
 
 export interface HubSpotBatchReadResponse {
