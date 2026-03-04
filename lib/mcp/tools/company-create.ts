@@ -6,7 +6,7 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerCompanyCreate(server: McpServer) {
   server.tool(
     "company_create",
-    `HubSpot に新しい会社レコードを作成する。nameは推奨。
+    `HubSpot に新しい会社レコードを作成する。nameは推奨。associationsで作成と同時にコンタクト・取引等への関連付けも可能。
 
 返却: 作成された会社のID, プロパティ, URL。
 additionalPropertiesでカスタムプロパティも設定可能。industryはHubSpot定義の列挙値のみ（例: COMPUTER_SOFTWARE, INFORMATION_TECHNOLOGY_AND_SERVICES）。`,

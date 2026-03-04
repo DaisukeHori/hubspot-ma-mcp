@@ -6,7 +6,7 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerTicketCreate(server: McpServer) {
   server.tool(
     "ticket_create",
-    `HubSpot に新しいチケットを作成する。subjectは必須。hs_pipelineとhs_pipeline_stageも多くの環境で必須（pipeline_listツールで確認）。
+    `HubSpot に新しいチケットを作成する。subjectは必須。hs_pipelineとhs_pipeline_stageも多くの環境で必須（pipeline_listツールで確認）。associationsで作成と同時にコンタクト・会社等への関連付けも可能。
 
 返却: 作成されたチケットのID, プロパティ, URL。
 additionalPropertiesでカスタムプロパティも設定可能。`,

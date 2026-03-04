@@ -6,7 +6,7 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerContactCreate(server: McpServer) {
   server.tool(
     "contact_create",
-    `HubSpot に新しいコンタクトを作成する。emailは推奨（重複判定キー）。既にあるメールアドレスと重複するとエラー。
+    `HubSpot に新しいコンタクトを作成する。emailは推奨（重複判定キー）。既にあるメールアドレスと重複するとエラー。associationsで作成と同時に会社・取引等への関連付けも可能。
 
 返却: 作成されたコンタクトのID, プロパティ, URL。
 additionalPropertiesでカスタムプロパティも設定可能（properties_listツールでプロパティ名を確認）。`,

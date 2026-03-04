@@ -6,7 +6,7 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerDealCreate(server: McpServer) {
   server.tool(
     "deal_create",
-    `HubSpot に新しい取引（Deal）を作成する。dealnameは必須。
+    `HubSpot に新しい取引（Deal）を作成する。dealnameは必須。associationsで作成と同時にコンタクト・会社等への関連付けも可能。
 
 返却: 作成された取引のID, プロパティ, URL。
 dealstageはpipeline_listツールで取得したステージIDを指定。additionalPropertiesでカスタムプロパティも設定可能。`,
