@@ -11,7 +11,7 @@ export function registerContactSearch(server: McpServer) {
 返却: 一致するコンタクトの配列（ID, プロパティ, 作成日, 更新日）。totalで総件数も返る。propertyName: 'associations.contact'等で関連レコード検索も可能。\n\n制約: 最大5 filterGroups×各6 filters（合計18 filters）、総結果上限10,000件。
 ページネーション: afterに前回レスポンスのカーソルを指定して次ページ取得。`,
     {
-      query: z.string().optional().describe("フリーテキスト検索キーワード。firstname, lastname, email, phone, company, mobilephone, fax等を横断検索。filterGroupsと併用可能"),
+      query: z.string().optional().describe("フリーテキスト検索キーワード。firstname, lastname, email, phone, hs_additional_emails, fax, mobilephone, company, hs_marketable_until_renewalを横断検索。filterGroupsと併用可能"),
       filterGroups: z
         .array(
           z.object({

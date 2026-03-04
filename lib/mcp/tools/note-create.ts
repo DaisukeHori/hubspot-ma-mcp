@@ -8,7 +8,7 @@ export function registerNoteCreate(server: McpServer) {
     "note_create",
     "HubSpot メモを作成する。コンタクト・会社・取引等への関連付けも可能。",
     {
-      body: z.string().describe("メモの本文（HTML可）"),
+      body: z.string().describe("メモの本文（HTML可）。hs_attachment_idsプロパティでファイル添付も可能（ファイルIDをセミコロン区切り）"),
       timestamp: z.string().optional().describe("タイムスタンプ（ISO8601）。省略時は現在時刻"),
       ownerId: z.string().optional().describe("担当者のHubSpotユーザーID（数値文字列）。HubSpot管理画面のユーザー設定で確認可能"),
       associations: z

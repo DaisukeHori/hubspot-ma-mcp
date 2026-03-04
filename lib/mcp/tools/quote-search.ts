@@ -7,7 +7,7 @@ export function registerQuoteSearch(server: McpServer) {
   "quote_search",
   "HubSpotの見積もり（Quote）を検索する。Quotes APIは読み取り専用（作成・更新・削除はHubSpot UI上のみ）。返却値: total, results（hs_title, hs_status, hs_expiration_date, hs_public_url_key等）, paging。制約: 最大5 filterGroups×各6 filters、総結果上限10,000件。",
   {
-    query: z.string().optional().describe("フリーテキスト検索キーワード。hs_title, hs_sender_firstname, hs_sender_lastname, hs_sender_email, hs_quote_number等を横断検索。filterGroupsと併用可能"),
+    query: z.string().optional().describe("フリーテキスト検索キーワード。hs_sender_firstname, hs_sender_lastname, hs_proposal_slug, hs_title, hs_sender_company_name, hs_sender_email, hs_quote_number, hs_public_url_keyを横断検索。filterGroupsと併用可能"),
     filterGroups: z.array(z.object({
       filters: z.array(z.object({
         propertyName: z.string().describe("フィルタ対象プロパティ名（例: hs_title, hs_status, hs_expiration_date, hs_quote_amount）"),

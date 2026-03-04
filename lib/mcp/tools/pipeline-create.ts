@@ -16,7 +16,7 @@ export function registerPipelineCreate(server: McpServer) {
         label: z.string().describe("ステージ名"),
         displayOrder: z.number().describe("表示順"),
         metadata: z.record(z.string()).optional().describe("メタデータ（例: { \"probability\": \"0.5\", \"isClosed\": \"false\" }）"),
-      })).describe("ステージ定義の配列。各要素: {label: ステージ名, displayOrder: 表示順, metadata:{probability: 成約確率0.0-1.0(deals用)}}"),
+      })).describe("ステージ定義の配列。各要素: {label: ステージ名, displayOrder: 表示順, metadata:{probability: 成約確率0.0-1.0(deals必須), ticketState: OPEN/CLOSED(tickets用)}}"),
     },
     async ({ objectType, label, displayOrder, stages }) => {
       const stagesWithMeta = stages.map(s => ({

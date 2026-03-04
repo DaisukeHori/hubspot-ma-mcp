@@ -6,7 +6,7 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerTicketDelete(server: McpServer) {
   server.tool(
     "ticket_delete",
-    "HubSpot チケットを削除する（ゴミ箱へ移動）。復元可能。",
+    "HubSpot チケットを削除する（ゴミ箱へ移動）。confirm=trueが必須。アーカイブされ、一定期間はゴミ箱から復元可能。",
     {
       ticketId: z.string().describe("チケットレコードID（数値文字列）。ticket_searchやticket_createの返却値のidフィールドから取得"),
       confirm: z.literal(true).describe("削除確認（true を指定）"),

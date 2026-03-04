@@ -7,7 +7,7 @@ export function registerEmailCreate(server: McpServer) {
   "email_create",
   "新しいメールエンゲージメントを作成する。返却値: id, properties, createdAt。associationsで既存レコードに紐付け可能。",
   {
-    properties: z.record(z.string()).describe("メールのプロパティ（キー:値）。主要プロパティ: hs_email_subject, hs_email_text, hs_email_status, hs_email_direction。プロパティ名はproperties_listツールで確認可能"),
+    properties: z.record(z.string()).describe("メールのプロパティ（キー:値）。hs_timestampは必須（ISO8601/Unixミリ秒）。主要プロパティ: hs_email_subject(件名), hs_email_text(本文), hs_email_status(SENT等), hs_email_direction(EMAIL), hs_email_headers(JSON文字列: {from:{email,firstName,lastName},to:[{email,firstName,lastName}],cc:[],bcc:[]}), hubspot_owner_id(担当者ID)"),
     associations: z.array(z.object({
       to: z.object({ id: z.string().describe("関連先レコードID") }).describe("関連先レコード"),
       types: z.array(z.object({
