@@ -27,10 +27,14 @@ export function registerContactSearch(server: McpServer) {
         .optional()
         .describe("高度なフィルター条件（OR条件の配列。各グループ内のfiltersはAND結合）。例: [{filters:[{propertyName:'email',operator:'CONTAINS_TOKEN',value:'@example.com'}]}]"),
       properties: z.array(z.string()).optional().describe("取得するプロパティ名の配列"),
-      limit: z.number().min(1).max(100).optional().describe("取得件数（デフォルト10、最大100）"),
+      limit: z.number().min(1).max(200).optional().describe("取得件数（デフォルト10、最大200）"),
+      sorts: z.array(z.object({
+        propertyName: z.string().describe("ソート対象プロパティ名（例: createdate, lastmodifieddate）"),
+        direction: z.enum(["ASCENDING", "DESCENDING"]).describe("ソート方向: ASCENDING（昇順）/ DESCENDING（降順）"),
+      })).optional().describe("ソート条件（1つのみ指定可能）。省略時はcreatedate昇順"),
       after: z.string().optional().describe("ページネーション用カーソル（前回レスポンスのpaging.next.afterの値を指定）"),
     },
-    async ({ query, filterGroups, properties, limit, after }) => {
+    async ({ query, filterGroups, properties, limit, after, sorts }) => {
       try {
         const defaultProps = properties ?? [
           "email", "firstname", "lastname", "company", "phone",

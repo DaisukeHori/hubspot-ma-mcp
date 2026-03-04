@@ -1,6 +1,6 @@
 /**
  * MCP サーバー初期化
- * 全ツールを一括登録する（59 tools）
+ * 全ツールを一括登録する（78 tools）
  */
 
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -89,6 +89,35 @@ import { registerCmsBlogList } from "./tools/cms-blog-list";
 import { registerCmsBlogUpdate } from "./tools/cms-blog-update";
 import { registerCmsPageList } from "./tools/cms-page-list";
 import { registerCmsPageUpdate } from "./tools/cms-page-update";
+// ── Owners ──
+import { registerOwnerList } from "./tools/owner-list";
+import { registerOwnerGet } from "./tools/owner-get";
+
+// ── Emails（Engagements）──
+import { registerEmailSearch } from "./tools/email-search";
+import { registerEmailGet } from "./tools/email-get";
+import { registerEmailCreate } from "./tools/email-create";
+import { registerEmailUpdate } from "./tools/email-update";
+import { registerEmailDelete } from "./tools/email-delete";
+
+// ── Meetings（Engagements）──
+import { registerMeetingSearch } from "./tools/meeting-search";
+import { registerMeetingGet } from "./tools/meeting-get";
+import { registerMeetingCreate } from "./tools/meeting-create";
+import { registerMeetingUpdate } from "./tools/meeting-update";
+import { registerMeetingDelete } from "./tools/meeting-delete";
+
+// ── Calls（Engagements）──
+import { registerCallSearch } from "./tools/call-search";
+import { registerCallGet } from "./tools/call-get";
+import { registerCallCreate } from "./tools/call-create";
+import { registerCallUpdate } from "./tools/call-update";
+import { registerCallDelete } from "./tools/call-delete";
+
+// ── Quotes ──
+import { registerQuoteSearch } from "./tools/quote-search";
+import { registerQuoteGet } from "./tools/quote-get";
+
 
 /**
  * MCP サーバーに全ツールを登録する
@@ -178,5 +207,34 @@ export function registerAllTools(server: McpServer) {
   registerCmsBlogUpdate(server);
   registerCmsPageList(server);
   registerCmsPageUpdate(server);
+
+  // Owners（2 tools）
+  registerOwnerList(server);
+  registerOwnerGet(server);
+
+  // Emails（5 tools）
+  registerEmailSearch(server);
+  registerEmailGet(server);
+  registerEmailCreate(server);
+  registerEmailUpdate(server);
+  registerEmailDelete(server);
+
+  // Meetings（5 tools）
+  registerMeetingSearch(server);
+  registerMeetingGet(server);
+  registerMeetingCreate(server);
+  registerMeetingUpdate(server);
+  registerMeetingDelete(server);
+
+  // Calls（5 tools）
+  registerCallSearch(server);
+  registerCallGet(server);
+  registerCallCreate(server);
+  registerCallUpdate(server);
+  registerCallDelete(server);
+
+  // Quotes（2 tools）
+  registerQuoteSearch(server);
+  registerQuoteGet(server);
 }
 

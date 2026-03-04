@@ -11,7 +11,7 @@ export function registerContactCreate(server: McpServer) {
 返却: 作成されたコンタクトのID, プロパティ, URL。
 additionalPropertiesでカスタムプロパティも設定可能（properties_listツールでプロパティ名を確認）。`,
     {
-      email: z.string().describe("メールアドレス（必須）"),
+      email: z.string().optional().describe("メールアドレス（HubSpotの重複判定キー。推奨だがAPI上は任意）"),
       firstname: z.string().optional().describe("名（例: '太郎'）"),
       lastname: z.string().optional().describe("姓（例: '山田'）"),
       phone: z.string().optional().describe("電話番号（例: '+81-3-1234-5678'）"),

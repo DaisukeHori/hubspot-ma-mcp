@@ -125,7 +125,7 @@ export interface CrmProperty {
 
 // ── CRM 汎用操作 ──
 
-export type ObjectType = "contacts" | "companies" | "deals" | "tickets" | "line_items" | "products" | "notes" | "tasks";
+export type ObjectType = "contacts" | "companies" | "deals" | "tickets" | "line_items" | "products" | "notes" | "tasks" | "emails" | "meetings" | "calls" | "quotes";
 
 export async function crmSearch(
   objectType: ObjectType,
@@ -136,16 +136,20 @@ export async function crmSearch(
       propertyName: string;
       operator: string;
       value?: string;
+      values?: string[];
+      highValue?: string;
     }>;
   }>,
   limit: number = 10,
-  after?: string
+  after?: string,
+  sorts?: Array<{ propertyName: string; direction: string }>
 ): Promise<CrmSearchResponse> {
   const body: Record<string, unknown> = { limit };
   if (query) body.query = query;
   if (properties?.length) body.properties = properties;
   if (filterGroups?.length) body.filterGroups = filterGroups;
   if (after) body.after = after;
+  if (sorts?.length) body.sorts = sorts;
 
   return fetchWithRetry<CrmSearchResponse>(
     `${BASE_URL}/crm/v3/objects/${objectType}/search`,
@@ -577,6 +581,43 @@ export async function removeAssociationLabels(
         ],
       }),
     }
+  );
+}
+
+
+// ── Owners API ──
+
+export interface Owner {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  userId: number;
+  createdAt: string;
+  updatedAt: string;
+  archived: boolean;
+  teams?: Array<{ id: string; name: string; primary: boolean }>;
+}
+
+export async function listOwners(
+  limit: number = 100,
+  after?: string,
+  email?: string
+): Promise<{ results: Owner[]; paging?: { next?: { after: string } } }> {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (after) params.set("after", after);
+  if (email) params.set("email", email);
+
+  return fetchWithRetry(
+    `${BASE_URL}/crm/v3/owners?${params.toString()}`,
+    { method: "GET", headers: getHeaders() }
+  );
+}
+
+export async function getOwner(ownerId: string): Promise<Owner> {
+  return fetchWithRetry<Owner>(
+    `${BASE_URL}/crm/v3/owners/${ownerId}`,
+    { method: "GET", headers: getHeaders() }
   );
 }
 

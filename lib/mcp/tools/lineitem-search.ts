@@ -17,15 +17,21 @@ export function registerLineItemSearch(server: McpServer) {
         filters: z.array(z.object({
           propertyName: z.string().describe("フィルタ対象プロパティ名（例: name, quantity, price, hs_product_id）"),
           operator: z.string().describe("比較演算子: EQ, NEQ, LT, LTE, GT, GTE, CONTAINS_TOKEN, HAS_PROPERTY, NOT_HAS_PROPERTY"),
-          value: z.string().optional().describe("比較値"),
+          value: z.string().optional().describe("比較値（EQ/NEQ/LT/GT等で使用）"),
+                values: z.array(z.string()).optional().describe("値の配列（IN/NOT_IN演算子用。値は小文字必須）"),
+                highValue: z.string().optional().describe("範囲上限値（BETWEEN演算子用。valueが下限、highValueが上限）"),
         })).describe("AND条件フィルタの配列"),
       })).optional().describe("高度なフィルター条件（OR条件の配列。各グループ内のfiltersはAND結合）"),
       properties: z.array(z.string()).optional().describe("取得するプロパティ名の配列（例: ['name','quantity']）。省略時はデフォルトプロパティのみ"),
-      limit: z.number().optional().describe("取得件数（デフォルト10、最大100）"),
+      limit: z.number().optional().describe("取得件数（デフォルト10、最大200）"),
+      sorts: z.array(z.object({
+        propertyName: z.string().describe("ソート対象プロパティ名（例: createdate, lastmodifieddate）"),
+        direction: z.enum(["ASCENDING", "DESCENDING"]).describe("ソート方向: ASCENDING（昇順）/ DESCENDING（降順）"),
+      })).optional().describe("ソート条件（1つのみ指定可能）。省略時はcreatedate昇順"),
       after: z.string().optional().describe("ページネーション"),
     },
-    async ({ query, filterGroups, properties, limit, after }) => {
-      const result = await crmSearch("line_items", query || "", properties || DEFAULT_PROPS, filterGroups, limit || 10, after);
+    async ({ query, filterGroups, properties, limit, after, sorts }) => {
+      const result = await crmSearch("line_items", query || "", properties || DEFAULT_PROPS, filterGroups, limit || 10, after, sorts);
       return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
     }
   );
