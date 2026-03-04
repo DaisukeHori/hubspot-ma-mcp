@@ -262,6 +262,16 @@ export async function updatePipeline(
   );
 }
 
+export async function deletePipeline(
+  objectType: "deals" | "tickets",
+  pipelineId: string
+): Promise<void> {
+  return fetchWithRetry<void>(
+    `${BASE_URL}/crm/v3/pipelines/${objectType}/${pipelineId}`,
+    { method: "DELETE", headers: getHeaders() }
+  );
+}
+
 // ── プロパティ ──
 
 export async function listProperties(

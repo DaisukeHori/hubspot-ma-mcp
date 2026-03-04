@@ -1,6 +1,6 @@
 /**
  * MCP サーバー初期化
- * 全ツールを一括登録する（78 tools）
+ * 全ツールを一括登録する（81 tools）
  */
 
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -51,6 +51,7 @@ import { registerPropertyDelete } from "./tools/property-delete";
 import { registerPipelineList } from "./tools/pipeline-list";
 import { registerPipelineCreate } from "./tools/pipeline-create";
 import { registerPipelineUpdate } from "./tools/pipeline-update";
+import { registerPipelineDelete } from "./tools/pipeline-delete";
 
 // ── Line Items ──
 import { registerLineItemSearch } from "./tools/lineitem-search";
@@ -71,12 +72,14 @@ import { registerNoteSearch } from "./tools/note-search";
 import { registerNoteGet } from "./tools/note-get";
 import { registerNoteCreate } from "./tools/note-create";
 import { registerNoteUpdate } from "./tools/note-update";
+import { registerNoteDelete } from "./tools/note-delete";
 
 // ── Tasks（Engagements）──
 import { registerTaskSearch } from "./tools/task-search";
 import { registerTaskGet } from "./tools/task-get";
 import { registerTaskCreate } from "./tools/task-create";
 import { registerTaskUpdate } from "./tools/task-update";
+import { registerTaskDelete } from "./tools/task-delete";
 
 // ── Associations ──
 import { registerAssociationList } from "./tools/association-list";
@@ -165,10 +168,11 @@ export function registerAllTools(server: McpServer) {
   registerPropertyUpdate(server);
   registerPropertyDelete(server);
 
-  // Pipelines（3 tools）
+  // Pipelines（4 tools）
   registerPipelineList(server);
   registerPipelineCreate(server);
   registerPipelineUpdate(server);
+  registerPipelineDelete(server);
 
   // Line Items（5 tools）
   registerLineItemSearch(server);
@@ -184,17 +188,19 @@ export function registerAllTools(server: McpServer) {
   registerProductUpdate(server);
   registerProductDelete(server);
 
-  // Notes（4 tools）
+  // Notes（5 tools）
   registerNoteSearch(server);
   registerNoteGet(server);
   registerNoteCreate(server);
   registerNoteUpdate(server);
+  registerNoteDelete(server);
 
-  // Tasks（4 tools）
+  // Tasks（5 tools）
   registerTaskSearch(server);
   registerTaskGet(server);
   registerTaskCreate(server);
   registerTaskUpdate(server);
+  registerTaskDelete(server);
 
   // Associations（4 tools）
   registerAssociationList(server);

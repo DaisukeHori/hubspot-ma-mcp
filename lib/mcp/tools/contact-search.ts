@@ -8,10 +8,10 @@ export function registerContactSearch(server: McpServer) {
     "contact_search",
     `HubSpot コンタクトを検索する。キーワード検索またはフィルター条件で絞り込み可能。
 
-返却: 一致するコンタクトの配列（ID, プロパティ, 作成日, 更新日）。totalで総件数も返る。制約: 最大5 filterGroups×各6 filters（合計18 filters）、総結果上限10,000件。
+返却: 一致するコンタクトの配列（ID, プロパティ, 作成日, 更新日）。totalで総件数も返る。propertyName: 'associations.contact'等で関連レコード検索も可能。\n\n制約: 最大5 filterGroups×各6 filters（合計18 filters）、総結果上限10,000件。
 ページネーション: afterに前回レスポンスのカーソルを指定して次ページ取得。`,
     {
-      query: z.string().optional().describe("フリーテキスト検索キーワード。HubSpotが名前・メール・電話番号等の主要フィールドを横断検索する。filterGroupsと併用可能"),
+      query: z.string().optional().describe("フリーテキスト検索キーワード。firstname, lastname, email, phone, company, mobilephone, fax等を横断検索。filterGroupsと併用可能"),
       filterGroups: z
         .array(
           z.object({

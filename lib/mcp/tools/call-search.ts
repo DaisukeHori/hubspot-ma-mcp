@@ -7,7 +7,7 @@ export function registerCallSearch(server: McpServer) {
   "call_search",
   "HubSpotの通話エンゲージメントを検索する。返却値: total, results（hs_createdate, hs_lastmodifieddate, hs_object_id）, paging。制約: 最大5 filterGroups×各6 filters（合計18 filters）、総結果上限10,000件。",
   {
-    query: z.string().optional().describe("フリーテキスト検索キーワード。通話の主要フィールドを横断検索"),
+    query: z.string().optional().describe("フリーテキスト検索キーワード。hs_call_title, hs_body_previewを横断検索。filterGroupsと併用可能。注意: hs_body_preview_htmlはフィルタ不可"),
     filterGroups: z.array(z.object({
       filters: z.array(z.object({
         propertyName: z.string().describe("フィルタ対象プロパティ名（例: hs_call_title, hs_call_body, hs_call_duration, hs_call_direction, hs_call_status）"),

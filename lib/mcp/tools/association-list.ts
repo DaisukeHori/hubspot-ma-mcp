@@ -6,10 +6,12 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerAssociationList(server: McpServer) {
   server.tool(
     "association_list",
-    `HubSpot レコードの関連付け一覧を取得する（方向あり: from→to）。
+    `HubSpot レコードの関連付け一覧を取得する（方向あり: from→to、v4 API使用）。
 
 結果には関連先レコードIDと、各関連に付いているラベル情報（category, typeId, label）が含まれる。
 ページネーション対応（after パラメータ）。
+
+注意: toObjectType="companies"の場合、v3ではプライマリ会社のみ返る。このツールはv4を使用するため全関連会社が返る。
 
 例: fromObjectType="contacts", fromObjectId="123", toObjectType="companies"
 → コンタクト123に紐づく全会社と、各関連のラベル（Primary, カスタムラベル等）を取得。`,

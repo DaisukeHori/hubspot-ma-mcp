@@ -7,7 +7,7 @@ export function registerEmailSearch(server: McpServer) {
   "email_search",
   "HubSpotのメールエンゲージメントを検索する。返却値: total, results（hs_createdate, hs_lastmodifieddate, hs_object_id）, paging。制約: 最大5 filterGroups×各6 filters（合計18 filters）、総結果上限10,000件。",
   {
-    query: z.string().optional().describe("フリーテキスト検索キーワード。メールの主要フィールドを横断検索"),
+    query: z.string().optional().describe("フリーテキスト検索キーワード。hs_email_subjectを横断検索。filterGroupsと併用可能。注意: hs_email_html, hs_body_preview, hs_body_preview_htmlはフィルタ不可"),
     filterGroups: z.array(z.object({
       filters: z.array(z.object({
         propertyName: z.string().describe("フィルタ対象プロパティ名（例: hs_email_subject, hs_email_text, hs_email_status, hs_email_direction）"),

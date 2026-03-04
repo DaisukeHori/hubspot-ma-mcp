@@ -5,13 +5,13 @@ import { crmSearch } from "@/lib/hubspot/crm-client";
 export function registerQuoteSearch(server: McpServer) {
   server.tool(
   "quote_search",
-  "HubSpotの見積もり（Quote）を検索する。返却値: total, results（hs_title, hs_status, hs_expiration_date, hs_public_url_key等）, paging。制約: 最大5 filterGroups×各6 filters、総結果上限10,000件。",
+  "HubSpotの見積もり（Quote）を検索する。Quotes APIは読み取り専用（作成・更新・削除はHubSpot UI上のみ）。返却値: total, results（hs_title, hs_status, hs_expiration_date, hs_public_url_key等）, paging。制約: 最大5 filterGroups×各6 filters、総結果上限10,000件。",
   {
-    query: z.string().optional().describe("フリーテキスト検索キーワード。見積もりタイトル等を横断検索"),
+    query: z.string().optional().describe("フリーテキスト検索キーワード。hs_title, hs_sender_firstname, hs_sender_lastname, hs_sender_email, hs_quote_number等を横断検索。filterGroupsと併用可能"),
     filterGroups: z.array(z.object({
       filters: z.array(z.object({
         propertyName: z.string().describe("フィルタ対象プロパティ名（例: hs_title, hs_status, hs_expiration_date, hs_quote_amount）"),
-        operator: z.string().describe("比較演算子: EQ, NEQ, LT, LTE, GT, GTE, CONTAINS_TOKEN, HAS_PROPERTY, NOT_HAS_PROPERTY, IN, NOT_IN, BETWEEN"),
+        operator: z.string().describe("比較演算子: EQ, NEQ, LT, LTE, GT, GTE, BETWEEN, IN, NOT_IN, HAS_PROPERTY, NOT_HAS_PROPERTY, CONTAINS_TOKEN, NOT_CONTAINS_TOKEN"),
         value: z.string().optional().describe("比較値"),
         values: z.array(z.string()).optional().describe("値の配列（IN/NOT_IN用。小文字必須）"),
         highValue: z.string().optional().describe("範囲上限値（BETWEEN用）"),
