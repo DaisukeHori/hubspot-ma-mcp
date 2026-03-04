@@ -510,14 +510,72 @@ export async function createAssociationLabel(
   fromObjectType: string,
   toObjectType: string,
   label: string,
-  name: string
+  name: string,
+  inverseLabel?: string
 ): Promise<{ results: AssociationLabel[] }> {
+  const body: Record<string, string> = { label, name };
+  if (inverseLabel) body.inverseLabel = inverseLabel;
   return fetchWithRetry<{ results: AssociationLabel[] }>(
     `${BASE_URL}/crm/v4/associations/${fromObjectType}/${toObjectType}/labels`,
     {
       method: "POST",
       headers: getHeaders(),
-      body: JSON.stringify({ label, name }),
+      body: JSON.stringify(body),
+    }
+  );
+}
+
+export async function updateAssociationLabel(
+  fromObjectType: string,
+  toObjectType: string,
+  associationTypeId: number,
+  label: string,
+  inverseLabel?: string
+): Promise<unknown> {
+  const body: Record<string, unknown> = { label, associationTypeId };
+  if (inverseLabel) body.inverseLabel = inverseLabel;
+  return fetchWithRetry<unknown>(
+    `${BASE_URL}/crm/v4/associations/${fromObjectType}/${toObjectType}/labels`,
+    {
+      method: "PUT",
+      headers: getHeaders(),
+      body: JSON.stringify(body),
+    }
+  );
+}
+
+export async function deleteAssociationLabel(
+  fromObjectType: string,
+  toObjectType: string,
+  associationTypeId: number
+): Promise<void> {
+  return fetchWithRetry<void>(
+    `${BASE_URL}/crm/v4/associations/${fromObjectType}/${toObjectType}/labels/${associationTypeId}`,
+    { method: "DELETE", headers: getHeaders() }
+  );
+}
+
+export async function removeAssociationLabels(
+  fromObjectType: string,
+  toObjectType: string,
+  fromId: string,
+  toId: string,
+  types: Array<{ associationCategory: string; associationTypeId: number }>
+): Promise<unknown> {
+  return fetchWithRetry<unknown>(
+    `${BASE_URL}/crm/v4/associations/${fromObjectType}/${toObjectType}/batch/labels/archive`,
+    {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify({
+        inputs: [
+          {
+            from: { id: fromId },
+            to: { id: toId },
+            types,
+          },
+        ],
+      }),
     }
   );
 }
