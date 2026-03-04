@@ -241,9 +241,12 @@ export default function Home() {
           ))}
         </div>
         <div className="hs-cta-banner">
-          <h3>自分のアカウントで試してみよう</h3>
-          <p>HubSpot Private Appを作成して、Bearer Tokenを設定するだけ。</p>
-          <a href="https://github.com/DaisukeHori/hubspot-ma-mcp" target="_blank" rel="noopener noreferrer" className="hs-btn hs-btn--primary">GitHubで詳細を見る →</a>
+          <h3>自分のサーバーをデプロイしよう</h3>
+          <p>ワンクリックで自分専用のMCPサーバーをVercelにデプロイ。HubSpot Private App トークンを入力するだけ。</p>
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+            <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp&env=HUBSPOT_ACCESS_TOKEN&envDescription=HubSpot%20Private%20App%20Token&envLink=https%3A%2F%2Fdevelopers.hubspot.com%2Fdocs%2Fapi%2Fprivate-apps&project-name=hubspot-ma-mcp&repository-name=hubspot-ma-mcp" target="_blank" rel="noopener noreferrer" className="hs-btn hs-btn--primary" style={{ fontSize: 15, padding: "12px 28px" }}>▲ Deploy with Vercel</a>
+            <a href="https://github.com/DaisukeHori/hubspot-ma-mcp" target="_blank" rel="noopener noreferrer" className="hs-btn" style={{ fontSize: 15, padding: "12px 28px", background: "rgba(255,255,255,0.1)", color: "white", border: "1px solid rgba(255,255,255,0.2)" }}>GitHub →</a>
+          </div>
         </div>
       </section>
 
