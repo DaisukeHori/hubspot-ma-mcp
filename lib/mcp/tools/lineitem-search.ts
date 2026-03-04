@@ -9,14 +9,14 @@ export function registerLineItemSearch(server: McpServer) {
     "lineitem_search",
     `HubSpot 明細行（Line Item）を検索する。キーワード検索またはフィルター条件で絞り込み可能。
 
-返却: 一致する明細行の配列（ID, プロパティ, 作成日, 更新日）。totalで総件数も返る。
+返却: 一致する明細行の配列（ID, プロパティ, 作成日, 更新日）。totalで総件数も返る。制約: 最大5 filterGroups×各6 filters（合計18 filters）、総結果上限10,000件。
 ページネーション: afterに前回レスポンスのカーソルを指定して次ページ取得。`,
     {
       query: z.string().optional().describe("フリーテキスト検索キーワード。明細行名等を横断検索"),
       filterGroups: z.array(z.object({
         filters: z.array(z.object({
           propertyName: z.string().describe("フィルタ対象プロパティ名（例: name, quantity, price, hs_product_id）"),
-          operator: z.string().describe("比較演算子: EQ, NEQ, LT, LTE, GT, GTE, CONTAINS_TOKEN, HAS_PROPERTY, NOT_HAS_PROPERTY"),
+          operator: z.string().describe("比較演算子: EQ, NEQ, LT, LTE, GT, GTE, CONTAINS_TOKEN, NOT_CONTAINS_TOKEN, HAS_PROPERTY, NOT_HAS_PROPERTY, IN, NOT_IN, BETWEEN"),
           value: z.string().optional().describe("比較値（EQ/NEQ/LT/GT等で使用）"),
                 values: z.array(z.string()).optional().describe("値の配列（IN/NOT_IN演算子用。値は小文字必須）"),
                 highValue: z.string().optional().describe("範囲上限値（BETWEEN演算子用。valueが下限、highValueが上限）"),
