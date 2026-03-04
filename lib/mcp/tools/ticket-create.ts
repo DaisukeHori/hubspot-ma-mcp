@@ -6,15 +6,18 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerTicketCreate(server: McpServer) {
   server.tool(
     "ticket_create",
-    "HubSpot に新しいチケットを作成する。",
+    `HubSpot に新しいチケットを作成する。subjectは必須。hs_pipelineとhs_pipeline_stageも多くの環境で必須（pipeline_listツールで確認）。
+
+返却: 作成されたチケットのID, プロパティ, URL。
+additionalPropertiesでカスタムプロパティも設定可能。`,
     {
       subject: z.string().describe("件名（必須）"),
-      content: z.string().optional().describe("内容"),
+      content: z.string().optional().describe("チケットの内容（テキストまたはHTML）"),
       hs_pipeline: z.string().optional().describe("パイプライン ID"),
       hs_pipeline_stage: z.string().optional().describe("ステージ ID"),
       hs_ticket_priority: z.string().optional().describe("優先度（LOW, MEDIUM, HIGH）"),
       hubspot_owner_id: z.string().optional().describe("オーナー ID"),
-      additionalProperties: z.record(z.string()).optional(),
+      additionalProperties: z.record(z.string()).optional().describe("追加プロパティ（キー:値）。カスタムプロパティ名はproperties_listツールで確認可能"),
     },
     async ({ subject, content, hs_pipeline, hs_pipeline_stage, hs_ticket_priority, hubspot_owner_id, additionalProperties }) => {
       try {

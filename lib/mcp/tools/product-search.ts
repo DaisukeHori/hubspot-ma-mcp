@@ -7,7 +7,10 @@ const DEFAULT_PROPS = ["name", "description", "price", "hs_cost_of_goods_sold", 
 export function registerProductSearch(server: McpServer) {
   server.tool(
     "product_search",
-    "商品ライブラリ（Products）を検索する",
+    `HubSpot 商品（Product）を検索する。キーワード検索またはフィルター条件で絞り込み可能。
+
+返却: 一致する商品の配列（ID, プロパティ, 作成日, 更新日）。totalで総件数も返る。
+ページネーション: afterに前回レスポンスのカーソルを指定して次ページ取得。`,
     {
       query: z.string().optional().describe("検索キーワード"),
       filterGroups: z.array(z.object({

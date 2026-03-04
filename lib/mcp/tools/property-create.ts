@@ -13,7 +13,7 @@ export function registerPropertyCreate(server: McpServer) {
       type: z.string().describe("型: string / number / date / datetime / enumeration"),
       fieldType: z.string().describe("フィールド種別: text / textarea / number / date / select / checkbox / radio"),
       groupName: z.string().describe("プロパティグループ名"),
-      description: z.string().optional().describe("説明"),
+      description: z.string().optional().describe("プロパティの説明文（UIに表示される）"),
       hasUniqueValue: z.boolean().optional().describe("ユニーク値制約"),
       options: z.array(z.object({
         label: z.string(),

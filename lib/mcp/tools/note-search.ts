@@ -6,7 +6,10 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerNoteSearch(server: McpServer) {
   server.tool(
     "note_search",
-    "HubSpot メモ（ノート）を検索する。キーワードやフィルター条件で絞り込み可能。",
+    `HubSpot メモ（Note）を検索する。キーワード検索またはフィルター条件で絞り込み可能。
+
+返却: 一致するメモの配列（ID, hs_note_body, hs_timestamp等）。totalで総件数も返る。
+ページネーション対応。`,
     {
       query: z.string().optional().describe("検索キーワード"),
       filterGroups: z

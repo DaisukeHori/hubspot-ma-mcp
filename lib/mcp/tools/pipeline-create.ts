@@ -5,7 +5,9 @@ import { createPipeline } from "../../hubspot/crm-client";
 export function registerPipelineCreate(server: McpServer) {
   server.tool(
     "pipeline_create",
-    "取引またはチケットのパイプラインを新規作成する",
+    `HubSpot にパイプラインを新規作成する。取引（deals）またはチケット（tickets）用。ステージ定義が必須。
+
+返却: 作成されたパイプラインのID, label, stages。`,
     {
       objectType: z.enum(["deals", "tickets"]).describe("deals または tickets"),
       label: z.string().describe("パイプライン名"),

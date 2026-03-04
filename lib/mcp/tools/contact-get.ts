@@ -6,7 +6,10 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerContactGet(server: McpServer) {
   server.tool(
     "contact_get",
-    "HubSpot コンタクトを ID で取得する。",
+    `HubSpot コンタクトを1件取得する。IDを指定してプロパティと関連オブジェクトを取得。
+
+返却: コンタクトのID, 全プロパティ（またはproperties指定分）, 作成日, 更新日, アーカイブ状態。
+associations指定時は関連オブジェクトのID一覧も返る。`,
     {
       contactId: z.string().describe("コンタクト ID"),
       properties: z.array(z.string()).optional().describe("取得するプロパティ名の配列"),

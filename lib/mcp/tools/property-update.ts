@@ -5,7 +5,7 @@ import { updateProperty } from "../../hubspot/crm-client";
 export function registerPropertyUpdate(server: McpServer) {
   server.tool(
     "property_update",
-    "既存プロパティのラベル・説明・選択肢を更新する",
+    `HubSpot プロパティの定義を更新する。label、description、groupName、選択肢（options）の変更が可能。type, fieldType, nameは変更不可。`,
     {
       objectType: z.string().describe("対象オブジェクト"),
       propertyName: z.string().describe("プロパティ内部名"),

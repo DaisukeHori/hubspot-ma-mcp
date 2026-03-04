@@ -6,7 +6,7 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerLineItemDelete(server: McpServer) {
   server.tool(
     "lineitem_delete",
-    "HubSpot 明細行を削除する。",
+    `HubSpot 明細行を削除する。confirm=trueが必須。関連する取引からも自動的に解除される。`,
     {
       lineItemId: z.string().describe("明細行 ID"),
       confirm: z.literal(true).describe("削除確認（true を指定）"),

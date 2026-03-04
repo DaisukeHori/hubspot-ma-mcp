@@ -6,7 +6,7 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerProductDelete(server: McpServer) {
   server.tool(
     "product_delete",
-    "HubSpot 商品を削除する。",
+    `HubSpot 商品を削除する。confirm=trueが必須。この商品を参照している明細行は影響を受ける可能性あり。`,
     {
       productId: z.string().describe("商品 ID"),
       confirm: z.literal(true).describe("削除確認（true を指定）"),

@@ -6,7 +6,7 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerDealDelete(server: McpServer) {
   server.tool(
     "deal_delete",
-    "HubSpot 取引を削除する（ゴミ箱へ移動）。復元可能。",
+    `HubSpot 取引を削除する（ゴミ箱へ移動）。confirm=trueが必須。アーカイブされ、一定期間はゴミ箱から復元可能。`,
     {
       dealId: z.string().describe("取引 ID"),
       confirm: z.literal(true).describe("削除確認（true を指定）"),

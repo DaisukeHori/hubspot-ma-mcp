@@ -6,15 +6,18 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerDealCreate(server: McpServer) {
   server.tool(
     "deal_create",
-    "HubSpot に新しい取引（Deal）を作成する。",
+    `HubSpot に新しい取引（Deal）を作成する。dealnameは必須。
+
+返却: 作成された取引のID, プロパティ, URL。
+dealstageはpipeline_listツールで取得したステージIDを指定。additionalPropertiesでカスタムプロパティも設定可能。`,
     {
       dealname: z.string().describe("取引名（必須）"),
-      amount: z.string().optional().describe("金額"),
+      amount: z.string().optional().describe("金額（文字列。例: '1000000'）"),
       dealstage: z.string().optional().describe("取引ステージ ID"),
       pipeline: z.string().optional().describe("パイプライン ID（デフォルト: default）"),
       closedate: z.string().optional().describe("クローズ日（ISO8601）"),
       hubspot_owner_id: z.string().optional().describe("オーナー ID"),
-      additionalProperties: z.record(z.string()).optional(),
+      additionalProperties: z.record(z.string()).optional().describe("追加プロパティ（キー:値）。カスタムプロパティ名はproperties_listツールで確認可能"),
     },
     async ({ dealname, amount, dealstage, pipeline, closedate, hubspot_owner_id, additionalProperties }) => {
       try {

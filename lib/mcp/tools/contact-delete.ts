@@ -6,7 +6,9 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerContactDelete(server: McpServer) {
   server.tool(
     "contact_delete",
-    "HubSpot コンタクトを削除する（ゴミ箱へ移動）。復元可能。",
+    `HubSpot コンタクトを削除する（ゴミ箱へ移動）。完全削除ではなくアーカイブされる。confirm=trueが必須。
+
+削除後も一定期間はHubSpotのゴミ箱から復元可能。関連付け（association）は自動的に解除される。`,
     {
       contactId: z.string().describe("コンタクト ID"),
       confirm: z.literal(true).describe("削除確認（true を指定）"),

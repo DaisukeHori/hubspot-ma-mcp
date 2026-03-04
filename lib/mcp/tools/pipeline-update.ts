@@ -5,7 +5,7 @@ import { updatePipeline } from "../../hubspot/crm-client";
 export function registerPipelineUpdate(server: McpServer) {
   server.tool(
     "pipeline_update",
-    "パイプラインのラベル・ステージを更新する",
+    `HubSpot パイプラインを更新する。label, displayOrder, stagesの変更が可能。stagesを指定すると全ステージが置換される（既存ステージは削除される）。`,
     {
       objectType: z.enum(["deals", "tickets"]).describe("deals または tickets"),
       pipelineId: z.string().describe("パイプライン ID"),

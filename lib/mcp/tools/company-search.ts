@@ -6,15 +6,18 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerCompanySearch(server: McpServer) {
   server.tool(
     "company_search",
-    "HubSpot 会社を検索する。名前・ドメイン等で検索可能。",
+    `HubSpot 会社を検索する。キーワード検索またはフィルター条件で絞り込み可能。
+
+返却: 一致する会社の配列（ID, プロパティ, 作成日, 更新日）。totalで総件数も返る。
+ページネーション: afterに前回レスポンスのカーソルを指定して次ページ取得。`,
     {
       query: z.string().optional().describe("検索キーワード"),
       filterGroups: z
         .array(z.object({ filters: z.array(z.object({ propertyName: z.string(), operator: z.string(), value: z.string().optional() })) }))
-        .optional(),
-      properties: z.array(z.string()).optional(),
-      limit: z.number().min(1).max(100).optional(),
-      after: z.string().optional(),
+        .optional().describe("高度なフィルター条件。例: [{filters:[{propertyName:'domain',operator:'EQ',value:'example.com'}]}]。operator: EQ, NEQ, LT, GT, CONTAINS_TOKEN, HAS_PROPERTY 等"),
+      properties: z.array(z.string()).optional().describe("取得するプロパティ名の配列（例: ['name','domain','industry']）。省略時はデフォルトプロパティのみ"),
+      limit: z.number().min(1).max(100).optional().describe("取得件数（デフォルト10、最大100）"),
+      after: z.string().optional().describe("ページネーション用カーソル（前回レスポンスのpaging.next.afterの値）"),
     },
     async ({ query, filterGroups, properties, limit, after }) => {
       try {

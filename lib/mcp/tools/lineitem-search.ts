@@ -7,7 +7,10 @@ const DEFAULT_PROPS = ["name", "quantity", "price", "amount", "hs_product_id", "
 export function registerLineItemSearch(server: McpServer) {
   server.tool(
     "lineitem_search",
-    "Line Item（明細行）を検索する",
+    `HubSpot 明細行（Line Item）を検索する。キーワード検索またはフィルター条件で絞り込み可能。
+
+返却: 一致する明細行の配列（ID, プロパティ, 作成日, 更新日）。totalで総件数も返る。
+ページネーション: afterに前回レスポンスのカーソルを指定して次ページ取得。`,
     {
       query: z.string().optional().describe("検索キーワード"),
       filterGroups: z.array(z.object({

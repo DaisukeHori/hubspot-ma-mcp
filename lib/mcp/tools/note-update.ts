@@ -6,7 +6,7 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerNoteUpdate(server: McpServer) {
   server.tool(
     "note_update",
-    "HubSpot メモを更新する。",
+    `HubSpot メモのプロパティを更新する。主なプロパティ: hs_note_body（本文HTML）, hs_timestamp（タイムスタンプ）。指定したプロパティのみ上書き。`,
     {
       noteId: z.string().describe("メモ ID"),
       properties: z.record(z.string()).describe("更新するプロパティ（hs_note_body, hs_timestamp 等）"),

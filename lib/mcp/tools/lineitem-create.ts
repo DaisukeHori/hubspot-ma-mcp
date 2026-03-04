@@ -5,13 +5,16 @@ import { crmCreate } from "../../hubspot/crm-client";
 export function registerLineItemCreate(server: McpServer) {
   server.tool(
     "lineitem_create",
-    "Line Item（明細行）を新規作成し、取引に紐付ける",
+    `HubSpot に新しい明細行（Line Item）を作成する。nameは必須。取引への紐付けはdealIdまたはassociation_createで行う。
+
+返却: 作成された明細行のID, プロパティ, URL。
+商品ライブラリから紐付ける場合はhs_product_idを指定。`,
     {
       name: z.string().describe("明細行の名前"),
-      quantity: z.string().optional().describe("数量"),
-      price: z.string().optional().describe("単価"),
+      quantity: z.string().optional().describe("数量（文字列。例: '5'）"),
+      price: z.string().optional().describe("単価（文字列。例: '10000'）"),
       hs_product_id: z.string().optional().describe("商品 ID（商品ライブラリから紐付け）"),
-      description: z.string().optional().describe("説明"),
+      description: z.string().optional().describe("明細の説明テキスト"),
       dealId: z.string().optional().describe("紐付ける取引 ID"),
       additionalProperties: z.record(z.string()).optional().describe("追加プロパティ"),
     },

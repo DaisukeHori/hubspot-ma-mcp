@@ -5,7 +5,7 @@ import { crmUpdate } from "../../hubspot/crm-client";
 export function registerLineItemUpdate(server: McpServer) {
   server.tool(
     "lineitem_update",
-    "Line Item（明細行）を更新する",
+    `HubSpot 明細行のプロパティを更新する。指定したプロパティのみ上書き。プロパティ名はproperties_listツールで確認可能。`,
     {
       lineItemId: z.string().describe("Line Item ID"),
       properties: z.record(z.string()).describe("更新するプロパティ（キー:値）"),

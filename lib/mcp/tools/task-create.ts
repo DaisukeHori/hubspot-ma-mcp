@@ -11,7 +11,7 @@ export function registerTaskCreate(server: McpServer) {
       subject: z.string().describe("タスクの件名"),
       body: z.string().optional().describe("タスクの詳細（HTML可）"),
       status: z.enum(["NOT_STARTED", "IN_PROGRESS", "WAITING", "COMPLETED"]).optional().describe("ステータス（デフォルト NOT_STARTED）"),
-      priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional().describe("優先度"),
+      priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional().describe("優先度（NONE / LOW / MEDIUM / HIGH）"),
       taskType: z.enum(["TODO", "CALL", "EMAIL"]).optional().describe("タスクタイプ"),
       timestamp: z.string().optional().describe("期日（ISO8601）"),
       ownerId: z.string().optional().describe("担当者 ID"),

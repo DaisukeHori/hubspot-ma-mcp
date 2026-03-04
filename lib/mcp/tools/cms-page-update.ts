@@ -9,9 +9,9 @@ export function registerCmsPageUpdate(server: McpServer) {
     {
       pageType: z.enum(["landing-pages", "site-pages"]).describe("ページ種別"),
       pageId: z.string().describe("ページ ID"),
-      name: z.string().optional().describe("ページ名"),
+      name: z.string().optional().describe("ページ名（タイトル）"),
       slug: z.string().optional().describe("スラグ（URLパス）"),
-      state: z.enum(["DRAFT", "PUBLISHED"]).optional().describe("公開状態"),
+      state: z.enum(["DRAFT", "PUBLISHED"]).optional().describe("公開状態（DRAFT / PUBLISHED / SCHEDULED）"),
       htmlTitle: z.string().optional().describe("HTMLタイトル"),
       metaDescription: z.string().optional().describe("メタディスクリプション"),
       additionalUpdates: z.record(z.unknown()).optional().describe("その他の更新フィールド"),

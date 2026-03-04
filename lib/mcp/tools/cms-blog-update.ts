@@ -12,7 +12,7 @@ export function registerCmsBlogUpdate(server: McpServer) {
       postBody: z.string().optional().describe("記事本文（HTML）"),
       metaDescription: z.string().optional().describe("メタディスクリプション"),
       slug: z.string().optional().describe("スラグ（URLパス）"),
-      state: z.enum(["DRAFT", "PUBLISHED"]).optional().describe("公開状態"),
+      state: z.enum(["DRAFT", "PUBLISHED"]).optional().describe("公開状態（DRAFT / PUBLISHED / SCHEDULED）"),
       additionalUpdates: z.record(z.unknown()).optional().describe("その他の更新フィールド"),
     },
     async ({ postId, name, postBody, metaDescription, slug, state, additionalUpdates }) => {

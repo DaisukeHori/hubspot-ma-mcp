@@ -6,7 +6,10 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerTaskSearch(server: McpServer) {
   server.tool(
     "task_search",
-    "HubSpot タスクを検索する。キーワードやフィルター条件で絞り込み可能。",
+    `HubSpot タスクを検索する。キーワード検索またはフィルター条件で絞り込み可能。
+
+返却: 一致するタスクの配列（ID, hs_task_subject, hs_task_status, hs_task_priority等）。totalで総件数も返る。
+ページネーション対応。`,
     {
       query: z.string().optional().describe("検索キーワード"),
       filterGroups: z
