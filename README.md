@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  HubSpot CRM・ワークフロー・CMS を AI アシスタントから直接操作する MCP サーバー
+  HubSpot CRM・ワークフロー・メモ・タスク・関連付け・CMS を AI アシスタントから直接操作する MCP サーバー（58ツール）
 </p>
 
 <p align="center">
@@ -15,7 +15,7 @@
   <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/transport-Streamable_HTTP-A5F3FC?style=flat-square" alt="Transport" /></a>
   <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/auth-2_modes-FF7A59?style=flat-square" alt="Auth" /></a>
   <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/protocol-MCP_2025--03--26-FF7A59?style=flat-square" alt="Protocol" /></a>
-  <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/tools-35-FF7A59?style=flat-square" alt="Tools" /></a>
+  <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/tools-58-FF7A59?style=flat-square" alt="Tools" /></a>
   <a href="https://vercel.com"><img src="https://img.shields.io/badge/deployed_on-Vercel-000?style=flat-square&logo=vercel" alt="Vercel" /></a>
   <img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License" />
 </p>
@@ -51,6 +51,8 @@ https://hubspot-ma-mcp.vercel.app/api/mcp
 | `tickets` | ticket_* | ✓ |
 | `crm.schemas.*.read` / `.write` | property_*, pipeline_* | ✓ |
 | `automation` | workflow_* | ✓ |
+| `crm.objects.notes.read` / `.write` | note_* | ✓ |
+| `crm.objects.tasks.read` / `.write` | task_* | ✓ |
 | `content` | cms_blog_*, cms_page_* | 任意 |
 
 > CMS スコープは CMS Hub 契約がある場合のみ利用可能です。
@@ -212,92 +214,130 @@ curl https://api.anthropic.com/v1/messages \
 
 ---
 
-## ツール一覧（35ツール）
+## ツール一覧（58ツール）
 
-### Workflow（Automation v4 API）
+### Workflow（Automation v4）— 6ツール
 
 | ツール | 説明 |
 |---|---|
 | `workflow_list` | ワークフロー一覧取得 |
-| `workflow_get` | ワークフロー詳細取得（ID指定） |
-| `workflow_create` | ワークフロー作成（デフォルト無効） |
-| `workflow_update` | ワークフロー更新（revisionId 自動取得） |
-| `workflow_delete` | ワークフロー削除（`confirm=true` 必須） |
+| `workflow_get` | ワークフロー詳細取得 |
+| `workflow_create` | ワークフロー作成 |
+| `workflow_update` | ワークフロー更新 |
+| `workflow_delete` | ワークフロー削除 |
 | `workflow_batch_read` | 複数ワークフロー一括取得 |
 
-### CRM Contacts（v3 API）
+### CRM Contacts — 5ツール（Full CRUD）
 
 | ツール | 説明 |
 |---|---|
-| `contact_search` | コンタクト検索（名前・メール・プロパティフィルター） |
-| `contact_get` | コンタクト詳細取得（関連オブジェクト取得可） |
+| `contact_search` | コンタクト検索（ページネーション対応） |
+| `contact_get` | コンタクト詳細取得（関連取得可） |
 | `contact_create` | コンタクト新規作成 |
 | `contact_update` | コンタクト更新 |
+| `contact_delete` | コンタクト削除（ゴミ箱） |
 
-### CRM Companies（v3 API）
+### CRM Companies — 5ツール（Full CRUD）
 
 | ツール | 説明 |
 |---|---|
-| `company_search` | 会社検索（名前・ドメイン等） |
+| `company_search` | 会社検索 |
 | `company_get` | 会社詳細取得 |
 | `company_create` | 会社新規作成 |
+| `company_update` | 会社更新 |
+| `company_delete` | 会社削除（ゴミ箱） |
 
-### CRM Deals（v3 API）
+### CRM Deals — 5ツール（Full CRUD）
 
 | ツール | 説明 |
 |---|---|
 | `deal_search` | 取引検索 |
 | `deal_get` | 取引詳細取得 |
 | `deal_create` | 取引新規作成 |
-| `deal_update` | 取引更新（ステージ変更・金額変更等） |
+| `deal_update` | 取引更新 |
+| `deal_delete` | 取引削除（ゴミ箱） |
 
-### CRM Tickets（v3 API）
+### CRM Tickets — 5ツール（Full CRUD）
 
 | ツール | 説明 |
 |---|---|
 | `ticket_search` | チケット検索 |
+| `ticket_get` | チケット詳細取得（関連取得可） |
 | `ticket_create` | チケット新規作成 |
+| `ticket_update` | チケット更新 |
+| `ticket_delete` | チケット削除（ゴミ箱） |
 
-### Properties（CRUD）
+### Notes（メモ）— 4ツール 🆕
+
+| ツール | 説明 |
+|---|---|
+| `note_search` | メモ検索 |
+| `note_get` | メモ詳細取得（関連レコード取得可） |
+| `note_create` | メモ作成（関連付け可） |
+| `note_update` | メモ更新 |
+
+### Tasks（タスク）— 4ツール 🆕
+
+| ツール | 説明 |
+|---|---|
+| `task_search` | タスク検索 |
+| `task_get` | タスク詳細取得（関連レコード取得可） |
+| `task_create` | タスク作成（件名・優先度・期日・関連付け） |
+| `task_update` | タスク更新 |
+
+### Associations（関連付け / v4）— 3ツール 🆕
+
+| ツール | 説明 |
+|---|---|
+| `association_list` | レコード間の関連一覧取得 |
+| `association_create` | 関連付け作成（ラベル付き/デフォルト） |
+| `association_delete` | 関連付け削除 |
+
+### Properties — 4ツール
 
 | ツール | 説明 |
 |---|---|
 | `properties_list` | プロパティ定義一覧取得 |
-| `property_create` | カスタムプロパティ作成（type/fieldType/groupName 指定） |
-| `property_update` | プロパティ更新（ラベル・説明・選択肢） |
-| `property_delete` | プロパティ削除（`confirm=true` 必須） |
+| `property_create` | カスタムプロパティ作成 |
+| `property_update` | プロパティ更新 |
+| `property_delete` | プロパティ削除 |
 
-### Pipelines（CRUD）
+### Pipelines — 3ツール
 
 | ツール | 説明 |
 |---|---|
-| `pipeline_list` | パイプライン一覧取得（Deals/Tickets） |
-| `pipeline_create` | パイプライン新規作成（ステージ定義付き） |
-| `pipeline_update` | パイプライン更新（ラベル・ステージ変更） |
+| `pipeline_list` | パイプライン一覧取得 |
+| `pipeline_create` | パイプライン新規作成 |
+| `pipeline_update` | パイプライン更新 |
 
-### Line Items（v3 API）
+### Line Items — 5ツール（Full CRUD）
 
 | ツール | 説明 |
 |---|---|
 | `lineitem_search` | 明細行検索 |
-| `lineitem_create` | 明細行作成（取引への紐付け対応） |
+| `lineitem_get` | 明細行詳細取得 |
+| `lineitem_create` | 明細行作成 |
 | `lineitem_update` | 明細行更新 |
+| `lineitem_delete` | 明細行削除 |
 
-### Products（v3 API）
+### Products — 5ツール（Full CRUD）
 
 | ツール | 説明 |
 |---|---|
-| `product_search` | 商品ライブラリ検索 |
-| `product_create` | 商品登録（SKU・価格・請求周期） |
+| `product_search` | 商品検索 |
+| `product_get` | 商品詳細取得 |
+| `product_create` | 商品登録 |
+| `product_update` | 商品更新 |
+| `product_delete` | 商品削除 |
 
-### CMS（Blog & Pages）
+### CMS（Blog & Pages）— 4ツール
 
 | ツール | 説明 |
 |---|---|
 | `cms_blog_list` | ブログ記事一覧取得 |
-| `cms_blog_update` | ブログ記事更新（タイトル・本文・公開状態） |
-| `cms_page_list` | ランディングページ/サイトページ一覧取得 |
-| `cms_page_update` | ページ更新（タイトル・スラグ・公開状態） |
+| `cms_blog_update` | ブログ記事更新 |
+| `cms_page_list` | ページ一覧取得 |
+| `cms_page_update` | ページ更新 |
 
 ---
 
