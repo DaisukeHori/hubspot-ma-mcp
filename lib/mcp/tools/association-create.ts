@@ -27,7 +27,7 @@ export function registerAssociationCreate(server: McpServer) {
     {
       fromObjectType: z.string().describe("元オブジェクトタイプ（方向の起点）: contacts, companies, deals, tickets, notes, tasks, line_items, products 等"),
       fromObjectId: z.string().describe("元レコード ID"),
-      toObjectType: z.string().describe("関連先オブジェクトタイプ（方向の終点）"),
+      toObjectType: z.string().describe("関連先オブジェクトタイプ（方向の終点）: contacts, companies, deals, tickets, notes, tasks, line_items, products, 又はカスタムオブジェクトID"),
       toObjectId: z.string().describe("関連先レコード ID"),
       associationCategory: z.enum(["HUBSPOT_DEFINED", "USER_DEFINED"]).optional().describe("関連カテゴリ。HUBSPOT_DEFINED=標準ラベル、USER_DEFINED=カスタムラベル。省略するとデフォルト（ラベルなし）関連を作成"),
       associationTypeId: z.number().optional().describe("関連タイプ ID（方向ごとに異なる）。association_labelsツールのlistで確認可能"),

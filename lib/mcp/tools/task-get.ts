@@ -8,7 +8,7 @@ export function registerTaskGet(server: McpServer) {
     "task_get",
     "HubSpot タスクの詳細を取得する。関連レコードの取得も可能。",
     {
-      taskId: z.string().describe("タスク ID"),
+      taskId: z.string().describe("タスクのエンゲージメントID（数値文字列）。task_searchやtask_createの返却値のidフィールドから取得"),
       properties: z.array(z.string()).optional().describe("取得するプロパティ名の配列"),
       associations: z.array(z.string()).optional().describe("取得する関連オブジェクト（contacts, companies, deals 等）"),
     },

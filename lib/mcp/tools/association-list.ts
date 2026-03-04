@@ -16,7 +16,7 @@ export function registerAssociationList(server: McpServer) {
     {
       fromObjectType: z.string().describe("元オブジェクトタイプ（方向の起点）: contacts, companies, deals, tickets, notes, tasks, line_items, products"),
       fromObjectId: z.string().describe("元レコード ID"),
-      toObjectType: z.string().describe("関連先オブジェクトタイプ"),
+      toObjectType: z.string().describe("関連先オブジェクトタイプ: contacts, companies, deals, tickets, notes, tasks, line_items, products, 又はカスタムオブジェクトID"),
       limit: z.number().min(1).max(500).optional().describe("取得件数（デフォルト100、最大500）"),
       after: z.string().optional().describe("ページネーション用カーソル（前回レスポンスのpaging.next.afterを指定）"),
     },

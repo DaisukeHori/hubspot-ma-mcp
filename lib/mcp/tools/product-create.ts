@@ -15,7 +15,7 @@ export function registerProductCreate(server: McpServer) {
       hs_sku: z.string().optional().describe("SKU（在庫管理コード。例: 'CUT-A-001'）"),
       hs_cost_of_goods_sold: z.string().optional().describe("原価（文字列。例: '2000'）"),
       hs_recurring_billing_period: z.string().optional().describe("請求周期（例: P12M）"),
-      additionalProperties: z.record(z.string()).optional().describe("追加プロパティ"),
+      additionalProperties: z.record(z.string()).optional().describe("追加プロパティ（キー:値）。カスタムプロパティ名はproperties_listツールで確認可能"),
     },
     async ({ name, price, description, hs_sku, hs_cost_of_goods_sold, hs_recurring_billing_period, additionalProperties }) => {
       const properties: Record<string, string> = { name };

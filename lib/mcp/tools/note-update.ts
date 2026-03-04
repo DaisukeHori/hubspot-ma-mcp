@@ -8,7 +8,7 @@ export function registerNoteUpdate(server: McpServer) {
     "note_update",
     `HubSpot メモのプロパティを更新する。主なプロパティ: hs_note_body（本文HTML）, hs_timestamp（タイムスタンプ）。指定したプロパティのみ上書き。`,
     {
-      noteId: z.string().describe("メモ ID"),
+      noteId: z.string().describe("メモのエンゲージメントID（数値文字列）。note_searchやnote_createの返却値のidフィールドから取得"),
       properties: z.record(z.string()).describe("更新するプロパティ（hs_note_body, hs_timestamp 等）"),
     },
     async ({ noteId, properties }) => {

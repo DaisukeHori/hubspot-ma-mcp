@@ -8,7 +8,7 @@ export function registerPropertiesList(server: McpServer) {
     "properties_list",
     "HubSpot オブジェクトのプロパティ定義一覧を取得する。カスタムプロパティも含む。",
     {
-      objectType: z.enum(["contacts", "companies", "deals", "tickets"]).describe("オブジェクトタイプ"),
+      objectType: z.enum(["contacts", "companies", "deals", "tickets"]).describe("オブジェクトタイプ: contacts, companies, deals, tickets のいずれか"),
     },
     async ({ objectType }) => {
       try {

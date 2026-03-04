@@ -11,13 +11,13 @@ export function registerTaskSearch(server: McpServer) {
 返却: 一致するタスクの配列（ID, hs_task_subject, hs_task_status, hs_task_priority等）。totalで総件数も返る。
 ページネーション対応。`,
     {
-      query: z.string().optional().describe("検索キーワード"),
+      query: z.string().optional().describe("フリーテキスト検索キーワード。タスク件名等を横断検索"),
       filterGroups: z
         .array(
           z.object({
             filters: z.array(
               z.object({
-                propertyName: z.string(),
+                propertyName: z.string().describe("フィルタ対象プロパティ名（例: hs_task_subject, hs_task_status, hs_task_priority）"),
                 operator: z.string().describe("EQ, NEQ, LT, LTE, GT, GTE, CONTAINS_TOKEN, HAS_PROPERTY, NOT_HAS_PROPERTY"),
                 value: z.string().optional(),
               })

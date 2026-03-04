@@ -11,8 +11,8 @@ export function registerCompanyCreate(server: McpServer) {
 返却: 作成された会社のID, プロパティ, URL。
 additionalPropertiesでカスタムプロパティも設定可能。industryはHubSpot定義の列挙値のみ（例: COMPUTER_SOFTWARE, INFORMATION_TECHNOLOGY_AND_SERVICES）。`,
     {
-      name: z.string().describe("会社名（必須）"),
-      domain: z.string().optional().describe("ドメイン名"),
+      name: z.string().describe("会社名（必須。例: '株式会社レヴォル'）"),
+      domain: z.string().optional().describe("会社のWebサイトドメイン（例: 'revol-club.jp'）。HubSpotの重複チェックに使用される"),
       industry: z.string().optional().describe("業種（HubSpot定義の列挙値。例: COMPUTER_SOFTWARE, INFORMATION_TECHNOLOGY_AND_SERVICES, MARKETING_AND_ADVERTISING等。properties_listで全値を確認可能）"),
       phone: z.string().optional().describe("電話番号（例: '+81-48-123-4567'）"),
       city: z.string().optional().describe("市区町村（例: '川口市'）"),

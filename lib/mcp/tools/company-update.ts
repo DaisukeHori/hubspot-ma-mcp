@@ -10,7 +10,7 @@ export function registerCompanyUpdate(server: McpServer) {
 
 プロパティ名はproperties_listツールで確認可能。列挙型プロパティ（industry等）は定義済みの値のみ設定可能。`,
     {
-      companyId: z.string().describe("会社 ID"),
+      companyId: z.string().describe("会社レコードID（数値文字列）。company_searchやcompany_createの返却値のidフィールドから取得"),
       properties: z.record(z.string()).describe("更新するプロパティ（キー:値）"),
     },
     async ({ companyId, properties }) => {

@@ -10,13 +10,13 @@ export function registerPipelineCreate(server: McpServer) {
 返却: 作成されたパイプラインのID, label, stages。`,
     {
       objectType: z.enum(["deals", "tickets"]).describe("deals または tickets"),
-      label: z.string().describe("パイプライン名"),
+      label: z.string().describe("パイプライン名（例: '法人営業パイプライン'）"),
       displayOrder: z.number().optional().describe("表示順（デフォルト: 0）"),
       stages: z.array(z.object({
         label: z.string().describe("ステージ名"),
         displayOrder: z.number().describe("表示順"),
         metadata: z.record(z.string()).optional().describe("メタデータ（例: { \"probability\": \"0.5\", \"isClosed\": \"false\" }）"),
-      })).describe("ステージ定義"),
+      })).describe("ステージ定義の配列。各要素: {label: ステージ名, displayOrder: 表示順, metadata:{probability: 成約確率0.0-1.0(deals用)}}"),
     },
     async ({ objectType, label, displayOrder, stages }) => {
       const stagesWithMeta = stages.map(s => ({

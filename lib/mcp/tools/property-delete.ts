@@ -7,7 +7,7 @@ export function registerPropertyDelete(server: McpServer) {
     "property_delete",
     "カスタムプロパティを削除（アーカイブ）する。confirm=true 必須",
     {
-      objectType: z.string().describe("対象オブジェクト"),
+      objectType: z.string().describe("対象オブジェクトタイプ: contacts, companies, deals, tickets, line_items, products のいずれか"),
       propertyName: z.string().describe("削除するプロパティの内部名"),
       confirm: z.boolean().describe("削除確認（true 必須）"),
     },

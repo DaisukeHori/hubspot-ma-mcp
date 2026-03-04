@@ -11,13 +11,13 @@ export function registerNoteSearch(server: McpServer) {
 返却: 一致するメモの配列（ID, hs_note_body, hs_timestamp等）。totalで総件数も返る。
 ページネーション対応。`,
     {
-      query: z.string().optional().describe("検索キーワード"),
+      query: z.string().optional().describe("フリーテキスト検索キーワード。メモ本文等を横断検索"),
       filterGroups: z
         .array(
           z.object({
             filters: z.array(
               z.object({
-                propertyName: z.string(),
+                propertyName: z.string().describe("フィルタ対象プロパティ名（例: hs_note_body, hs_timestamp, hs_object_id）"),
                 operator: z.string().describe("EQ, NEQ, LT, LTE, GT, GTE, CONTAINS_TOKEN, HAS_PROPERTY, NOT_HAS_PROPERTY"),
                 value: z.string().optional(),
               })

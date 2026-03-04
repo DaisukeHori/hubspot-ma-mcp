@@ -10,7 +10,7 @@ export function registerContactUpdate(server: McpServer) {
 
 プロパティ名はproperties_listツールで確認可能。emailの変更も可能だが重複チェックあり。`,
     {
-      contactId: z.string().describe("コンタクト ID"),
+      contactId: z.string().describe("コンタクトレコードID（数値文字列）。contact_searchやcontact_createの返却値のidフィールドから取得"),
       properties: z.record(z.string()).describe("更新するプロパティ（キー:値）"),
     },
     async ({ contactId, properties }) => {

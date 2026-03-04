@@ -8,7 +8,7 @@ export function registerCmsBlogUpdate(server: McpServer) {
     "HubSpot CMS のブログ記事を更新する（タイトル・本文・メタ情報・公開状態等）",
     {
       postId: z.string().describe("ブログ記事 ID"),
-      name: z.string().optional().describe("記事タイトル"),
+      name: z.string().optional().describe("ブログ記事タイトル（例: '2026年のヘアトレンド予測'）"),
       postBody: z.string().optional().describe("記事本文（HTML）"),
       metaDescription: z.string().optional().describe("メタディスクリプション"),
       slug: z.string().optional().describe("スラグ（URLパス）"),

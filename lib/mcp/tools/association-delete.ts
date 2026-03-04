@@ -12,13 +12,13 @@ export function registerAssociationDelete(server: McpServer) {
 【特定ラベルのみ解除】labelsToRemove を指定 → 指定したラベルだけを外す。デフォルト（ラベルなし）関連は残る。
   ⚠ デフォルト（unlabeled）関連を削除すると、他の全ラベルも一緒に消える。`,
     {
-      fromObjectType: z.string().describe("元オブジェクトタイプ（方向の起点）"),
+      fromObjectType: z.string().describe("元オブジェクトタイプ（方向の起点）: contacts, companies, deals, tickets, notes, tasks, line_items, products, 又はカスタムオブジェクトID"),
       fromObjectId: z.string().describe("元レコード ID"),
-      toObjectType: z.string().describe("関連先オブジェクトタイプ"),
+      toObjectType: z.string().describe("関連先オブジェクトタイプ: contacts, companies, deals, tickets, notes, tasks, line_items, products, 又はカスタムオブジェクトID"),
       toObjectId: z.string().describe("関連先レコード ID"),
       labelsToRemove: z.array(z.object({
-        associationCategory: z.enum(["HUBSPOT_DEFINED", "USER_DEFINED"]),
-        associationTypeId: z.number(),
+        associationCategory: z.enum(["HUBSPOT_DEFINED", "USER_DEFINED"]).describe("HUBSPOT_DEFINED（標準ラベル）または USER_DEFINED（カスタムラベル）"),
+        associationTypeId: z.number().describe("削除するラベルのtypeId（association_labelsツールのlistで取得可能）"),
       })).optional().describe("削除するラベルの配列。省略時は全関連を削除。例: [{associationCategory:'USER_DEFINED', associationTypeId:37}]"),
     },
     async ({ fromObjectType, fromObjectId, toObjectType, toObjectId, labelsToRemove }) => {

@@ -8,7 +8,7 @@ export function registerTaskUpdate(server: McpServer) {
     "task_update",
     "HubSpot タスクを更新する。件名・ステータス・優先度・担当者等を変更可能。",
     {
-      taskId: z.string().describe("タスク ID"),
+      taskId: z.string().describe("タスクのエンゲージメントID（数値文字列）。task_searchやtask_createの返却値のidフィールドから取得"),
       properties: z.record(z.string()).describe("更新するプロパティ（hs_task_subject, hs_task_status, hs_task_priority 等）"),
     },
     async ({ taskId, properties }) => {

@@ -11,7 +11,7 @@ export function registerContactGet(server: McpServer) {
 返却: コンタクトのID, 全プロパティ（またはproperties指定分）, 作成日, 更新日, アーカイブ状態。
 associations指定時は関連オブジェクトのID一覧も返る。`,
     {
-      contactId: z.string().describe("コンタクト ID"),
+      contactId: z.string().describe("コンタクトレコードID（数値文字列）。contact_searchやcontact_createの返却値のidフィールドから取得"),
       properties: z.array(z.string()).optional().describe("取得するプロパティ名の配列"),
       associations: z.array(z.string()).optional().describe("関連オブジェクト（companies, deals, tickets）"),
     },

@@ -11,12 +11,12 @@ export function registerTicketCreate(server: McpServer) {
 返却: 作成されたチケットのID, プロパティ, URL。
 additionalPropertiesでカスタムプロパティも設定可能。`,
     {
-      subject: z.string().describe("件名（必須）"),
+      subject: z.string().describe("チケット件名（必須。例: '設備不具合の報告'）"),
       content: z.string().optional().describe("チケットの内容（テキストまたはHTML）"),
       hs_pipeline: z.string().optional().describe("パイプライン ID"),
-      hs_pipeline_stage: z.string().optional().describe("ステージ ID"),
+      hs_pipeline_stage: z.string().optional().describe("チケットステージID（pipeline_listツールでpipeline=ticketsの各stageのidを取得して指定。多くの環境で必須）"),
       hs_ticket_priority: z.string().optional().describe("優先度（LOW, MEDIUM, HIGH）"),
-      hubspot_owner_id: z.string().optional().describe("オーナー ID"),
+      hubspot_owner_id: z.string().optional().describe("担当者のHubSpotユーザーID（数値文字列）。HubSpot管理画面のユーザー設定で確認可能"),
       additionalProperties: z.record(z.string()).optional().describe("追加プロパティ（キー:値）。カスタムプロパティ名はproperties_listツールで確認可能"),
     },
     async ({ subject, content, hs_pipeline, hs_pipeline_stage, hs_ticket_priority, hubspot_owner_id, additionalProperties }) => {

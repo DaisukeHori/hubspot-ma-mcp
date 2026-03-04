@@ -11,7 +11,7 @@ export function registerCompanyGet(server: McpServer) {
 返却: 会社のID, 全プロパティ（またはproperties指定分）, 作成日, 更新日。
 associations指定時は関連するcontacts/dealsのID一覧も返る。`,
     {
-      companyId: z.string().describe("会社 ID"),
+      companyId: z.string().describe("会社レコードID（数値文字列）。company_searchやcompany_createの返却値のidフィールドから取得"),
       properties: z.array(z.string()).optional().describe("取得するプロパティ名の配列（例: ['name','domain','industry','phone']）。省略時はデフォルトプロパティのみ"),
       associations: z.array(z.string()).optional().describe("関連オブジェクト（contacts, deals）"),
     },

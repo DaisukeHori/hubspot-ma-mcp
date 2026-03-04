@@ -11,15 +11,15 @@ export function registerContactSearch(server: McpServer) {
 返却: 一致するコンタクトの配列（ID, プロパティ, 作成日, 更新日）。totalで総件数も返る。
 ページネーション: afterに前回レスポンスのカーソルを指定して次ページ取得。`,
     {
-      query: z.string().optional().describe("フリーテキスト検索（名前・メール・電話番号等を部分一致検索）"),
+      query: z.string().optional().describe("フリーテキスト検索キーワード。HubSpotが名前・メール・電話番号等の主要フィールドを横断検索する。filterGroupsと併用可能"),
       filterGroups: z
         .array(
           z.object({
             filters: z.array(
               z.object({
-                propertyName: z.string(),
-                operator: z.string().describe("EQ, NEQ, LT, LTE, GT, GTE, CONTAINS_TOKEN, NOT_CONTAINS_TOKEN, HAS_PROPERTY, NOT_HAS_PROPERTY, IN, NOT_IN"),
-                value: z.string().optional(),
+                propertyName: z.string().describe("フィルタ対象プロパティ名（例: email, firstname, lastname, phone, lifecyclestage）"),
+                operator: z.string().describe("比較演算子: EQ, NEQ, LT, LTE, GT, GTE, CONTAINS_TOKEN, NOT_CONTAINS_TOKEN, HAS_PROPERTY, NOT_HAS_PROPERTY, IN, NOT_IN, BETWEEN"),
+                value: z.string().optional().describe("比較値（HAS_PROPERTY/NOT_HAS_PROPERTY以外で必須）"),
               })
             ),
           })

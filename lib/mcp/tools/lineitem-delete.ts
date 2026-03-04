@@ -8,7 +8,7 @@ export function registerLineItemDelete(server: McpServer) {
     "lineitem_delete",
     `HubSpot 明細行を削除する。confirm=trueが必須。関連する取引からも自動的に解除される。`,
     {
-      lineItemId: z.string().describe("明細行 ID"),
+      lineItemId: z.string().describe("明細行レコードID（数値文字列）。lineitem_searchやlineitem_createの返却値のidフィールドから取得"),
       confirm: z.literal(true).describe("削除確認（true を指定）"),
     },
     async ({ lineItemId }) => {

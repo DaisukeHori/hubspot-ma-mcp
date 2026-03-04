@@ -8,7 +8,7 @@ export function registerDealUpdate(server: McpServer) {
     "deal_update",
     "HubSpot 取引（Deal）を更新する。ステージ変更、金額変更等。",
     {
-      dealId: z.string().describe("取引 ID"),
+      dealId: z.string().describe("取引レコードID（数値文字列）。deal_searchやdeal_createの返却値のidフィールドから取得"),
       properties: z.record(z.string()).describe("更新するプロパティ（キー:値）"),
     },
     async ({ dealId, properties }) => {

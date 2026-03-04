@@ -8,7 +8,7 @@ export function registerDealDelete(server: McpServer) {
     "deal_delete",
     `HubSpot 取引を削除する（ゴミ箱へ移動）。confirm=trueが必須。アーカイブされ、一定期間はゴミ箱から復元可能。`,
     {
-      dealId: z.string().describe("取引 ID"),
+      dealId: z.string().describe("取引レコードID（数値文字列）。deal_searchやdeal_createの返却値のidフィールドから取得"),
       confirm: z.literal(true).describe("削除確認（true を指定）"),
     },
     async ({ dealId }) => {

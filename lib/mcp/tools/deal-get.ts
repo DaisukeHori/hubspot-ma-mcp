@@ -11,7 +11,7 @@ export function registerDealGet(server: McpServer) {
 返却: 取引のID, 全プロパティ（またはproperties指定分）, 作成日, 更新日。
 associations指定時は関連するcontacts/companiesのID一覧も返る。`,
     {
-      dealId: z.string().describe("取引 ID"),
+      dealId: z.string().describe("取引レコードID（数値文字列）。deal_searchやdeal_createの返却値のidフィールドから取得"),
       properties: z.array(z.string()).optional().describe("取得するプロパティ名の配列（例: ['dealname','amount','dealstage','pipeline','closedate']）。省略時はデフォルトプロパティのみ"),
       associations: z.array(z.string()).optional().describe("関連オブジェクト（contacts, companies）"),
     },

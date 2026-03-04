@@ -8,7 +8,7 @@ export function registerProductUpdate(server: McpServer) {
     "product_update",
     "HubSpot 商品を更新する。名前・価格・SKU 等を変更可能。",
     {
-      productId: z.string().describe("商品 ID"),
+      productId: z.string().describe("商品レコードID（数値文字列）。product_searchやproduct_createの返却値のidフィールドから取得"),
       properties: z.record(z.string()).describe("更新するプロパティ（キー:値）"),
     },
     async ({ productId, properties }) => {

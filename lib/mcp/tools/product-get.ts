@@ -8,7 +8,7 @@ export function registerProductGet(server: McpServer) {
     "product_get",
     `HubSpot 商品を1件取得する。IDを指定してプロパティを取得。返却: 商品のID, 全プロパティ（またはproperties指定分）, 作成日, 更新日。`,
     {
-      productId: z.string().describe("商品 ID"),
+      productId: z.string().describe("商品レコードID（数値文字列）。product_searchやproduct_createの返却値のidフィールドから取得"),
       properties: z.array(z.string()).optional().describe("取得するプロパティ名の配列"),
     },
     async ({ productId, properties }) => {

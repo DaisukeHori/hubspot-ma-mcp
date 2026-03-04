@@ -10,13 +10,13 @@ export function registerLineItemCreate(server: McpServer) {
 返却: 作成された明細行のID, プロパティ, URL。
 商品ライブラリから紐付ける場合はhs_product_idを指定。`,
     {
-      name: z.string().describe("明細行の名前"),
+      name: z.string().describe("明細行の名前（必須。例: 'カットメニュー A × 5'）"),
       quantity: z.string().optional().describe("数量（文字列。例: '5'）"),
       price: z.string().optional().describe("単価（文字列。例: '10000'）"),
       hs_product_id: z.string().optional().describe("商品 ID（商品ライブラリから紐付け）"),
       description: z.string().optional().describe("明細の説明テキスト"),
       dealId: z.string().optional().describe("紐付ける取引 ID"),
-      additionalProperties: z.record(z.string()).optional().describe("追加プロパティ"),
+      additionalProperties: z.record(z.string()).optional().describe("追加プロパティ（キー:値）。カスタムプロパティ名はproperties_listツールで確認可能"),
     },
     async ({ name, quantity, price, hs_product_id, description, dealId, additionalProperties }) => {
       const properties: Record<string, string> = { name };

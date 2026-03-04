@@ -19,7 +19,7 @@ export function registerAssociationLabels(server: McpServer) {
 【delete】カスタムラベル定義を削除。associationTypeId を指定。削除前にそのラベルを使用しているレコードから外す必要がある場合あり。`,
     {
       fromObjectType: z.string().describe("元オブジェクトタイプ（contacts, companies, deals, tickets 等）"),
-      toObjectType: z.string().describe("関連先オブジェクトタイプ"),
+      toObjectType: z.string().describe("関連先オブジェクトタイプ: contacts, companies, deals, tickets, notes, tasks, line_items, products, 又はカスタムオブジェクトID"),
       action: z.enum(["list", "create", "update", "delete"]).describe("list: 一覧 / create: 作成 / update: 名前変更 / delete: 定義削除"),
       label: z.string().optional().describe("ラベル名。create/update時に必須。create時はfrom→to方向のラベル（例: '代理店'）"),
       name: z.string().optional().describe("内部名（create時に必須。英数字snake_case。例: 'distributor'）"),

@@ -19,7 +19,7 @@ export function registerWorkflowCreate(server: McpServer) {
         "コンタクトベースのワークフローは type='CONTACT_FLOW'、" +
         "それ以外（会社、取引、チケット）は type='PLATFORM_FLOW' を使用する。",
       inputSchema: {
-        name: z.string().describe("ワークフロー名"),
+        name: z.string().describe("ワークフロー名（例: '新規リード自動フォロー'）"),
         type: z
           .enum(["CONTACT_FLOW", "PLATFORM_FLOW"])
           .describe(

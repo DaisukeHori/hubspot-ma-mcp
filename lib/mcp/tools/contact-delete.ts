@@ -10,7 +10,7 @@ export function registerContactDelete(server: McpServer) {
 
 削除後も一定期間はHubSpotのゴミ箱から復元可能。関連付け（association）は自動的に解除される。`,
     {
-      contactId: z.string().describe("コンタクト ID"),
+      contactId: z.string().describe("コンタクトレコードID（数値文字列）。contact_searchやcontact_createの返却値のidフィールドから取得"),
       confirm: z.literal(true).describe("削除確認（true を指定）"),
     },
     async ({ contactId }) => {

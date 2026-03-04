@@ -9,14 +9,14 @@ export function registerPipelineUpdate(server: McpServer) {
     {
       objectType: z.enum(["deals", "tickets"]).describe("deals または tickets"),
       pipelineId: z.string().describe("パイプライン ID"),
-      label: z.string().optional().describe("新しいラベル"),
-      displayOrder: z.number().optional().describe("新しい表示順"),
+      label: z.string().optional().describe("新しいパイプライン名（例: '法人営業パイプライン v2'）"),
+      displayOrder: z.number().optional().describe("表示順（0始まりの整数。小さいほど先に表示）"),
       stages: z.array(z.object({
         id: z.string().optional().describe("既存ステージ ID（更新時）"),
         label: z.string().describe("ステージ名"),
         displayOrder: z.number().describe("表示順"),
         metadata: z.record(z.string()).optional().describe("メタデータ"),
-      })).optional().describe("ステージ定義（全置換）"),
+      })).optional().describe("ステージ定義の配列（全置換）。各要素: {label, displayOrder, metadata:{probability}}"),
     },
     async ({ objectType, pipelineId, label, displayOrder, stages }) => {
       const updates: Record<string, unknown> = {};

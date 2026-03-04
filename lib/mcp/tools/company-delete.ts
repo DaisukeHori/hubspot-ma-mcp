@@ -8,7 +8,7 @@ export function registerCompanyDelete(server: McpServer) {
     "company_delete",
     `HubSpot 会社を削除する（ゴミ箱へ移動）。confirm=trueが必須。アーカイブされ、一定期間はゴミ箱から復元可能。`,
     {
-      companyId: z.string().describe("会社 ID"),
+      companyId: z.string().describe("会社レコードID（数値文字列）。company_searchやcompany_createの返却値のidフィールドから取得"),
       confirm: z.literal(true).describe("削除確認（true を指定）"),
     },
     async ({ companyId }) => {

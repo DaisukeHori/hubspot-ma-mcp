@@ -8,7 +8,7 @@ export function registerTicketUpdate(server: McpServer) {
     "ticket_update",
     "HubSpot チケットを更新する。ステータス・優先度・担当者等を変更可能。",
     {
-      ticketId: z.string().describe("チケット ID"),
+      ticketId: z.string().describe("チケットレコードID（数値文字列）。ticket_searchやticket_createの返却値のidフィールドから取得"),
       properties: z.record(z.string()).describe("更新するプロパティ（キー:値）"),
     },
     async ({ ticketId, properties }) => {

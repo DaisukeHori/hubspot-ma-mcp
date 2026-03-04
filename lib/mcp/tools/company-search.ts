@@ -11,9 +11,9 @@ export function registerCompanySearch(server: McpServer) {
 返却: 一致する会社の配列（ID, プロパティ, 作成日, 更新日）。totalで総件数も返る。
 ページネーション: afterに前回レスポンスのカーソルを指定して次ページ取得。`,
     {
-      query: z.string().optional().describe("検索キーワード"),
+      query: z.string().optional().describe("フリーテキスト検索キーワード。会社名等の主要フィールドを横断検索。filterGroupsと併用可能"),
       filterGroups: z
-        .array(z.object({ filters: z.array(z.object({ propertyName: z.string(), operator: z.string(), value: z.string().optional() })) }))
+        .array(z.object({ filters: z.array(z.object({ propertyName: z.string().describe("フィルタ対象プロパティ名（例: name, domain, industry）"), operator: z.string().describe("比較演算子: EQ, NEQ, LT, LTE, GT, GTE, CONTAINS_TOKEN, HAS_PROPERTY, NOT_HAS_PROPERTY"), value: z.string().optional().describe("比較値。HAS_PROPERTY/NOT_HAS_PROPERTY以外で必須") })) }))
         .optional().describe("高度なフィルター条件。例: [{filters:[{propertyName:'domain',operator:'EQ',value:'example.com'}]}]。operator: EQ, NEQ, LT, GT, CONTAINS_TOKEN, HAS_PROPERTY 等"),
       properties: z.array(z.string()).optional().describe("取得するプロパティ名の配列（例: ['name','domain','industry']）。省略時はデフォルトプロパティのみ"),
       limit: z.number().min(1).max(100).optional().describe("取得件数（デフォルト10、最大100）"),

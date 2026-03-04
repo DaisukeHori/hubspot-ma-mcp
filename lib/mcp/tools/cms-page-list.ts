@@ -7,7 +7,7 @@ export function registerCmsPageList(server: McpServer) {
     "cms_page_list",
     "HubSpot CMS のランディングページまたはサイトページの一覧を取得する",
     {
-      pageType: z.enum(["landing-pages", "site-pages"]).describe("ページ種別"),
+      pageType: z.enum(["landing-pages", "site-pages"]).describe("ページ種別: landing-pages（ランディングページ）または site-pages（サイトページ）"),
       limit: z.number().optional().describe("取得件数（デフォルト20、最大100）"),
       after: z.string().optional().describe("ページネーション"),
     },

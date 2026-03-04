@@ -7,8 +7,8 @@ export function registerCmsPageUpdate(server: McpServer) {
     "cms_page_update",
     "HubSpot CMS のランディングページまたはサイトページを更新する",
     {
-      pageType: z.enum(["landing-pages", "site-pages"]).describe("ページ種別"),
-      pageId: z.string().describe("ページ ID"),
+      pageType: z.enum(["landing-pages", "site-pages"]).describe("ページ種別: landing-pages（ランディングページ）または site-pages（サイトページ）"),
+      pageId: z.string().describe("ページレコードID（数値文字列）。cms_page_listの返却値のidから取得"),
       name: z.string().optional().describe("ページ名（タイトル）"),
       slug: z.string().optional().describe("スラグ（URLパス）"),
       state: z.enum(["DRAFT", "PUBLISHED"]).optional().describe("公開状態（DRAFT / PUBLISHED / SCHEDULED）"),

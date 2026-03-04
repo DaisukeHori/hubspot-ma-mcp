@@ -8,7 +8,7 @@ export function registerLineItemGet(server: McpServer) {
     "lineitem_get",
     "HubSpot 明細行の詳細を取得する。関連する取引・商品の取得も可能。",
     {
-      lineItemId: z.string().describe("明細行 ID"),
+      lineItemId: z.string().describe("明細行レコードID（数値文字列）。lineitem_searchやlineitem_createの返却値のidフィールドから取得"),
       properties: z.array(z.string()).optional().describe("取得するプロパティ名の配列"),
       associations: z.array(z.string()).optional().describe("取得する関連オブジェクト（deals, products 等）"),
     },
