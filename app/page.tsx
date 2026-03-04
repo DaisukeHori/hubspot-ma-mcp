@@ -111,6 +111,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
       { name: "note_get", desc: "メモ詳細取得", icon: "📝", api: "GET /crm/v3/objects/notes/{id}", params: [{ name: "noteId", required: true, desc: "メモ ID" }, { name: "associations", required: false, desc: "関連取得" }] },
       { name: "note_create", desc: "メモ作成（関連付け可）", icon: "✏️", api: "POST /crm/v3/objects/notes", params: [{ name: "body", required: true, desc: "メモ本文" }, { name: "associations", required: false, desc: "関連付け先" }] },
       { name: "note_update", desc: "メモ更新", icon: "🔄", api: "PATCH /crm/v3/objects/notes/{id}", params: [{ name: "noteId", required: true, desc: "メモ ID" }, { name: "properties", required: true, desc: "更新プロパティ" }] },
+      { name: "note_delete", desc: "メモ削除（ゴミ箱・復元可）", icon: "🗑", api: "DELETE /crm/v3/objects/notes/{id}", params: [{ name: "noteId", required: true, desc: "メモ ID" }, { name: "confirm", required: true, desc: "削除確認（true）" }] },
     ],
   },
   {
@@ -121,6 +122,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
       { name: "task_get", desc: "タスク詳細取得", icon: "📋", api: "GET /crm/v3/objects/tasks/{id}", params: [{ name: "taskId", required: true, desc: "タスク ID" }, { name: "associations", required: false, desc: "関連取得" }] },
       { name: "task_create", desc: "タスク作成（関連付け可）", icon: "✅", api: "POST /crm/v3/objects/tasks", params: [{ name: "subject", required: true, desc: "タスク件名" }, { name: "status", required: false, desc: "NOT_STARTED / IN_PROGRESS / COMPLETED" }, { name: "priority", required: false, desc: "LOW / MEDIUM / HIGH" }] },
       { name: "task_update", desc: "タスク更新", icon: "🔄", api: "PATCH /crm/v3/objects/tasks/{id}", params: [{ name: "taskId", required: true, desc: "タスク ID" }, { name: "properties", required: true, desc: "更新プロパティ" }] },
+      { name: "task_delete", desc: "タスク削除（ゴミ箱・復元可）", icon: "🗑", api: "DELETE /crm/v3/objects/tasks/{id}", params: [{ name: "taskId", required: true, desc: "タスク ID" }, { name: "confirm", required: true, desc: "削除確認（true）" }] },
     ],
   },
   {
@@ -150,6 +152,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
       { name: "pipeline_list", desc: "パイプライン一覧", icon: "🔧", api: "GET /crm/v3/pipelines/{objectType}", params: [{ name: "objectType", required: true, desc: "deals / tickets" }] },
       { name: "pipeline_create", desc: "パイプライン作成", icon: "🔨", api: "POST /crm/v3/pipelines/{objectType}", params: [{ name: "objectType", required: true, desc: "deals / tickets" }, { name: "label", required: true, desc: "パイプライン名" }, { name: "stages", required: true, desc: "ステージ定義" }] },
       { name: "pipeline_update", desc: "パイプライン更新", icon: "🔄", api: "PATCH /crm/v3/pipelines/{objectType}/{id}", params: [{ name: "objectType", required: true, desc: "deals / tickets" }, { name: "pipelineId", required: true, desc: "パイプライン ID" }] },
+      { name: "pipeline_delete", desc: "パイプライン削除", icon: "🗑", api: "DELETE /crm/v3/pipelines/{objectType}/{id}", params: [{ name: "objectType", required: true, desc: "deals / tickets" }, { name: "pipelineId", required: true, desc: "パイプライン ID" }, { name: "confirm", required: true, desc: "削除確認（true）" }] },
     ],
   },
   {
@@ -200,7 +203,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
       { name: "email_get", desc: "メール詳細取得", icon: "📧", api: "GET /crm/v3/objects/emails/:id", params: [{ name: "emailId", required: true, desc: "メールID" }] },
       { name: "email_create", desc: "メール作成", icon: "➕", api: "POST /crm/v3/objects/emails", params: [{ name: "properties", required: true, desc: "メールプロパティ" }] },
       { name: "email_update", desc: "メール更新", icon: "✏️", api: "PATCH /crm/v3/objects/emails/:id", params: [{ name: "emailId", required: true, desc: "メールID" }] },
-      { name: "email_delete", desc: "メール削除", icon: "🗑", api: "DELETE /crm/v3/objects/emails/:id", params: [{ name: "emailId", required: true, desc: "メールID" }] },
+      { name: "email_delete", desc: "メール永久削除（復元不可）", icon: "🗑", api: "DELETE /crm/v3/objects/emails/:id", params: [{ name: "emailId", required: true, desc: "メールID" }] },
     ],
   },
   {
@@ -456,7 +459,7 @@ export default function Home() {
             MCP Protocol 2025-03-26 · Streamable HTTP
           </div>
           <h1>AIから<span>HubSpot CRM</span>を<br />直接操作しよう</h1>
-          <p className="hs-hero__sub">ワークフロー・CRM・商品・明細行・プロパティ・パイプライン・CMS をAIツールから直接操作できるMCPサーバー。78ツール搭載。</p>
+          <p className="hs-hero__sub">ワークフロー・CRM・商品・明細行・プロパティ・パイプライン・CMS をAIツールから直接操作できるMCPサーバー。81ツール搭載。</p>
           <div className="hs-hero__endpoint">
             <span style={{ color: "var(--hs-text-light)", fontSize: 12 }}>ENDPOINT</span>
             <span>{MCP_URL}</span>

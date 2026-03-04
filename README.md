@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  HubSpot CRM・ワークフロー・メモ・タスク・関連付け・CMS を AI アシスタントから直接操作する MCP サーバー（78ツール）
+  HubSpot CRM・ワークフロー・メモ・タスク・関連付け・CMS を AI アシスタントから直接操作する MCP サーバー（81ツール）
 </p>
 
 <p align="center">
@@ -15,7 +15,7 @@
   <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/transport-Streamable_HTTP-A5F3FC?style=flat-square" alt="Transport" /></a>
   <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/auth-2_modes-FF7A59?style=flat-square" alt="Auth" /></a>
   <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/protocol-MCP_2025--03--26-FF7A59?style=flat-square" alt="Protocol" /></a>
-  <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/tools-58-FF7A59?style=flat-square" alt="Tools" /></a>
+  <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/tools-81-FF7A59?style=flat-square" alt="Tools" /></a>
   <a href="https://vercel.com"><img src="https://img.shields.io/badge/deployed_on-Vercel-000?style=flat-square&logo=vercel" alt="Vercel" /></a>
   <img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License" />
 </p>
@@ -53,6 +53,11 @@ https://hubspot-ma-mcp.vercel.app/api/mcp
 | `automation` | workflow_* | ✓ |
 | `crm.objects.notes.read` / `.write` | note_* | ✓ |
 | `crm.objects.tasks.read` / `.write` | task_* | ✓ |
+| `crm.objects.quotes.read` | quote_* | ✓ |
+| `sales-email-read` / `crm.objects.emails.read` / `.write` | email_* | ✓ |
+| `crm.objects.meetings.read` / `.write` | meeting_* | ✓ |
+| `crm.objects.calls.read` / `.write` | call_* | ✓ |
+| `crm.objects.owners.read` | owner_* | ✓ |
 | `content` | cms_blog_*, cms_page_* | 任意 |
 
 > CMS スコープは CMS Hub 契約がある場合のみ利用可能です。
@@ -214,7 +219,7 @@ curl https://api.anthropic.com/v1/messages \
 
 ---
 
-## ツール一覧（78ツール）
+## ツール一覧（81ツール）
 
 ### Workflow（Automation v4）— 6ツール
 
@@ -267,7 +272,7 @@ curl https://api.anthropic.com/v1/messages \
 | `ticket_update` | チケット更新 |
 | `ticket_delete` | チケット削除（ゴミ箱） |
 
-### Notes（メモ）— 4ツール 🆕
+### Notes（メモ）— 5ツール（Full CRUD）
 
 | ツール | 説明 |
 |---|---|
@@ -275,8 +280,9 @@ curl https://api.anthropic.com/v1/messages \
 | `note_get` | メモ詳細取得（関連レコード取得可） |
 | `note_create` | メモ作成（関連付け可） |
 | `note_update` | メモ更新 |
+| `note_delete` | メモ削除（ゴミ箱・復元可） |
 
-### Tasks（タスク）— 4ツール 🆕
+### Tasks（タスク）— 5ツール（Full CRUD）
 
 | ツール | 説明 |
 |---|---|
@@ -284,14 +290,16 @@ curl https://api.anthropic.com/v1/messages \
 | `task_get` | タスク詳細取得（関連レコード取得可） |
 | `task_create` | タスク作成（件名・優先度・期日・関連付け） |
 | `task_update` | タスク更新 |
+| `task_delete` | タスク削除（ゴミ箱・復元可） |
 
-### Associations（関連付け / v4）— 3ツール 🆕
+### Associations（関連付け / v4）— 4ツール
 
 | ツール | 説明 |
 |---|---|
 | `association_list` | レコード間の関連一覧取得 |
 | `association_create` | 関連付け作成（ラベル付き/デフォルト） |
 | `association_delete` | 関連付け削除 |
+| `association_labels` | ラベル定義の取得・作成（CRUD） |
 
 ### Properties — 4ツール
 
@@ -302,13 +310,14 @@ curl https://api.anthropic.com/v1/messages \
 | `property_update` | プロパティ更新 |
 | `property_delete` | プロパティ削除 |
 
-### Pipelines — 3ツール
+### Pipelines — 4ツール（Full CRUD）
 
 | ツール | 説明 |
 |---|---|
 | `pipeline_list` | パイプライン一覧取得 |
 | `pipeline_create` | パイプライン新規作成 |
 | `pipeline_update` | パイプライン更新 |
+| `pipeline_delete` | パイプライン削除 |
 
 ### Line Items — 5ツール（Full CRUD）
 
@@ -330,14 +339,14 @@ curl https://api.anthropic.com/v1/messages \
 | `product_update` | 商品更新 |
 | `product_delete` | 商品削除 |
 
-### Owners — 2ツール 🆕
+### Owners — 2ツール
 
 | Tool | Description |
 |------|-------------|
 | `owner_list` | 担当者（オーナー）一覧取得 |
 | `owner_get` | 担当者詳細取得 |
 
-### Emails（メールエンゲージメント）— 5ツール 🆕
+### Emails（メールエンゲージメント）— 5ツール
 
 | Tool | Description |
 |------|-------------|
@@ -345,9 +354,9 @@ curl https://api.anthropic.com/v1/messages \
 | `email_get` | メールエンゲージメント詳細取得 |
 | `email_create` | メールエンゲージメント作成 |
 | `email_update` | メールエンゲージメント更新 |
-| `email_delete` | メールエンゲージメント削除 |
+| `email_delete` | メール永久削除（復元不可） |
 
-### Meetings（ミーティング）— 5ツール 🆕
+### Meetings（ミーティング）— 5ツール
 
 | Tool | Description |
 |------|-------------|
@@ -357,7 +366,7 @@ curl https://api.anthropic.com/v1/messages \
 | `meeting_update` | ミーティング更新 |
 | `meeting_delete` | ミーティング削除 |
 
-### Calls（通話）— 5ツール 🆕
+### Calls（通話）— 5ツール
 
 | Tool | Description |
 |------|-------------|
@@ -367,7 +376,7 @@ curl https://api.anthropic.com/v1/messages \
 | `call_update` | 通話記録更新 |
 | `call_delete` | 通話記録削除 |
 
-### Quotes（見積もり）— 2ツール 🆕
+### Quotes（見積もり）— 2ツール
 
 | Tool | Description |
 |------|-------------|
