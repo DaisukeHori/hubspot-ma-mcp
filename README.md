@@ -7,13 +7,13 @@
 </p>
 
 <p align="center">
-  <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp&env=HUBSPOT_ACCESS_TOKEN&envDescription=HubSpot%20Private%20App%20Token%EF%BC%88%E8%A8%AD%E5%AE%9A%E2%86%92%E9%80%A3%E6%90%BA%E2%86%92%E9%9D%9E%E5%85%AC%E9%96%8B%E3%82%A2%E3%83%97%E3%83%AA%E3%81%A7%E4%BD%9C%E6%88%90%EF%BC%89&envLink=https%3A%2F%2Fdevelopers.hubspot.com%2Fdocs%2Fapi%2Fprivate-apps&project-name=hubspot-ma-mcp&repository-name=hubspot-ma-mcp"><img src="https://vercel.com/button" alt="Deploy with Vercel" /></a>
+  <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp&env=AUTH_MODE%2CHUBSPOT_ACCESS_TOKEN%2CMCP_API_KEY&envDescription=AUTH_MODE%3A+hubspot_token%28%E3%83%87%E3%83%95%E3%82%A9%E3%83%AB%E3%83%88%29+or+api_key+%7C+HUBSPOT_ACCESS_TOKEN%3A+api_key%E3%83%A2%E3%83%BC%E3%83%89%E6%99%82%E3%81%AB%E5%BF%85%E9%A0%88+%7C+MCP_API_KEY%3A+api_key%E3%83%A2%E3%83%BC%E3%83%89%E6%99%82%E3%81%AB%E5%BF%85%E9%A0%88&envLink=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp%23%E8%AA%8D%E8%A8%BC%E3%83%A2%E3%83%BC%E3%83%89&project-name=hubspot-ma-mcp&repository-name=hubspot-ma-mcp"><img src="https://vercel.com/button" alt="Deploy with Vercel" /></a>
 </p>
 
 <p align="center">
   <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/status-operational-10B981?style=flat-square" alt="Status" /></a>
   <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/transport-Streamable_HTTP-A5F3FC?style=flat-square" alt="Transport" /></a>
-  <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/auth-Bearer_Token-FF7A59?style=flat-square" alt="Auth" /></a>
+  <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/auth-2_modes-FF7A59?style=flat-square" alt="Auth" /></a>
   <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/protocol-MCP_2025--03--26-FF7A59?style=flat-square" alt="Protocol" /></a>
   <a href="https://vercel.com"><img src="https://img.shields.io/badge/deployed_on-Vercel-000?style=flat-square&logo=vercel" alt="Vercel" /></a>
   <img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License" />
@@ -31,16 +31,32 @@ https://hubspot-ma-mcp.vercel.app/api/mcp
 
 ---
 
-## 認証方式
+## 認証モード
 
-自分の HubSpot アカウントのワークフローを操作するには、[HubSpot Private App](https://developers.hubspot.com/docs/api/private-apps) のアクセストークンが必要です。
+環境変数 `AUTH_MODE` でサーバーの認証方式を切り替えます。
 
-| 方式 | 説明 | 適用場面 |
-|---|---|---|
-| **Bearer Token（推奨）** | MCP クライアントの設定で `Authorization: Bearer <token>` ヘッダーを指定 | 公開サーバー利用・個人利用 |
-| **環境変数（自前デプロイ用）** | 自分でデプロイしたサーバーに `HUBSPOT_ACCESS_TOKEN` を設定 | チーム共用・自前デプロイ |
+### ① hubspot_token モード（デフォルト）
 
-> ⚠ **公開サーバーでは Bearer Token が必須です。** トークンなしのリクエストはエラーになります。
+各ユーザーが自分の HubSpot アクセストークンを Bearer Token として渡します。MCPサーバー自体への認証はありません。
+
+| 項目 | 値 |
+|---|---|
+| `AUTH_MODE` | `hubspot_token`（またはデフォルト） |
+| Bearer Token の中身 | HubSpot Private App トークン (`pat-na1-xxxx...`) |
+| MCP サーバー認証 | なし |
+| 用途 | 公開サーバー、個人利用、マルチユーザー |
+
+### ② api_key モード
+
+MCP APIキーでサーバーへのアクセスを制限します。HubSpot トークンはサーバーの環境変数に固定設定され、デプロイした組織だけが使えます。
+
+| 項目 | 値 |
+|---|---|
+| `AUTH_MODE` | `api_key` |
+| `MCP_API_KEY` | 任意の秘密文字列（必須） |
+| `HUBSPOT_ACCESS_TOKEN` | 組織の HubSpot トークン（必須） |
+| Bearer Token の中身 | `MCP_API_KEY` の値 |
+| 用途 | チーム専用、組織限定 |
 
 ### HubSpot Private App の作成
 
@@ -52,8 +68,13 @@ https://hubspot-ma-mcp.vercel.app/api/mcp
 
 ## クイック接続
 
-各クライアントの設定例を以下に示します。  
-`pat-na1-xxxx...` の部分を自分の HubSpot Private App トークンに置き換えてください。
+### hubspot_token モード（公開サーバー利用時）
+
+`pat-na1-xxxx...` を自分の HubSpot Private App トークンに置き換えてください。
+
+### api_key モード（自前デプロイ利用時）
+
+`your-mcp-api-key` をデプロイ時に設定した `MCP_API_KEY` に置き換えてください。
 
 インタラクティブガイド → **[hubspot-ma-mcp.vercel.app](https://hubspot-ma-mcp.vercel.app/)**
 
@@ -148,7 +169,7 @@ claude mcp add --transport http hubspot-ma \
 設定 → コネクタ → カスタムコネクタを追加 → URL を貼り付け
 ```
 
-> ⚠ Claude.ai Web ではカスタムヘッダーを設定できないため、自前デプロイ + 環境変数方式が必要です。
+> ⚠ Claude.ai Web ではカスタムヘッダーを設定できないため、自前デプロイ + api_key モードが必要です。
 
 ### Anthropic API（MCP Connector Beta）
 
@@ -189,15 +210,16 @@ curl https://api.anthropic.com/v1/messages \
 
 ## 自分でデプロイする
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp&env=HUBSPOT_ACCESS_TOKEN&envDescription=HubSpot%20Private%20App%20Token%EF%BC%88%E8%A8%AD%E5%AE%9A%E2%86%92%E9%80%A3%E6%90%BA%E2%86%92%E9%9D%9E%E5%85%AC%E9%96%8B%E3%82%A2%E3%83%97%E3%83%AA%E3%81%A7%E4%BD%9C%E6%88%90%EF%BC%89&envLink=https%3A%2F%2Fdevelopers.hubspot.com%2Fdocs%2Fapi%2Fprivate-apps&project-name=hubspot-ma-mcp&repository-name=hubspot-ma-mcp)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp&env=AUTH_MODE%2CHUBSPOT_ACCESS_TOKEN%2CMCP_API_KEY&envDescription=AUTH_MODE%3A+hubspot_token%28%E3%83%87%E3%83%95%E3%82%A9%E3%83%AB%E3%83%88%29+or+api_key+%7C+HUBSPOT_ACCESS_TOKEN%3A+api_key%E3%83%A2%E3%83%BC%E3%83%89%E6%99%82%E3%81%AB%E5%BF%85%E9%A0%88+%7C+MCP_API_KEY%3A+api_key%E3%83%A2%E3%83%BC%E3%83%89%E6%99%82%E3%81%AB%E5%BF%85%E9%A0%88&envLink=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp%23%E8%AA%8D%E8%A8%BC%E3%83%A2%E3%83%BC%E3%83%89&project-name=hubspot-ma-mcp&repository-name=hubspot-ma-mcp)
 
 ボタンをクリックすると：
 
 1. GitHub にリポジトリがフォークされます
-2. `HUBSPOT_ACCESS_TOKEN` の入力を求められます（HubSpot Private App で取得）
+2. 環境変数の入力を求められます：
+   - `AUTH_MODE`: `hubspot_token` または `api_key`
+   - `HUBSPOT_ACCESS_TOKEN`: api_key モードでは必須
+   - `MCP_API_KEY`: api_key モードでは必須
 3. Vercel に自動デプロイされます
-
-デプロイ後は自分のサーバー URL（`https://your-project.vercel.app/api/mcp`）を使ってください。
 
 ### 手動デプロイ
 
@@ -206,7 +228,7 @@ git clone https://github.com/DaisukeHori/hubspot-ma-mcp.git
 cd hubspot-ma-mcp
 npm install
 cp .env.example .env.local
-# .env.local に HUBSPOT_ACCESS_TOKEN を設定
+# .env.local を編集して認証モードとトークンを設定
 npm run dev
 ```
 
@@ -218,7 +240,7 @@ npm run dev
 |---|---|
 | Framework | Next.js 15 (App Router) |
 | MCP Handler | mcp-handler (Streamable HTTP / SSE) |
-| Auth | Bearer Token 必須（公開サーバー） |
+| Auth | 2モード: hubspot_token / api_key |
 | API | HubSpot Automation API v4 (Beta) |
 | Hosting | Vercel (Fluid Compute) |
 | Language | TypeScript |
