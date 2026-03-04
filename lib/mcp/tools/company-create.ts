@@ -18,9 +18,23 @@ additionalPropertiesでカスタムプロパティも設定可能。industryはH
       city: z.string().optional().describe("市区町村（例: '川口市'）"),
       state: z.string().optional().describe("都道府県 / 州（例: '埼玉県', 'California'）"),
       country: z.string().optional().describe("国（例: 'Japan'）"),
+      associations: z
+        .array(
+          z.object({
+            to: z.object({ id: z.string().describe("関連先レコードID（数値文字列）") }).describe("関連先レコード"),
+            types: z.array(
+              z.object({
+                associationCategory: z.string().describe("HUBSPOT_DEFINED（標準ラベル）/ USER_DEFINED（カスタムラベル）"),
+                associationTypeId: z.number().describe("関連タイプID。association_labelsツールのlistで取得可能。主要デフォルト値: contact→company=279, company→contact=280, deal→contact=3, deal→company=5, ticket→contact=16, ticket→company=26"),
+              })
+            ).describe("関連タイプ定義の配列"),
+          })
+        )
+        .optional()
+        .describe("作成と同時に関連付けるレコードの配列（任意）。後からassociation_createでも紐付け可能"),
       additionalProperties: z.record(z.string()).optional().describe("追加プロパティ（キー:値）。カスタムプロパティ名はproperties_listツールで確認可能"),
     },
-    async ({ name, domain, industry, phone, city, state, country, additionalProperties }) => {
+    async ({ name, domain, industry, phone, city, state, country, associations, additionalProperties }) => {
       try {
         const properties: Record<string, string> = {};
         if (name) properties.name = name;
@@ -31,7 +45,7 @@ additionalPropertiesでカスタムプロパティも設定可能。industryはH
         if (state) properties.state = state;
         if (country) properties.country = country;
         if (additionalProperties) Object.assign(properties, additionalProperties);
-        const result = await crmCreate("companies", properties);
+        const result = await crmCreate("companies", properties, associations);
         return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);
