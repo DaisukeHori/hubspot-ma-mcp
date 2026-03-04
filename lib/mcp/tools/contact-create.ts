@@ -17,7 +17,7 @@ additionalPropertiesでカスタムプロパティも設定可能（properties_l
       phone: z.string().optional().describe("電話番号（例: '+81-3-1234-5678'）"),
       company: z.string().optional().describe("会社名（テキスト。会社レコードとの関連付けにはassociation_createを使用）"),
       jobtitle: z.string().optional().describe("役職（例: '営業部長'）"),
-      lifecyclestage: z.string().optional().describe("ライフサイクルステージ: subscriber, lead, marketingqualifiedlead, salesqualifiedlead, opportunity, customer, evangelist, other"),
+      lifecyclestage: z.string().optional().describe("ライフサイクルステージ。有効値: subscriber / lead / marketingqualifiedlead / salesqualifiedlead / opportunity / customer / evangelist / other"),
       additionalProperties: z.record(z.string()).optional().describe("追加プロパティ（キー:値）"),
     },
     async ({ email, firstname, lastname, phone, company, jobtitle, lifecyclestage, additionalProperties }) => {

@@ -25,7 +25,7 @@ export function registerContactSearch(server: McpServer) {
           })
         )
         .optional()
-        .describe("フィルター条件"),
+        .describe("高度なフィルター条件（OR条件の配列。各グループ内のfiltersはAND結合）。例: [{filters:[{propertyName:'email',operator:'CONTAINS_TOKEN',value:'@example.com'}]}]"),
       properties: z.array(z.string()).optional().describe("取得するプロパティ名の配列"),
       limit: z.number().min(1).max(100).optional().describe("取得件数（デフォルト10、最大100）"),
       after: z.string().optional().describe("ページネーション用カーソル（前回レスポンスのpaging.next.afterの値を指定）"),

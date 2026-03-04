@@ -17,7 +17,7 @@ export function registerNoteCreate(server: McpServer) {
             to: z.object({ id: z.string().describe("関連先レコードID") }).describe("関連先レコード"),
             types: z.array(
               z.object({
-                associationCategory: z.string().describe("HUBSPOT_DEFINED（標準）または USER_DEFINED（カスタム）").describe("HUBSPOT_DEFINED"),
+                associationCategory: z.string().describe("HUBSPOT_DEFINED（標準ラベル）または USER_DEFINED（カスタムラベル）").describe("HUBSPOT_DEFINED"),
                 associationTypeId: z.number().describe("関連タイプID。association_labelsツールのlistで取得可能").describe("関連タイプ ID（例: 202=note_to_contact, 190=note_to_company, 214=note_to_deal）"),
               })
             ),
