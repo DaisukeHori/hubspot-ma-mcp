@@ -1,21 +1,14 @@
 /**
- * 環境変数の管理・バリデーション
+ * 環境変数の管理
+ *
+ * HUBSPOT_ACCESS_TOKEN はオプション。
+ * Bearer Token がリクエストヘッダーで渡される場合は不要。
  */
 
 export function getConfig() {
-  const hubspotAccessToken = process.env.HUBSPOT_ACCESS_TOKEN;
-  const mcpApiKey = process.env.MCP_API_KEY;
-
-  if (!hubspotAccessToken) {
-    throw new Error(
-      "HUBSPOT_ACCESS_TOKEN が設定されていません。" +
-        "HubSpot > Settings > Integrations > Private Apps で取得してください。"
-    );
-  }
-
   return {
-    hubspotAccessToken,
-    mcpApiKey: mcpApiKey || undefined,
+    hubspotAccessToken: process.env.HUBSPOT_ACCESS_TOKEN || undefined,
+    mcpApiKey: process.env.MCP_API_KEY || undefined,
     hubspotBaseUrl: "https://api.hubapi.com",
   };
 }

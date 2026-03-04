@@ -2,12 +2,12 @@
  * HubSpot Automation API v4 クライアント
  *
  * ワークフロー CRUD 操作を提供する。
- * - Bearer Token 認証
+ * - Bearer Token 認証（リクエストヘッダー or 環境変数）
  * - レート制限対応（自動リトライ）
  * - エクスポネンシャルバックオフ
  */
 
-import { getConfig } from "@/lib/config";
+import { getHubSpotToken } from "./auth-context";
 import { HubSpotError } from "./errors";
 import type {
   HubSpotFlow,
@@ -19,19 +19,15 @@ import type {
 
 const MAX_RETRIES = 3;
 const BASE_DELAY_MS = 1000;
+const BASE_URL = "https://api.hubapi.com";
 
 // ── 内部ヘルパー ──
 
 function getHeaders(): Record<string, string> {
-  const { hubspotAccessToken } = getConfig();
   return {
-    Authorization: `Bearer ${hubspotAccessToken}`,
+    Authorization: `Bearer ${getHubSpotToken()}`,
     "Content-Type": "application/json",
   };
-}
-
-function getBaseUrl(): string {
-  return getConfig().hubspotBaseUrl;
 }
 
 async function handleResponse<T>(response: Response): Promise<T> {
@@ -115,7 +111,7 @@ async function fetchWithRetry<T>(
  */
 export async function listFlows(): Promise<HubSpotFlow[]> {
   const data = await fetchWithRetry<HubSpotFlowListResponse>(
-    `${getBaseUrl()}/automation/v4/flows`,
+    `${BASE_URL}/automation/v4/flows`,
     { method: "GET", headers: getHeaders() }
   );
   return data.results;
@@ -126,7 +122,7 @@ export async function listFlows(): Promise<HubSpotFlow[]> {
  */
 export async function getFlow(flowId: string): Promise<HubSpotFlow> {
   return fetchWithRetry<HubSpotFlow>(
-    `${getBaseUrl()}/automation/v4/flows/${flowId}`,
+    `${BASE_URL}/automation/v4/flows/${flowId}`,
     { method: "GET", headers: getHeaders() }
   );
 }
@@ -138,7 +134,7 @@ export async function batchReadFlows(
   flowIds: string[]
 ): Promise<HubSpotFlow[]> {
   const data = await fetchWithRetry<HubSpotBatchReadResponse>(
-    `${getBaseUrl()}/automation/v4/flows/batch/read`,
+    `${BASE_URL}/automation/v4/flows/batch/read`,
     {
       method: "POST",
       headers: getHeaders(),
@@ -166,7 +162,7 @@ export async function createFlow(
   };
 
   return fetchWithRetry<HubSpotFlow>(
-    `${getBaseUrl()}/automation/v4/flows`,
+    `${BASE_URL}/automation/v4/flows`,
     {
       method: "POST",
       headers: getHeaders(),
@@ -201,7 +197,7 @@ export async function updateFlow(
   };
 
   return fetchWithRetry<HubSpotFlow>(
-    `${getBaseUrl()}/automation/v4/flows/${flowId}`,
+    `${BASE_URL}/automation/v4/flows/${flowId}`,
     {
       method: "PUT",
       headers: getHeaders(),
@@ -215,7 +211,7 @@ export async function updateFlow(
  */
 export async function deleteFlow(flowId: string): Promise<void> {
   await fetchWithRetry<void>(
-    `${getBaseUrl()}/automation/v4/flows/${flowId}`,
+    `${BASE_URL}/automation/v4/flows/${flowId}`,
     { method: "DELETE", headers: getHeaders() }
   );
 }
