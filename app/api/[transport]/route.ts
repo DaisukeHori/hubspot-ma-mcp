@@ -36,7 +36,7 @@ const mcpHandler = createMcpHandler(
  */
 function extractBearerToken(request: Request): string | undefined {
   const authHeader = request.headers.get("authorization") || "";
-  const match = authHeader.match(/^Bearer\\s+(.+)$/i);
+  const match = authHeader.match(/^Bearer\s+(.+)$/i);
   return match?.[1] || undefined;
 }
 
