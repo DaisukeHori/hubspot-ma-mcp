@@ -190,8 +190,8 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     description: "担当者一覧・詳細",
     color: "#7C8DB5",
     tools: [
-      { name: "owner_list", desc: "担当者（オーナー）一覧取得", api: "GET /crm/v3/owners" },
-      { name: "owner_get", desc: "担当者詳細取得", api: "GET /crm/v3/owners/:id" },
+      { name: "owner_list", desc: "担当者（オーナー）一覧取得", icon: "👤", api: "GET /crm/v3/owners", params: [{ name: "limit", required: false, desc: "取得件数" }] },
+      { name: "owner_get", desc: "担当者詳細取得", icon: "🔍", api: "GET /crm/v3/owners/:id", params: [{ name: "ownerId", required: true, desc: "オーナーID" }] },
     ],
   },
   {
@@ -200,11 +200,11 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     description: "メールエンゲージメント CRUD",
     color: "#00BDA5",
     tools: [
-      { name: "email_search", desc: "メール検索", api: "POST /crm/v3/objects/emails/search" },
-      { name: "email_get", desc: "メール詳細取得", api: "GET /crm/v3/objects/emails/:id" },
-      { name: "email_create", desc: "メール作成", api: "POST /crm/v3/objects/emails" },
-      { name: "email_update", desc: "メール更新", api: "PATCH /crm/v3/objects/emails/:id" },
-      { name: "email_delete", desc: "メール削除", api: "DELETE /crm/v3/objects/emails/:id" },
+      { name: "email_search", desc: "メール検索", icon: "🔎", api: "POST /crm/v3/objects/emails/search", params: [{ name: "query", required: false, desc: "検索キーワード" }] },
+      { name: "email_get", desc: "メール詳細取得", icon: "📧", api: "GET /crm/v3/objects/emails/:id", params: [{ name: "emailId", required: true, desc: "メールID" }] },
+      { name: "email_create", desc: "メール作成", icon: "➕", api: "POST /crm/v3/objects/emails", params: [{ name: "properties", required: true, desc: "メールプロパティ" }] },
+      { name: "email_update", desc: "メール更新", icon: "✏️", api: "PATCH /crm/v3/objects/emails/:id", params: [{ name: "emailId", required: true, desc: "メールID" }] },
+      { name: "email_delete", desc: "メール削除", icon: "🗑", api: "DELETE /crm/v3/objects/emails/:id", params: [{ name: "emailId", required: true, desc: "メールID" }] },
     ],
   },
   {
@@ -213,11 +213,11 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     description: "ミーティングエンゲージメント CRUD",
     color: "#00A4BD",
     tools: [
-      { name: "meeting_search", desc: "ミーティング検索", api: "POST /crm/v3/objects/meetings/search" },
-      { name: "meeting_get", desc: "ミーティング詳細取得", api: "GET /crm/v3/objects/meetings/:id" },
-      { name: "meeting_create", desc: "ミーティング作成", api: "POST /crm/v3/objects/meetings" },
-      { name: "meeting_update", desc: "ミーティング更新", api: "PATCH /crm/v3/objects/meetings/:id" },
-      { name: "meeting_delete", desc: "ミーティング削除", api: "DELETE /crm/v3/objects/meetings/:id" },
+      { name: "meeting_search", desc: "ミーティング検索", icon: "🔎", api: "POST /crm/v3/objects/meetings/search", params: [{ name: "query", required: false, desc: "検索キーワード" }] },
+      { name: "meeting_get", desc: "ミーティング詳細取得", icon: "📅", api: "GET /crm/v3/objects/meetings/:id", params: [{ name: "meetingId", required: true, desc: "ミーティングID" }] },
+      { name: "meeting_create", desc: "ミーティング作成", icon: "➕", api: "POST /crm/v3/objects/meetings", params: [{ name: "properties", required: true, desc: "ミーティングプロパティ" }] },
+      { name: "meeting_update", desc: "ミーティング更新", icon: "✏️", api: "PATCH /crm/v3/objects/meetings/:id", params: [{ name: "meetingId", required: true, desc: "ミーティングID" }] },
+      { name: "meeting_delete", desc: "ミーティング削除", icon: "🗑", api: "DELETE /crm/v3/objects/meetings/:id", params: [{ name: "meetingId", required: true, desc: "ミーティングID" }] },
     ],
   },
   {
@@ -226,11 +226,11 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     description: "通話エンゲージメント CRUD",
     color: "#516F90",
     tools: [
-      { name: "call_search", desc: "通話検索", api: "POST /crm/v3/objects/calls/search" },
-      { name: "call_get", desc: "通話詳細取得", api: "GET /crm/v3/objects/calls/:id" },
-      { name: "call_create", desc: "通話作成", api: "POST /crm/v3/objects/calls" },
-      { name: "call_update", desc: "通話更新", api: "PATCH /crm/v3/objects/calls/:id" },
-      { name: "call_delete", desc: "通話削除", api: "DELETE /crm/v3/objects/calls/:id" },
+      { name: "call_search", desc: "通話検索", icon: "🔎", api: "POST /crm/v3/objects/calls/search", params: [{ name: "query", required: false, desc: "検索キーワード" }] },
+      { name: "call_get", desc: "通話詳細取得", icon: "📞", api: "GET /crm/v3/objects/calls/:id", params: [{ name: "callId", required: true, desc: "通話ID" }] },
+      { name: "call_create", desc: "通話作成", icon: "➕", api: "POST /crm/v3/objects/calls", params: [{ name: "properties", required: true, desc: "通話プロパティ" }] },
+      { name: "call_update", desc: "通話更新", icon: "✏️", api: "PATCH /crm/v3/objects/calls/:id", params: [{ name: "callId", required: true, desc: "通話ID" }] },
+      { name: "call_delete", desc: "通話削除", icon: "🗑", api: "DELETE /crm/v3/objects/calls/:id", params: [{ name: "callId", required: true, desc: "通話ID" }] },
     ],
   },
   {
@@ -239,8 +239,8 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     description: "見積もり（読み取り専用）",
     color: "#F5A623",
     tools: [
-      { name: "quote_search", desc: "見積もり検索", api: "POST /crm/v3/objects/quotes/search" },
-      { name: "quote_get", desc: "見積もり詳細取得", api: "GET /crm/v3/objects/quotes/:id" },
+      { name: "quote_search", desc: "見積もり検索", icon: "🔎", api: "POST /crm/v3/objects/quotes/search", params: [{ name: "query", required: false, desc: "検索キーワード" }] },
+      { name: "quote_get", desc: "見積もり詳細取得", icon: "💰", api: "GET /crm/v3/objects/quotes/:id", params: [{ name: "quoteId", required: true, desc: "見積もりID" }] },
     ],
   }
 ];
