@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 const MCP_URL = "https://hubspot-ma-mcp.vercel.app/api/mcp";
+const TOKEN_PLACEHOLDER = "pat-na1-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
 
 type ClientId =
   | "claude-web"
@@ -19,10 +20,10 @@ interface ClientConfig {
   icon: string;
   color: string;
   description: string;
-  oneClick?: string;
   copyContent: string;
   copyLabel: string;
   instructions: string[];
+  note?: string;
 }
 
 const CLIENTS: ClientConfig[] = [
@@ -38,6 +39,7 @@ const CLIENTS: ClientConfig[] = [
       '設定 → コネクタ → 「カスタムコネクタを追加」',
       "上記 URL を貼り付けて「追加」をクリック",
     ],
+    note: "Claude.ai ではヘッダー設定不可のため、サーバー側に環境変数 HUBSPOT_ACCESS_TOKEN の設定が必要です。",
   },
   {
     id: "claude-desktop",
@@ -50,7 +52,12 @@ const CLIENTS: ClientConfig[] = [
         mcpServers: {
           "hubspot-ma": {
             command: "npx",
-            args: ["mcp-remote", MCP_URL],
+            args: [
+              "mcp-remote",
+              MCP_URL,
+              "--header",
+              `Authorization:Bearer ${TOKEN_PLACEHOLDER}`,
+            ],
           },
         },
       },
@@ -61,7 +68,8 @@ const CLIENTS: ClientConfig[] = [
     instructions: [
       "macOS: ~/Library/Application Support/Claude/claude_desktop_config.json",
       "Windows: %APPDATA%\\Claude\\claude_desktop_config.json",
-      "上記 JSON を貼り付けてアプリを再起動",
+      "pat-na1-xxxx... を自分の HubSpot Private App トークンに置換",
+      "アプリを再起動",
     ],
   },
   {
@@ -70,10 +78,11 @@ const CLIENTS: ClientConfig[] = [
     icon: "⌘",
     color: "#D97706",
     description: "ターミナル CLI",
-    oneClick: `claude mcp add --transport http hubspot-ma ${MCP_URL}`,
-    copyContent: `claude mcp add --transport http hubspot-ma ${MCP_URL}`,
+    copyContent: `claude mcp add --transport http hubspot-ma ${MCP_URL} --header "Authorization:Bearer ${TOKEN_PLACEHOLDER}"`,
     copyLabel: "コマンドをコピー",
-    instructions: ["ターミナルで上記コマンドを実行するだけ"],
+    instructions: [
+      "pat-na1-xxxx... を自分の HubSpot トークンに置換してターミナルで実行",
+    ],
   },
   {
     id: "cursor",
@@ -87,6 +96,9 @@ const CLIENTS: ClientConfig[] = [
           "hubspot-ma": {
             type: "http",
             url: MCP_URL,
+            headers: {
+              Authorization: `Bearer ${TOKEN_PLACEHOLDER}`,
+            },
           },
         },
       },
@@ -97,6 +109,7 @@ const CLIENTS: ClientConfig[] = [
     instructions: [
       "Cmd/Ctrl + , → Tools & Integrations → New MCP Server",
       "または ~/.cursor/mcp.json に上記 JSON を貼り付け",
+      "pat-na1-xxxx... を自分の HubSpot トークンに置換",
     ],
   },
   {
@@ -105,12 +118,25 @@ const CLIENTS: ClientConfig[] = [
     icon: "⬡",
     color: "#007ACC",
     description: "Visual Studio Code（GitHub Copilot Chat）",
-    oneClick: `code --add-mcp '{"type":"http","name":"hubspot-ma","url":"${MCP_URL}"}'`,
-    copyContent: `code --add-mcp '{"type":"http","name":"hubspot-ma","url":"${MCP_URL}"}'`,
-    copyLabel: "コマンドをコピー",
+    copyContent: JSON.stringify(
+      {
+        mcpServers: {
+          "hubspot-ma": {
+            type: "http",
+            url: MCP_URL,
+            headers: {
+              Authorization: `Bearer ${TOKEN_PLACEHOLDER}`,
+            },
+          },
+        },
+      },
+      null,
+      2
+    ),
+    copyLabel: "JSON をコピー",
     instructions: [
-      "ターミナルで上記コマンドを実行",
-      "または .vscode/mcp.json に JSON 設定を追加",
+      ".vscode/mcp.json またはユーザー設定に上記 JSON を貼り付け",
+      "pat-na1-xxxx... を自分の HubSpot トークンに置換",
     ],
   },
   {
@@ -124,7 +150,12 @@ const CLIENTS: ClientConfig[] = [
         mcpServers: {
           "hubspot-ma": {
             command: "npx",
-            args: ["mcp-remote", MCP_URL],
+            args: [
+              "mcp-remote",
+              MCP_URL,
+              "--header",
+              `Authorization:Bearer ${TOKEN_PLACEHOLDER}`,
+            ],
           },
         },
       },
@@ -134,7 +165,7 @@ const CLIENTS: ClientConfig[] = [
     copyLabel: "JSON をコピー",
     instructions: [
       "Cmd/Ctrl + , → Cascade → MCP servers → Add Server",
-      "上記 JSON を貼り付け",
+      "pat-na1-xxxx... を自分の HubSpot トークンに置換",
     ],
   },
   {
@@ -150,6 +181,7 @@ const CLIENTS: ClientConfig[] = [
             type: "url",
             url: MCP_URL,
             name: "hubspot-ma",
+            authorization_token: `Bearer ${TOKEN_PLACEHOLDER}`,
           },
         ],
         tools: [
@@ -166,6 +198,7 @@ const CLIENTS: ClientConfig[] = [
     instructions: [
       "messages API の body に上記を追加",
       'ヘッダー: "anthropic-beta": "mcp-client-2025-11-20"',
+      "pat-na1-xxxx... を自分の HubSpot トークンに置換",
     ],
   },
 ];
@@ -299,6 +332,24 @@ function ClientCard({ client }: { client: ClientConfig }) {
                 <li key={i}>{step}</li>
               ))}
             </ol>
+
+            {client.note && (
+              <div
+                style={{
+                  background: "rgba(217,119,6,0.08)",
+                  border: "1px solid rgba(217,119,6,0.2)",
+                  borderRadius: 8,
+                  padding: "10px 14px",
+                  fontSize: 12,
+                  color: "#FBBF24",
+                  marginBottom: 16,
+                  lineHeight: 1.6,
+                }}
+              >
+                ⚠ {client.note}
+              </div>
+            )}
+
             <pre
               style={{
                 background: "rgba(0,0,0,0.4)",
@@ -310,7 +361,7 @@ function ClientCard({ client }: { client: ClientConfig }) {
                 lineHeight: 1.6,
                 color: "#A5F3FC",
                 marginBottom: 16,
-                maxHeight: 240,
+                maxHeight: 280,
               }}
             >
               <code>{client.copyContent}</code>
@@ -375,7 +426,6 @@ export default function Home() {
       `}</style>
 
       <div style={{ minHeight: "100vh", position: "relative", overflow: "hidden" }}>
-        {/* Background grid */}
         <div
           style={{
             position: "fixed",
@@ -386,7 +436,6 @@ export default function Home() {
             pointerEvents: "none",
           }}
         />
-        {/* Radial glow */}
         <div
           style={{
             position: "fixed",
@@ -441,14 +490,14 @@ export default function Home() {
               style={{
                 fontSize: 16,
                 color: "#9CA3AF",
-                maxWidth: 480,
+                maxWidth: 520,
                 margin: "0 auto 32px",
                 lineHeight: 1.7,
               }}
             >
               HubSpot ワークフローを AI アシスタントから直接操作。
               <br />
-              Claude・Cursor・VS Code など主要ツールに即接続。
+              自分の HubSpot トークンを設定するだけで誰でも利用可能。
             </p>
 
             <div
@@ -470,10 +519,54 @@ export default function Home() {
             </div>
           </section>
 
-          <div className="glow-line" style={{ marginBottom: 64 }} />
+          <div className="glow-line" style={{ marginBottom: 48 }} />
+
+          {/* ── 認証方式 ── */}
+          <section style={{ marginBottom: 48, animation: "fadeInUp 0.8s ease 0.15s both" }}>
+            <h2
+              style={{
+                fontSize: 13,
+                fontWeight: 700,
+                letterSpacing: "0.12em",
+                color: "#D97706",
+                textTransform: "uppercase",
+                marginBottom: 20,
+              }}
+            >
+              認証方式
+            </h2>
+            <div
+              style={{
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: 16,
+                padding: "20px 24px",
+                fontSize: 14,
+                color: "#D1D5DB",
+                lineHeight: 1.8,
+              }}
+            >
+              <p style={{ marginBottom: 12 }}>
+                <strong style={{ color: "#F59E0B" }}>方式 A（推奨）</strong>：MCP クライアントの設定で
+                <code style={{ color: "#A5F3FC", background: "rgba(0,0,0,0.3)", padding: "2px 6px", borderRadius: 4, fontSize: 12 }}>
+                  Authorization: Bearer &lt;your-hubspot-token&gt;
+                </code>
+                ヘッダーを指定。自分の HubSpot アカウントのワークフローを操作できます。
+              </p>
+              <p>
+                <strong style={{ color: "#F59E0B" }}>方式 B</strong>：自分でサーバーをデプロイし、環境変数
+                <code style={{ color: "#A5F3FC", background: "rgba(0,0,0,0.3)", padding: "2px 6px", borderRadius: 4, fontSize: 12 }}>
+                  HUBSPOT_ACCESS_TOKEN
+                </code>
+                を設定。チーム共用サーバーに最適。
+              </p>
+            </div>
+          </section>
+
+          <div className="glow-line" style={{ marginBottom: 48 }} />
 
           {/* ── クイック接続 ── */}
-          <section style={{ marginBottom: 64, animation: "fadeInUp 0.8s ease 0.2s both" }}>
+          <section style={{ marginBottom: 64, animation: "fadeInUp 0.8s ease 0.3s both" }}>
             <h2
               style={{
                 fontSize: 13,
@@ -570,9 +663,9 @@ export default function Home() {
                 { label: "Framework", value: "Next.js 15" },
                 { label: "Transport", value: "Streamable HTTP" },
                 { label: "Protocol", value: "MCP 2025-03-26" },
+                { label: "Auth", value: "Bearer Token" },
                 { label: "API", value: "HubSpot v4 Beta" },
                 { label: "Hosting", value: "Vercel" },
-                { label: "Language", value: "TypeScript" },
               ].map((spec) => (
                 <div
                   key={spec.label}
