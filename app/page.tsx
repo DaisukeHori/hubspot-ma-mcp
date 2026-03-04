@@ -97,11 +97,49 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     ],
   },
   {
-    category: "Pipelines & Properties",
+    category: "Properties（CRUD）",
     color: "#516F90",
     tools: [
+      { name: "properties_list", desc: "プロパティ定義一覧", icon: "📑", api: "GET /crm/v3/properties/{objectType}", params: [{ name: "objectType", required: true, desc: "contacts / companies / deals / tickets / line_items / products" }] },
+      { name: "property_create", desc: "カスタムプロパティ作成", icon: "🏷", api: "POST /crm/v3/properties/{objectType}", params: [{ name: "objectType", required: true, desc: "対象オブジェクト" }, { name: "name", required: true, desc: "内部名" }, { name: "label", required: true, desc: "表示ラベル" }, { name: "type", required: true, desc: "型: string/number/date/enumeration" }, { name: "fieldType", required: true, desc: "フィールド種別: text/select/checkbox等" }, { name: "groupName", required: true, desc: "グループ名" }] },
+      { name: "property_update", desc: "プロパティ更新", icon: "✏️", api: "PATCH /crm/v3/properties/{objectType}/{name}", params: [{ name: "objectType", required: true, desc: "対象オブジェクト" }, { name: "propertyName", required: true, desc: "プロパティ内部名" }, { name: "label", required: false, desc: "新ラベル" }] },
+      { name: "property_delete", desc: "プロパティ削除", icon: "🗑", api: "DELETE /crm/v3/properties/{objectType}/{name}", params: [{ name: "objectType", required: true, desc: "対象オブジェクト" }, { name: "propertyName", required: true, desc: "プロパティ内部名" }, { name: "confirm", required: true, desc: "削除確認（true 必須）" }] },
+    ],
+  },
+  {
+    category: "Pipelines（CRUD）",
+    color: "#7C98B6",
+    tools: [
       { name: "pipeline_list", desc: "パイプライン一覧", icon: "🔧", api: "GET /crm/v3/pipelines/{objectType}", params: [{ name: "objectType", required: true, desc: "deals または tickets" }] },
-      { name: "properties_list", desc: "プロパティ定義一覧", icon: "📑", api: "GET /crm/v3/properties/{objectType}", params: [{ name: "objectType", required: true, desc: "contacts / companies / deals / tickets" }] },
+      { name: "pipeline_create", desc: "パイプライン作成", icon: "🔨", api: "POST /crm/v3/pipelines/{objectType}", params: [{ name: "objectType", required: true, desc: "deals / tickets" }, { name: "label", required: true, desc: "パイプライン名" }, { name: "stages", required: true, desc: "ステージ定義" }] },
+      { name: "pipeline_update", desc: "パイプライン更新", icon: "🔄", api: "PATCH /crm/v3/pipelines/{objectType}/{id}", params: [{ name: "objectType", required: true, desc: "deals / tickets" }, { name: "pipelineId", required: true, desc: "パイプライン ID" }] },
+    ],
+  },
+  {
+    category: "Line Items（v3）",
+    color: "#F2545B",
+    tools: [
+      { name: "lineitem_search", desc: "明細行検索", icon: "🔎", api: "POST /crm/v3/objects/line_items/search", params: [{ name: "query", required: false, desc: "検索キーワード" }, { name: "filterGroups", required: false, desc: "フィルター条件" }] },
+      { name: "lineitem_create", desc: "明細行作成", icon: "➕", api: "POST /crm/v3/objects/line_items", params: [{ name: "name", required: true, desc: "名前" }, { name: "quantity", required: false, desc: "数量" }, { name: "price", required: false, desc: "単価" }, { name: "dealId", required: false, desc: "紐付け取引 ID" }] },
+      { name: "lineitem_update", desc: "明細行更新", icon: "✏️", api: "PATCH /crm/v3/objects/line_items/{id}", params: [{ name: "lineItemId", required: true, desc: "Line Item ID" }, { name: "properties", required: true, desc: "更新プロパティ" }] },
+    ],
+  },
+  {
+    category: "Products（v3）",
+    color: "#00BDA5",
+    tools: [
+      { name: "product_search", desc: "商品検索", icon: "🛍", api: "POST /crm/v3/objects/products/search", params: [{ name: "query", required: false, desc: "検索キーワード" }, { name: "filterGroups", required: false, desc: "フィルター条件" }] },
+      { name: "product_create", desc: "商品登録", icon: "📦", api: "POST /crm/v3/objects/products", params: [{ name: "name", required: true, desc: "商品名" }, { name: "price", required: false, desc: "価格" }, { name: "hs_sku", required: false, desc: "SKU" }] },
+    ],
+  },
+  {
+    category: "CMS（Blog & Pages）",
+    color: "#FF8F59",
+    tools: [
+      { name: "cms_blog_list", desc: "ブログ記事一覧", icon: "📝", api: "GET /cms/v3/blogs/posts", params: [{ name: "limit", required: false, desc: "件数" }] },
+      { name: "cms_blog_update", desc: "ブログ記事更新", icon: "✍️", api: "PATCH /cms/v3/blogs/posts/{id}", params: [{ name: "postId", required: true, desc: "記事 ID" }, { name: "name", required: false, desc: "タイトル" }, { name: "postBody", required: false, desc: "本文（HTML）" }, { name: "state", required: false, desc: "DRAFT / PUBLISHED" }] },
+      { name: "cms_page_list", desc: "ページ一覧", icon: "📄", api: "GET /cms/v3/pages/{type}", params: [{ name: "pageType", required: true, desc: "landing-pages / site-pages" }] },
+      { name: "cms_page_update", desc: "ページ更新", icon: "🖊", api: "PATCH /cms/v3/pages/{type}/{id}", params: [{ name: "pageType", required: true, desc: "landing-pages / site-pages" }, { name: "pageId", required: true, desc: "ページ ID" }, { name: "name", required: false, desc: "ページ名" }, { name: "state", required: false, desc: "DRAFT / PUBLISHED" }] },
     ],
   },
 ];
@@ -310,7 +348,7 @@ export default function Home() {
             MCP Protocol 2025-03-26 · Streamable HTTP
           </div>
           <h1>AIから<span>HubSpot CRM</span>を<br />直接操作しよう</h1>
-          <p className="hs-hero__sub">ワークフロー・コンタクト・取引・チケットを Claude・Cursor・VS Code などあらゆるAIツールから操作できるMCPサーバー。</p>
+          <p className="hs-hero__sub">ワークフロー・CRM・商品・明細行・プロパティ・パイプライン・CMS をAIツールから直接操作できるMCPサーバー。35ツール搭載。</p>
           <div className="hs-hero__endpoint">
             <span style={{ color: "var(--hs-text-light)", fontSize: 12 }}>ENDPOINT</span>
             <span>{MCP_URL}</span>
@@ -335,6 +373,57 @@ export default function Home() {
             <h4>APIキーでゲート</h4>
             <p><code>MCP_API_KEY</code> でサーバーアクセスを制限。HubSpot トークンは環境変数に固定。<strong>デプロイした組織だけ</strong>が使えるセキュアな構成。</p>
           </div>
+        </div>
+
+        <div style={{ marginTop: 40 }}>
+          <h3 style={{ fontSize: 20, fontWeight: 700, color: "var(--hs-obsidian)", marginBottom: 16 }}>HubSpot Private App トークンの発行方法</h3>
+          <ol style={{ fontSize: 14, lineHeight: 2, color: "var(--hs-text)", paddingLeft: 20 }}>
+            <li><a href="https://app.hubspot.com/" target="_blank" rel="noopener noreferrer" style={{ color: "var(--hs-orange)" }}>HubSpot</a> にログイン → 右上の ⚙️ 設定アイコン</li>
+            <li>左メニュー「Integrations」→「Private Apps」</li>
+            <li>「Create a private app」をクリック</li>
+            <li>Basic Info: アプリ名（例: MCP Server）を入力</li>
+            <li>「Scopes」タブで下記の権限にチェック</li>
+            <li>「Create app」→ 表示される Access Token（<code>pat-na1-xxxx...</code>）をコピー</li>
+          </ol>
+        </div>
+
+        <div style={{ marginTop: 28 }}>
+          <h4 style={{ fontSize: 16, fontWeight: 700, color: "var(--hs-obsidian)", marginBottom: 12 }}>必要なスコープ（権限）</h4>
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", fontSize: 13, borderCollapse: "collapse", border: "1px solid var(--hs-border)", borderRadius: "var(--hs-radius)" }}>
+              <thead>
+                <tr style={{ background: "var(--hs-bg)", borderBottom: "2px solid var(--hs-border)" }}>
+                  <th style={{ padding: "10px 14px", textAlign: "left", color: "var(--hs-text-light)", fontWeight: 700 }}>スコープ</th>
+                  <th style={{ padding: "10px 14px", textAlign: "left", color: "var(--hs-text-light)", fontWeight: 700 }}>対象ツール</th>
+                  <th style={{ padding: "10px 14px", textAlign: "center", color: "var(--hs-text-light)", fontWeight: 700, width: 60 }}>必須</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { scope: "crm.objects.contacts.read / .write", tools: "contact_*", req: true },
+                  { scope: "crm.objects.companies.read / .write", tools: "company_*", req: true },
+                  { scope: "crm.objects.deals.read / .write", tools: "deal_*", req: true },
+                  { scope: "crm.objects.line_items.read / .write", tools: "lineitem_*", req: true },
+                  { scope: "e-commerce (products)", tools: "product_*", req: true },
+                  { scope: "tickets", tools: "ticket_*", req: true },
+                  { scope: "crm.schemas.*.read / .write", tools: "property_*, pipeline_*", req: true },
+                  { scope: "automation", tools: "workflow_*", req: true },
+                  { scope: "content", tools: "cms_blog_*, cms_page_*", req: false },
+                ].map((r, i) => (
+                  <tr key={i} style={{ borderBottom: "1px solid var(--hs-border)" }}>
+                    <td style={{ padding: "8px 14px", fontFamily: "'SF Mono','Fira Code',monospace", fontSize: 12 }}>{r.scope}</td>
+                    <td style={{ padding: "8px 14px", color: "var(--hs-text-light)" }}>{r.tools}</td>
+                    <td style={{ padding: "8px 14px", textAlign: "center" }}>
+                      {r.req
+                        ? <span style={{ color: "#E8603C", fontWeight: 700 }}>✓</span>
+                        : <span style={{ color: "var(--hs-text-light)" }}>任意</span>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p style={{ fontSize: 12, color: "var(--hs-text-light)", marginTop: 8 }}>※ CMS スコープは CMS Hub 契約がある場合のみ利用可能です。不要な場合はチェック不要です。</p>
         </div>
       </section>
 
@@ -374,7 +463,7 @@ export default function Home() {
         <div className="hs-section__label"><Sprocket size={14} /> TECH SPECS</div>
         <h2 className="hs-section__title">技術仕様</h2>
         <div className="hs-specs">
-          {[{l:"Framework",v:"Next.js 15"},{l:"Transport",v:"Streamable HTTP"},{l:"Protocol",v:"MCP 2025-03-26"},{l:"Auth",v:"2 Modes"},{l:"API",v:"CRM v3 + Automation v4"},{l:"Hosting",v:"Vercel"}].map((s) => (
+          {[{l:"Framework",v:"Next.js 15"},{l:"Transport",v:"Streamable HTTP"},{l:"Protocol",v:"MCP 2025-03-26"},{l:"Auth",v:"2 Modes"},{l:"API",v:"CRM v3 + CMS v3 + Automation v4"},{l:"Hosting",v:"Vercel"}].map((s) => (
             <div key={s.l} className="hs-spec"><div className="hs-spec__label">{s.l}</div><div className="hs-spec__value">{s.v}</div></div>
           ))}
         </div>
