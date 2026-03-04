@@ -183,11 +183,9 @@ const TOOL_CATEGORIES: ToolCategory[] = [
       { name: "cms_page_list", desc: "ページ一覧", icon: "📄", api: "GET /cms/v3/pages/{type}", params: [{ name: "pageType", required: true, desc: "landing-pages / site-pages" }] },
       { name: "cms_page_update", desc: "ページ更新", icon: "🖊", api: "PATCH /cms/v3/pages/{type}/{id}", params: [{ name: "pageType", required: true, desc: "landing-pages / site-pages" }, { name: "pageId", required: true, desc: "ページ ID" }] },
     ],
-  },,
+  },
   {
-    name: "Owners",
-    icon: "👤",
-    description: "担当者一覧・詳細",
+    category: "Owners",
     color: "#7C8DB5",
     tools: [
       { name: "owner_list", desc: "担当者（オーナー）一覧取得", icon: "👤", api: "GET /crm/v3/owners", params: [{ name: "limit", required: false, desc: "取得件数" }] },
@@ -195,9 +193,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     ],
   },
   {
-    name: "Emails",
-    icon: "📧",
-    description: "メールエンゲージメント CRUD",
+    category: "Emails（メールエンゲージメント）",
     color: "#00BDA5",
     tools: [
       { name: "email_search", desc: "メール検索", icon: "🔎", api: "POST /crm/v3/objects/emails/search", params: [{ name: "query", required: false, desc: "検索キーワード" }] },
@@ -208,9 +204,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     ],
   },
   {
-    name: "Meetings",
-    icon: "📅",
-    description: "ミーティングエンゲージメント CRUD",
+    category: "Meetings（ミーティング）",
     color: "#00A4BD",
     tools: [
       { name: "meeting_search", desc: "ミーティング検索", icon: "🔎", api: "POST /crm/v3/objects/meetings/search", params: [{ name: "query", required: false, desc: "検索キーワード" }] },
@@ -221,9 +215,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     ],
   },
   {
-    name: "Calls",
-    icon: "📞",
-    description: "通話エンゲージメント CRUD",
+    category: "Calls（通話）",
     color: "#516F90",
     tools: [
       { name: "call_search", desc: "通話検索", icon: "🔎", api: "POST /crm/v3/objects/calls/search", params: [{ name: "query", required: false, desc: "検索キーワード" }] },
@@ -234,9 +226,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     ],
   },
   {
-    name: "Quotes",
-    icon: "💰",
-    description: "見積もり（読み取り専用）",
+    category: "Quotes（見積もり）",
     color: "#F5A623",
     tools: [
       { name: "quote_search", desc: "見積もり検索", icon: "🔎", api: "POST /crm/v3/objects/quotes/search", params: [{ name: "query", required: false, desc: "検索キーワード" }] },
