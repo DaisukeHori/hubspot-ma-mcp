@@ -4,14 +4,20 @@
  * /api/mcp  → Streamable HTTP (メイン)
  * /api/sse  → SSE (後方互換)
  *
- * 認証方式（両対応）:
- *  1. Authorization: Bearer <HubSpot PAT>  → ユーザー自身のトークン
- *  2. 環境変数 HUBSPOT_ACCESS_TOKEN        → サーバーデフォルト
+ * AUTH_MODE による認証分岐:
+ *  - "hubspot_token" (デフォルト):
+ *      Authorization: Bearer <HubSpot PAT> でユーザーが自分のトークンを渡す
+ *      MCPサーバー自体への認証はなし
+ *
+ *  - "api_key":
+ *      Authorization: Bearer <MCP_API_KEY> でMCPサーバーへの認証
+ *      HubSpotトークンは環境変数 HUBSPOT_ACCESS_TOKEN を使用（組織固定）
+ *      MCP_API_KEY を知らない人はアクセス不可
  */
 
 import { createMcpHandler } from "mcp-handler";
 import { registerAllTools } from "@/lib/mcp/server";
-import { authStorage } from "@/lib/hubspot/auth-context";
+import { authStorage, getAuthMode } from "@/lib/hubspot/auth-context";
 
 const mcpHandler = createMcpHandler(
   (server) => {
@@ -26,19 +32,72 @@ const mcpHandler = createMcpHandler(
 );
 
 /**
- * リクエストの Authorization ヘッダーから Bearer トークンを抽出し、
- * AsyncLocalStorage 経由でツールハンドラーに渡すラッパー。
- *
- * createMcpHandler は (request: Request) => Promise<Response> を返すため
- * 引数は request のみ。
+ * Bearer Token を Authorization ヘッダーから抽出する
+ */
+function extractBearerToken(request: Request): string | undefined {
+  const authHeader = request.headers.get("authorization") || "";
+  const match = authHeader.match(/^Bearer\\s+(.+)$/i);
+  return match?.[1] || undefined;
+}
+
+/**
+ * api_key モード: MCP_API_KEY で認証
+ * 一致しなければ 401 を返す
+ */
+function verifyApiKey(bearerToken: string | undefined): Response | null {
+  const expectedKey = process.env.MCP_API_KEY;
+
+  if (!expectedKey) {
+    return new Response(
+      JSON.stringify({
+        jsonrpc: "2.0",
+        error: {
+          code: -32001,
+          message:
+            "サーバー設定エラー: AUTH_MODE=api_key ですが MCP_API_KEY が設定されていません。",
+        },
+      }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
+  if (!bearerToken || bearerToken !== expectedKey) {
+    return new Response(
+      JSON.stringify({
+        jsonrpc: "2.0",
+        error: {
+          code: -32001,
+          message:
+            "認証エラー: 有効な API キーを Authorization: Bearer <MCP_API_KEY> で指定してください。",
+        },
+      }),
+      { status: 401, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
+  return null; // 認証OK
+}
+
+/**
+ * メインハンドラー
  */
 async function handler(request: Request): Promise<Response> {
-  // Authorization: Bearer xxx からトークンを抽出
-  const authHeader = request.headers.get("authorization") || "";
-  const bearerMatch = authHeader.match(/^Bearer\s+(.+)$/i);
-  const bearerToken = bearerMatch?.[1] || undefined;
+  const mode = getAuthMode();
+  const bearerToken = extractBearerToken(request);
 
-  // AsyncLocalStorage にトークンをセットしてハンドラーを実行
+  if (mode === "api_key") {
+    // ── api_key モード ──
+    // Bearer Token = MCP_API_KEY として検証
+    const errorResponse = verifyApiKey(bearerToken);
+    if (errorResponse) return errorResponse;
+
+    // HubSpot トークンは環境変数から取得されるので
+    // AsyncLocalStorage にはセットしない
+    return mcpHandler(request);
+  }
+
+  // ── hubspot_token モード（デフォルト） ──
+  // Bearer Token = HubSpot アクセストークン
   if (bearerToken) {
     return authStorage.run(
       { hubspotAccessToken: bearerToken },
@@ -46,7 +105,8 @@ async function handler(request: Request): Promise<Response> {
     );
   }
 
-  // Bearer Token がない場合はそのまま実行（環境変数フォールバック）
+  // Bearer Token がない場合はそのまま実行
+  // （getHubSpotToken() でエラーになる）
   return mcpHandler(request);
 }
 
