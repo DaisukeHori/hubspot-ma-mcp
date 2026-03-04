@@ -21,7 +21,7 @@ export function registerContactSearch(server: McpServer) {
                 operator: z.string().describe("比較演算子: EQ, NEQ, LT, LTE, GT, GTE, CONTAINS_TOKEN, NOT_CONTAINS_TOKEN, HAS_PROPERTY, NOT_HAS_PROPERTY, IN, NOT_IN, BETWEEN"),
                 value: z.string().optional().describe("比較値（HAS_PROPERTY/NOT_HAS_PROPERTY以外で必須）"),
               })
-            ),
+            ).describe("AND条件フィルタの配列。各要素はpropertyName+operator+valueのオブジェクト"),
           })
         )
         .optional()
