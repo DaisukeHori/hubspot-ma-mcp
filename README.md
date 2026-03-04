@@ -9,6 +9,7 @@
 <p align="center">
   <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/status-operational-10B981?style=flat-square" alt="Status" /></a>
   <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/transport-Streamable_HTTP-A5F3FC?style=flat-square" alt="Transport" /></a>
+  <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/auth-Bearer_Token-F59E0B?style=flat-square" alt="Auth" /></a>
   <a href="https://hubspot-ma-mcp.vercel.app/"><img src="https://img.shields.io/badge/protocol-MCP_2025--03--26-D97706?style=flat-square" alt="Protocol" /></a>
   <a href="https://vercel.com"><img src="https://img.shields.io/badge/deployed_on-Vercel-000?style=flat-square&logo=vercel" alt="Vercel" /></a>
   <img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License" />
@@ -26,26 +27,35 @@ https://hubspot-ma-mcp.vercel.app/api/mcp
 
 ---
 
+## 認証方式
+
+自分の HubSpot アカウントのワークフローを操作するには、[HubSpot Private App](https://developers.hubspot.com/docs/api/private-apps) のアクセストークンが必要です。
+
+| 方式 | 説明 | 適用場面 |
+|---|---|---|
+| **Bearer Token（推奨）** | MCP クライアントの設定で `Authorization: Bearer <token>` ヘッダーを指定 | 個人利用・マルチユーザー |
+| **環境変数フォールバック** | サーバーの `HUBSPOT_ACCESS_TOKEN` 環境変数に設定 | チーム共用・自前デプロイ |
+
+Bearer Token が指定されている場合はそちらを優先し、なければ環境変数を使います。
+
+### HubSpot Private App の作成
+
+1. [HubSpot](https://app.hubspot.com/) → ⚙️ 設定 → Integrations → Private Apps
+2. 「Create a private app」→ Scopes で **`automation`** にチェック
+3. Access Token (`pat-na1-xxxx...`) をコピー
+
+---
+
 ## クイック接続
 
-使いたいクライアントを選んでコピペするだけ。  
-詳しい手順は **[ランディングページ](https://hubspot-ma-mcp.vercel.app/)** にインタラクティブガイドがあります。
+各クライアントの設定例を以下に示します。  
+`pat-na1-xxxx...` の部分を自分の HubSpot Private App トークンに置き換えてください。
 
-### Claude.ai（Web）
-
-```
-設定 → コネクタ → カスタムコネクタを追加 → URL を貼り付け
-```
-
-```
-https://hubspot-ma-mcp.vercel.app/api/mcp
-```
+インタラクティブガイド → **[hubspot-ma-mcp.vercel.app](https://hubspot-ma-mcp.vercel.app/)**
 
 ### Claude Desktop
 
-`claude_desktop_config.json` に追加:
-
-| OS | パス |
+| OS | 設定ファイルパス |
 |---|---|
 | macOS | `~/Library/Application Support/Claude/claude_desktop_config.json` |
 | Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
@@ -55,7 +65,12 @@ https://hubspot-ma-mcp.vercel.app/api/mcp
   "mcpServers": {
     "hubspot-ma": {
       "command": "npx",
-      "args": ["mcp-remote", "https://hubspot-ma-mcp.vercel.app/api/mcp"]
+      "args": [
+        "mcp-remote",
+        "https://hubspot-ma-mcp.vercel.app/api/mcp",
+        "--header",
+        "Authorization:Bearer pat-na1-xxxx..."
+      ]
     }
   }
 }
@@ -64,19 +79,24 @@ https://hubspot-ma-mcp.vercel.app/api/mcp
 ### Claude Code
 
 ```bash
-claude mcp add --transport http hubspot-ma https://hubspot-ma-mcp.vercel.app/api/mcp
+claude mcp add --transport http hubspot-ma \
+  https://hubspot-ma-mcp.vercel.app/api/mcp \
+  --header "Authorization:Bearer pat-na1-xxxx..."
 ```
 
 ### Cursor
 
-`~/.cursor/mcp.json` に追加:
+`~/.cursor/mcp.json`:
 
 ```json
 {
   "mcpServers": {
     "hubspot-ma": {
       "type": "http",
-      "url": "https://hubspot-ma-mcp.vercel.app/api/mcp"
+      "url": "https://hubspot-ma-mcp.vercel.app/api/mcp",
+      "headers": {
+        "Authorization": "Bearer pat-na1-xxxx..."
+      }
     }
   }
 }
@@ -84,18 +104,17 @@ claude mcp add --transport http hubspot-ma https://hubspot-ma-mcp.vercel.app/api
 
 ### VS Code
 
-```bash
-code --add-mcp '{"type":"http","name":"hubspot-ma","url":"https://hubspot-ma-mcp.vercel.app/api/mcp"}'
-```
-
-または `.vscode/mcp.json`:
+`.vscode/mcp.json`:
 
 ```json
 {
   "mcpServers": {
     "hubspot-ma": {
       "type": "http",
-      "url": "https://hubspot-ma-mcp.vercel.app/api/mcp"
+      "url": "https://hubspot-ma-mcp.vercel.app/api/mcp",
+      "headers": {
+        "Authorization": "Bearer pat-na1-xxxx..."
+      }
     }
   }
 }
@@ -108,11 +127,24 @@ code --add-mcp '{"type":"http","name":"hubspot-ma","url":"https://hubspot-ma-mcp
   "mcpServers": {
     "hubspot-ma": {
       "command": "npx",
-      "args": ["mcp-remote", "https://hubspot-ma-mcp.vercel.app/api/mcp"]
+      "args": [
+        "mcp-remote",
+        "https://hubspot-ma-mcp.vercel.app/api/mcp",
+        "--header",
+        "Authorization:Bearer pat-na1-xxxx..."
+      ]
     }
   }
 }
 ```
+
+### Claude.ai（Web）
+
+```
+設定 → コネクタ → カスタムコネクタを追加 → URL を貼り付け
+```
+
+> ⚠ Claude.ai Web ではカスタムヘッダーを設定できないため、自前デプロイ + 環境変数方式が必要です。
 
 ### Anthropic API（MCP Connector Beta）
 
@@ -126,7 +158,12 @@ curl https://api.anthropic.com/v1/messages \
     "model": "claude-sonnet-4-5-20250929",
     "max_tokens": 4096,
     "messages": [{"role": "user", "content": "HubSpotのワークフロー一覧を取得して"}],
-    "mcp_servers": [{"type": "url", "url": "https://hubspot-ma-mcp.vercel.app/api/mcp", "name": "hubspot-ma"}],
+    "mcp_servers": [{
+      "type": "url",
+      "url": "https://hubspot-ma-mcp.vercel.app/api/mcp",
+      "name": "hubspot-ma",
+      "authorization_token": "Bearer pat-na1-xxxx..."
+    }],
     "tools": [{"type": "mcp_toolset", "mcp_server_name": "hubspot-ma"}]
   }'
 ```
@@ -148,14 +185,6 @@ curl https://api.anthropic.com/v1/messages \
 
 ## 自分でデプロイする場合
 
-### 1. HubSpot Private App 作成
-
-1. [HubSpot](https://app.hubspot.com/) → ⚙️ 設定 → Integrations → Private Apps
-2. 「Create a private app」→ Scopes で **`automation`** にチェック
-3. Access Token をコピー
-
-### 2. デプロイ
-
 ```bash
 git clone https://github.com/DaisukeHori/hubspot-ma-mcp.git
 cd hubspot-ma-mcp
@@ -166,10 +195,8 @@ Vercel Environment Variables:
 
 | Key | Value | 必須 |
 |---|---|---|
-| `HUBSPOT_ACCESS_TOKEN` | `pat-na1-xxxx...` | ✅ |
+| `HUBSPOT_ACCESS_TOKEN` | `pat-na1-xxxx...` | Bearer Token 未使用時のみ |
 | `MCP_API_KEY` | 任意（アクセス制限用） | 任意 |
-
-### 3. ローカル開発
 
 ```bash
 cp .env.example .env.local
@@ -184,6 +211,7 @@ npm run dev
 |---|---|
 | Framework | Next.js 15 (App Router) |
 | MCP Handler | mcp-handler (Streamable HTTP / SSE) |
+| Auth | Bearer Token + 環境変数フォールバック |
 | API | HubSpot Automation API v4 (Beta) |
 | Hosting | Vercel (Fluid Compute) |
 | Language | TypeScript |
