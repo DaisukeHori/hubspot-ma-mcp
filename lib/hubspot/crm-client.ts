@@ -422,6 +422,12 @@ export interface AssociationResult {
   paging?: { next?: { after: string } };
 }
 
+export interface AssociationLabel {
+  category: string;
+  typeId: number;
+  label: string | null;
+}
+
 export async function listAssociations(
   fromObjectType: string,
   fromObjectId: string,
@@ -443,13 +449,31 @@ export async function createAssociation(
   fromObjectId: string,
   toObjectType: string,
   toObjectId: string,
+  associationCategory?: string,
   associationTypeId?: number
 ): Promise<unknown> {
-  if (associationTypeId !== undefined) {
-    // v3 labeled association
+  if (associationCategory && associationTypeId !== undefined) {
+    // v4 batch/create with label (supports direction + category)
     return fetchWithRetry<unknown>(
-      `${BASE_URL}/crm/v3/objects/${fromObjectType}/${fromObjectId}/associations/${toObjectType}/${toObjectId}/${associationTypeId}`,
-      { method: "PUT", headers: getHeaders() }
+      `${BASE_URL}/crm/v4/associations/${fromObjectType}/${toObjectType}/batch/create`,
+      {
+        method: "POST",
+        headers: getHeaders(),
+        body: JSON.stringify({
+          inputs: [
+            {
+              from: { id: fromObjectId },
+              to: { id: toObjectId },
+              types: [
+                {
+                  associationCategory,
+                  associationTypeId,
+                },
+              ],
+            },
+          ],
+        }),
+      }
     );
   } else {
     // v4 default (unlabeled) association
@@ -471,3 +495,30 @@ export async function deleteAssociation(
     { method: "DELETE", headers: getHeaders() }
   );
 }
+
+export async function listAssociationLabels(
+  fromObjectType: string,
+  toObjectType: string
+): Promise<{ results: AssociationLabel[] }> {
+  return fetchWithRetry<{ results: AssociationLabel[] }>(
+    `${BASE_URL}/crm/v4/associations/${fromObjectType}/${toObjectType}/labels`,
+    { method: "GET", headers: getHeaders() }
+  );
+}
+
+export async function createAssociationLabel(
+  fromObjectType: string,
+  toObjectType: string,
+  label: string,
+  name: string
+): Promise<{ results: AssociationLabel[] }> {
+  return fetchWithRetry<{ results: AssociationLabel[] }>(
+    `${BASE_URL}/crm/v4/associations/${fromObjectType}/${toObjectType}/labels`,
+    {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify({ label, name }),
+    }
+  );
+}
+

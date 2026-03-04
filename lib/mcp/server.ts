@@ -1,6 +1,6 @@
 /**
  * MCP サーバー初期化
- * 全ツールを一括登録する（58 tools）
+ * 全ツールを一括登録する（59 tools）
  */
 
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -82,6 +82,7 @@ import { registerTaskUpdate } from "./tools/task-update";
 import { registerAssociationList } from "./tools/association-list";
 import { registerAssociationCreate } from "./tools/association-create";
 import { registerAssociationDelete } from "./tools/association-delete";
+import { registerAssociationLabels } from "./tools/association-labels";
 
 // ── CMS（Blog & Pages）──
 import { registerCmsBlogList } from "./tools/cms-blog-list";
@@ -166,10 +167,11 @@ export function registerAllTools(server: McpServer) {
   registerTaskCreate(server);
   registerTaskUpdate(server);
 
-  // Associations（3 tools）
+  // Associations（4 tools）
   registerAssociationList(server);
   registerAssociationCreate(server);
   registerAssociationDelete(server);
+  registerAssociationLabels(server);
 
   // CMS（4 tools）
   registerCmsBlogList(server);
@@ -177,3 +179,4 @@ export function registerAllTools(server: McpServer) {
   registerCmsPageList(server);
   registerCmsPageUpdate(server);
 }
+
