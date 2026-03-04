@@ -127,9 +127,10 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     category: "Associations（関連付け / v4）",
     color: "#2D3E50",
     tools: [
-      { name: "association_list", desc: "関連レコード一覧", icon: "🔗", api: "GET /crm/v4/objects/{type}/{id}/associations/{toType}", params: [{ name: "fromObjectType", required: true, desc: "元オブジェクト" }, { name: "fromObjectId", required: true, desc: "元 ID" }, { name: "toObjectType", required: true, desc: "関連先オブジェクト" }] },
-      { name: "association_create", desc: "関連付け作成", icon: "🔗", api: "PUT /crm/v4/.../associations/default/...", params: [{ name: "fromObjectType", required: true, desc: "元オブジェクト" }, { name: "fromObjectId", required: true, desc: "元 ID" }, { name: "toObjectType", required: true, desc: "関連先オブジェクト" }, { name: "toObjectId", required: true, desc: "関連先 ID" }] },
+      { name: "association_list", desc: "関連レコード一覧（方向あり）", icon: "🔗", api: "GET /crm/v4/objects/{from}/{id}/associations/{to}", params: [{ name: "fromObjectType", required: true, desc: "元オブジェクト（方向の起点）" }, { name: "fromObjectId", required: true, desc: "元 ID" }, { name: "toObjectType", required: true, desc: "関連先オブジェクト" }] },
+      { name: "association_create", desc: "関連付け作成（方向+ラベル対応）", icon: "🔗", api: "POST /crm/v4/associations/{from}/{to}/batch/create", params: [{ name: "fromObjectType", required: true, desc: "元オブジェクト（方向の起点）" }, { name: "fromObjectId", required: true, desc: "元 ID" }, { name: "toObjectType", required: true, desc: "関連先オブジェクト" }, { name: "toObjectId", required: true, desc: "関連先 ID" }, { name: "associationCategory", required: false, desc: "HUBSPOT_DEFINED / USER_DEFINED" }, { name: "associationTypeId", required: false, desc: "方向別タイプID（例: 1=contact→company）" }] },
       { name: "association_delete", desc: "関連付け削除", icon: "✂️", api: "DELETE /crm/v4/.../associations/...", params: [{ name: "fromObjectType", required: true, desc: "元オブジェクト" }, { name: "fromObjectId", required: true, desc: "元 ID" }, { name: "toObjectType", required: true, desc: "関連先オブジェクト" }, { name: "toObjectId", required: true, desc: "関連先 ID" }] },
+      { name: "association_labels", desc: "ラベル定義の取得・作成", icon: "🏷", api: "GET/POST /crm/v4/associations/{from}/{to}/labels", params: [{ name: "fromObjectType", required: true, desc: "元オブジェクト" }, { name: "toObjectType", required: true, desc: "関連先オブジェクト" }, { name: "action", required: true, desc: "list / create" }, { name: "label", required: false, desc: "作成時ラベル名" }, { name: "name", required: false, desc: "作成時内部名" }] },
     ],
   },
   {
@@ -225,57 +226,33 @@ function ToolCard({ tool, accentColor }: { tool: ToolDef; accentColor: string })
     <div
       className="hs-tool-card"
       style={{ cursor: "pointer", borderColor: open ? accentColor : undefined, boxShadow: open ? `0 4px 16px ${accentColor}18` : undefined }}
-      onClick={() => setOpen(!open)}
+      onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
     >
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ fontSize: 22 }}>{tool.icon}</span>
+          <span style={{ fontSize: 18 }}>{tool.icon}</span>
           <div>
             <div className="hs-tool-card__name">{tool.name}</div>
             <div className="hs-tool-card__desc">{tool.desc}</div>
           </div>
         </div>
-        <svg
-          width="16" height="16" viewBox="0 0 20 20" fill="none"
-          style={{ transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "rotate(0deg)", flexShrink: 0, color: "#516F90" }}
-        >
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style={{ transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "rotate(0deg)", flexShrink: 0, color: "#516F90" }}>
           <path d="M5 8l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       </div>
       {open && (
-        <div
-          style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #EAF0F6", animation: "slideIn 0.2s ease" }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div style={{ fontFamily: "'SF Mono','Fira Code',monospace", fontSize: 11, color: accentColor, background: `${accentColor}0D`, padding: "4px 10px", borderRadius: 4, display: "inline-block", marginBottom: 12, fontWeight: 600 }}>
-            {tool.api}
-          </div>
+        <div style={{ marginTop: 14, paddingTop: 14, borderTop: `1px solid var(--hs-border)`, animation: "slideIn 0.2s ease" }}>
+          <div style={{ fontFamily: "'SF Mono','Fira Code',monospace", fontSize: 12, color: accentColor, marginBottom: 10, fontWeight: 600 }}>{tool.api}</div>
           {tool.params.length > 0 && (
-            <table style={{ width: "100%", fontSize: 12, borderCollapse: "collapse" }}>
-              <thead>
-                <tr style={{ borderBottom: "1px solid #EAF0F6", textAlign: "left" }}>
-                  <th style={{ padding: "6px 8px", color: "#516F90", fontWeight: 600 }}>パラメータ</th>
-                  <th style={{ padding: "6px 8px", color: "#516F90", fontWeight: 600, width: 50 }}></th>
-                  <th style={{ padding: "6px 8px", color: "#516F90", fontWeight: 600 }}>説明</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tool.params.map((p) => (
-                  <tr key={p.name} style={{ borderBottom: "1px solid #F5F8FA" }}>
-                    <td style={{ padding: "5px 8px", fontFamily: "'SF Mono','Fira Code',monospace", color: "#2D3E50", fontWeight: 500 }}>{p.name}</td>
-                    <td style={{ padding: "5px 8px" }}>
-                      {p.required
-                        ? <span style={{ fontSize: 10, fontWeight: 700, color: "#E8603C", background: "#FFF1EE", padding: "2px 6px", borderRadius: 3 }}>必須</span>
-                        : <span style={{ fontSize: 10, fontWeight: 600, color: "#516F90", background: "#F5F8FA", padding: "2px 6px", borderRadius: 3 }}>任意</span>}
-                    </td>
-                    <td style={{ padding: "5px 8px", color: "#516F90" }}>{p.desc}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-          {tool.params.length === 0 && (
-            <div style={{ fontSize: 12, color: "#516F90", fontStyle: "italic" }}>パラメータなし</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {tool.params.map((p) => (
+                <div key={p.name} style={{ display: "flex", alignItems: "baseline", gap: 8, fontSize: 12 }}>
+                  <code style={{ background: "var(--hs-bg)", padding: "2px 6px", borderRadius: 4, fontWeight: 600, color: "var(--hs-obsidian)", whiteSpace: "nowrap" }}>{p.name}</code>
+                  {p.required && <span style={{ color: "var(--hs-orange)", fontWeight: 700, fontSize: 10 }}>必須</span>}
+                  <span style={{ color: "var(--hs-text-light)" }}>{p.desc}</span>
+                </div>
+              ))}
+            </div>
           )}
         </div>
       )}
@@ -283,6 +260,35 @@ function ToolCard({ tool, accentColor }: { tool: ToolDef; accentColor: string })
   );
 }
 
+function CategoryCard({ cat }: { cat: ToolCategory }) {
+  const [expanded, setExpanded] = useState(false);
+  const iconMap: Record<string, string> = {
+    "Workflow": "⚡", "Contacts": "👤", "Companies": "🏢", "Deals": "💰",
+    "Tickets": "🎫", "Notes": "📝", "Tasks": "✅", "Associations": "🔗",
+    "Properties": "🏷", "Pipelines": "🔧", "Line Items": "📋", "Products": "📦", "CMS": "🌐",
+  };
+  const catKey = Object.keys(iconMap).find(k => cat.category.includes(k)) || "";
+  const icon = iconMap[catKey] || "🔧";
+  return (
+    <div className={`hs-category-card ${expanded ? "hs-category-card--open" : ""}`} style={{ borderColor: expanded ? cat.color : undefined }}>
+      <button className="hs-category-card__header" onClick={() => setExpanded(!expanded)}>
+        <div className="hs-category-card__icon" style={{ background: `${cat.color}14`, color: cat.color }}>{icon}</div>
+        <div className="hs-category-card__info">
+          <div className="hs-category-card__title">{cat.category}</div>
+          <div className="hs-category-card__count">{cat.tools.length} tools</div>
+        </div>
+        <svg className={`hs-category-card__chevron ${expanded ? "hs-category-card__chevron--open" : ""}`} width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M5 8l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+      {expanded && (
+        <div className="hs-category-card__body">
+          {cat.tools.map((t) => <ToolCard key={t.name} tool={t} accentColor={cat.color} />)}
+        </div>
+      )}
+    </div>
+  );
+}
 export default function Home() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -365,6 +371,18 @@ export default function Home() {
         .hs-footer a{color:var(--hs-text-light);text-decoration:underline;text-underline-offset:3px}
         .hs-footer a:hover{color:var(--hs-orange)}
         .hs-fade{opacity:0;transform:translateY(16px);transition:opacity 0.6s ease,transform 0.6s ease}
+        .hs-category-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+        .hs-category-card{background:var(--hs-white);border:1px solid var(--hs-border);border-radius:var(--hs-radius-lg);overflow:hidden;transition:all 0.2s}
+        .hs-category-card:hover{box-shadow:var(--hs-shadow-md)}
+        .hs-category-card--open{grid-column:1/-1;box-shadow:var(--hs-shadow-lg)}
+        .hs-category-card__header{width:100%;background:transparent;border:none;padding:20px;display:flex;align-items:center;gap:14px;cursor:pointer;font-family:inherit;text-align:left;color:var(--hs-text)}
+        .hs-category-card__icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+        .hs-category-card__info{flex:1;display:flex;flex-direction:column;gap:2px}
+        .hs-category-card__title{font-size:14px;font-weight:700;color:var(--hs-obsidian);letter-spacing:-0.01em}
+        .hs-category-card__count{font-size:12px;color:var(--hs-text-light);font-weight:500}
+        .hs-category-card__chevron{color:var(--hs-text-light);transition:transform 0.25s;flex-shrink:0}
+        .hs-category-card__chevron--open{transform:rotate(180deg)}
+        .hs-category-card__body{padding:0 20px 20px;display:flex;flex-direction:column;gap:8px;animation:slideIn 0.25s ease}
         .hs-fade--in{opacity:1;transform:translateY(0)}
         @media(max-width:640px){.hs-nav__links{display:none}.hs-hero{padding:48px 20px 40px}.hs-hero h1{font-size:28px}.hs-hero__sub{font-size:15px}.hs-section{padding:40px 20px}.hs-auth-grid{grid-template-columns:1fr}.hs-hero__endpoint{font-size:11px;flex-wrap:wrap;justify-content:center}}
       `}</style>
@@ -389,7 +407,7 @@ export default function Home() {
             MCP Protocol 2025-03-26 · Streamable HTTP
           </div>
           <h1>AIから<span>HubSpot CRM</span>を<br />直接操作しよう</h1>
-          <p className="hs-hero__sub">ワークフロー・CRM・商品・明細行・プロパティ・パイプライン・CMS をAIツールから直接操作できるMCPサーバー。35ツール搭載。</p>
+          <p className="hs-hero__sub">ワークフロー・CRM・商品・明細行・プロパティ・パイプライン・CMS をAIツールから直接操作できるMCPサーバー。59ツール搭載。</p>
           <div className="hs-hero__endpoint">
             <span style={{ color: "var(--hs-text-light)", fontSize: 12 }}>ENDPOINT</span>
             <span>{MCP_URL}</span>
@@ -483,20 +501,11 @@ export default function Home() {
         <div className="hs-section__label"><Sprocket size={14} /> AVAILABLE TOOLS</div>
         <h2 className="hs-section__title">利用可能なツール <span style={{ fontSize: 16, fontWeight: 500, color: "var(--hs-text-light)" }}>— {totalTools} tools</span></h2>
         <p className="hs-section__desc">各ツールをクリックすると、APIエンドポイントとパラメータの詳細が表示されます。</p>
-        {TOOL_CATEGORIES.map((cat) => (
-          <div key={cat.category}>
-            <div className="hs-cat-header">
-              <span className="hs-cat-dot" style={{ background: cat.color }} />
-              <span className="hs-cat-label">{cat.category}</span>
-              <span className="hs-cat-count">{cat.tools.length} tools</span>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 8 }}>
-              {cat.tools.map((t) => (
-                <ToolCard key={t.name} tool={t} accentColor={cat.color} />
-              ))}
-            </div>
-          </div>
-        ))}
+        <div className="hs-category-grid">
+          {TOOL_CATEGORIES.map((cat) => (
+            <CategoryCard key={cat.category} cat={cat} />
+          ))}
+        </div>
       </section>
 
       <div className="hs-divider" />
