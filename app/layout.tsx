@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "HubSpot MA MCP Server — 116ツール搭載のマーケティング自動化AI基盤",
   description:
-    "CRM・フォーム・リスト・マーケティングメール・ワークフローなど116ツールを搭載。Claude AIからHubSpotのマーケティング自動化を完全操作できるMCP（Model Context Protocol）サーバー。",
+    "AIをHubSpotのマーケティング担当者にする。116のMCPツール + 暗黙知を学習するKnowledge Store + 行動規範のClaude Skill。「セミナーやるからよろしく」で動くAI MA担当者。",
   keywords: [
     "HubSpot",
     "MCP",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "HubSpot MA MCP Server — 116 Tools",
     description:
-      "CRM・フォーム・リスト・メール・ワークフローなど116ツールでHubSpotマーケティング自動化をAIから完全操作",
+      "AIをHubSpotのMA担当者にする。116ツール + Knowledge Store + Claude Skill",
     url: "https://hubspot-ma-mcp.vercel.app",
     siteName: "HubSpot MA MCP Server",
     images: [

@@ -545,14 +545,75 @@ export default function Home() {
         <div className={`hs-hero__inner hs-fade ${mounted ? "hs-fade--in" : ""}`}>
           <div className="hs-hero__tag">
             <span className="hs-hero__tag-icon">⚡</span>
-            MCP Protocol 2025-03-26 · Streamable HTTP
+            116 MCP Tools + Knowledge Store + Claude Skill
           </div>
-          <h1>AIから<span>HubSpot CRM</span>を<br />直接操作しよう</h1>
-          <p className="hs-hero__sub">ワークフロー・CRM・商品・明細行・プロパティ・パイプライン・CMS をAIツールから直接操作できるMCPサーバー。116ツール搭載。</p>
+          <h1>AIを<span>HubSpot</span>の<br />マーケティング担当者にする</h1>
+          <p className="hs-hero__sub">「セミナーやるからよろしく」で動くAI。116のMCPツール + 暗黙知を学習するKnowledge Store + 行動規範のClaude Skill。単なるAPIラッパーではなく、あなたの会社のHubSpotを理解したMA担当者として機能します。</p>
           <div className="hs-hero__endpoint">
             <span style={{ color: "var(--hs-text-light)", fontSize: 12 }}>ENDPOINT</span>
             <span>{MCP_URL}</span>
             <CopyBtn text={MCP_URL} label="コピー" />
+          </div>
+        </div>
+      </section>
+
+
+      <div className="hs-divider" />
+      <section className="hs-section">
+        <div className="hs-section__label"><Sprocket size={14} /> WHY THIS EXISTS</div>
+        <h2 className="hs-section__title">なぜこれが必要か</h2>
+        <p className="hs-section__desc">HubSpot APIを叩けるだけではMA担当者にはなれません。本当の担当者は「うちのやり方」を知っています。</p>
+        <div className="hs-auth-grid">
+          <div className="hs-auth-card">
+            <span className="hs-auth-card__badge hs-auth-card__badge--alt">🔧 従来のMCP</span>
+            <h4>APIラッパー</h4>
+            <p>「フォーム作って」→ 作れる。「メール送って」→ 送れる。でも命名規則を知らない。禁止事項を知らない。過去のパターンを知らない。<strong>毎回ゼロから指示が必要。</strong></p>
+          </div>
+          <div className="hs-auth-card">
+            <span className="hs-auth-card__badge hs-auth-card__badge--rec">🧠 このMCP</span>
+            <h4>MA担当者</h4>
+            <p>「セミナーよろしく」→ 過去のパターンを参照し、命名規則に従い、禁止事項を確認し、80%を自分で組んで提案。<strong>使うほど賢くなる。</strong></p>
+          </div>
+        </div>
+      </section>
+
+      <div className="hs-divider" />
+      <section className="hs-section">
+        <div className="hs-section__label"><Sprocket size={14} /> ARCHITECTURE</div>
+        <h2 className="hs-section__title">3層アーキテクチャ</h2>
+        <p className="hs-section__desc">Skill（固定・全企業共通）+ Knowledge Store（可変・企業固有）+ MCPツール（API操作）の3層で構成。</p>
+        <div style={{ display: "grid", gap: 16, maxWidth: 640, margin: "0 auto" }}>
+          <div className="hs-auth-card" style={{ borderLeft: "3px solid var(--hs-orange)" }}>
+            <h4>🎯 Claude Skill（判断規範）</h4>
+            <p>MA担当者としての行動規範。「Knowledge Storeを毎回読め」「記載がないことは推測するな」「施策後は必ず記録しろ」。<strong>全企業共通。書き換え不要。</strong></p>
+          </div>
+          <div className="hs-auth-card" style={{ borderLeft: "3px solid #4A90D9" }}>
+            <h4>🧠 Knowledge Store（企業の記憶）</h4>
+            <p>設計判断・命名規則・手順書・禁止事項・過去施策等の10カテゴリ。<strong>HubSpot内のCRMノートに保存。追加インフラ不要。</strong>初回は自動分析+質問で構築、以降は施策実行のたびに自動成長。</p>
+          </div>
+          <div className="hs-auth-card" style={{ borderLeft: "3px solid #10B981" }}>
+            <h4>🔧 116 MCPツール（操作能力）</h4>
+            <p>CRM・フォーム・リスト・メール・WF・キャンペーン・イベント等、HubSpot APIを完全カバー。Skillの指示とKnowledgeの知識に基づいて動く「手足」。</p>
+          </div>
+        </div>
+      </section>
+
+      <div className="hs-divider" />
+      <section className="hs-section">
+        <div className="hs-section__label"><Sprocket size={14} /> GETTING STARTED</div>
+        <h2 className="hs-section__title">3ステップで始める</h2>
+        <div style={{ display: "grid", gap: 16, maxWidth: 640, margin: "0 auto" }}>
+          <div className="hs-auth-card">
+            <h4>① HubSpot Private Appを作成</h4>
+            <p>Settings → Integrations → Private Apps → Create。必要なスコープを付与してAccess Tokenをコピー。</p>
+          </div>
+          <div className="hs-auth-card">
+            <h4>② MCPサーバーを接続</h4>
+            <p>Claude.ai / Claude Desktop / Cursor / VS Code 等から接続。Authorizationヘッダーにトークンを設定。</p>
+          </div>
+          <div className="hs-auth-card">
+            <h4>③ Claude Skillをインストール</h4>
+            <p>GitHubの <code>skill/</code> フォルダをzipにしてClaude.ai → Settings → Skills → Upload。初回会話でKnowledge Storeが自動構築されます。</p>
           </div>
         </div>
       </section>
@@ -639,8 +700,8 @@ export default function Home() {
 
       <div className="hs-divider" />
       <section id="tools" className="hs-section">
-        <div className="hs-section__label"><Sprocket size={14} /> AVAILABLE TOOLS</div>
-        <h2 className="hs-section__title">利用可能なツール <span style={{ fontSize: 16, fontWeight: 500, color: "var(--hs-text-light)" }}>— {totalTools} tools</span></h2>
+        <div className="hs-section__label"><Sprocket size={14} /> 116 TOOLS</div>
+        <h2 className="hs-section__title">API操作ツール + Knowledge Store <span style={{ fontSize: 16, fontWeight: 500, color: "var(--hs-text-light)" }}>— {totalTools} tools</span></h2>
         <p className="hs-section__desc">各ツールをクリックすると、APIエンドポイントとパラメータの詳細が表示されます。</p>
         <div className="hs-category-grid">
           {TOOL_CATEGORIES.map((cat) => (
