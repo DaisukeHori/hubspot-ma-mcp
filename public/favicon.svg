@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <rect width="32" height="32" rx="7" fill="#FF7A59"/>
+  <g transform="translate(4,4)" stroke="#fff" stroke-width="1.8" stroke-linecap="round" fill="none">
+    <!-- Hub gear -->
+    <circle cx="12" cy="12" r="4"/>
+    <circle cx="12" cy="12" r="1.5" fill="#fff"/>
+    <!-- Spokes -->
+    <line x1="12" y1="2" x2="12" y2="5"/>
+    <line x1="12" y1="19" x2="12" y2="22"/>
+    <line x1="2" y1="12" x2="5" y2="12"/>
+    <line x1="19" y1="12" x2="22" y2="12"/>
+    <!-- Diagonal spokes -->
+    <line x1="4.9" y1="4.9" x2="7" y2="7"/>
+    <line x1="17" y1="17" x2="19.1" y2="19.1"/>
+    <line x1="19.1" y1="4.9" x2="17" y2="7"/>
+    <line x1="7" y1="17" x2="4.9" y2="19.1"/>
+    <!-- MCP connection nodes -->
+    <circle cx="3" cy="3" r="1.8" fill="#fff" stroke="none"/>
+    <circle cx="21" cy="21" r="1.8" fill="#fff" stroke="none"/>
+    <circle cx="21" cy="3" r="1.8" fill="#fff" stroke="none"/>
+  </g>
+</svg>
