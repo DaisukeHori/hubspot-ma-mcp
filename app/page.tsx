@@ -273,7 +273,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
       { name: "hubspot_knowledge_get", desc: "ナレッジ取得（設計思想・命名規則・パターン）", icon: "🧠", api: "Internal (notes search)", params: [{ name: "category", required: false, desc: "カテゴリ指定" }] },
       { name: "hubspot_knowledge_update", desc: "ナレッジ更新（replace/append）", icon: "✏️", api: "Internal (notes update)", params: [{ name: "category", required: true, desc: "カテゴリ" }, { name: "mode", required: true, desc: "replace/append" }] },
       { name: "hubspot_context_snapshot", desc: "HubSpot設定一括スナップショット", icon: "📸", api: "Internal (multi-API)", params: [{ name: "sections", required: false, desc: "取得セクション" }] },
-      { name: "hubspot_knowledge_build", desc: "既存設定→10カテゴリ自動分析+質問生成", icon: "🎓", api: "Internal (snapshot→analyze→save)", params: [{ name: "force", required: false, desc: "既存上書き" }] },
+      { name: "hubspot_knowledge_build", desc: "既存設定→12カテゴリ自動分析+質問生成", icon: "🎓", api: "Internal (snapshot→analyze→save)", params: [{ name: "force", required: false, desc: "既存上書き" }] },
     ],
   },
   {
@@ -545,10 +545,10 @@ export default function Home() {
         <div className={`hs-hero__inner hs-fade ${mounted ? "hs-fade--in" : ""}`}>
           <div className="hs-hero__tag">
             <span className="hs-hero__tag-icon">⚡</span>
-            116 MCP Tools + Knowledge Store + Claude Skill
+            117 MCP Tools + Knowledge Store + Claude Skill
           </div>
           <h1>AIを<span>HubSpot</span>の<br />マーケティング担当者にする</h1>
-          <p className="hs-hero__sub">「セミナーやるからよろしく」で動くAI。116のMCPツール + 暗黙知を学習するKnowledge Store + 行動規範のClaude Skill。単なるAPIラッパーではなく、あなたの会社のHubSpotを理解したMA担当者として機能します。</p>
+          <p className="hs-hero__sub">「セミナーやるからよろしく」で動くAI。117のMCPツール + 暗黙知を学習するKnowledge Store + 行動規範のClaude Skill。単なるAPIラッパーではなく、あなたの会社のHubSpotを理解したMA担当者として機能します。</p>
           <div className="hs-hero__endpoint">
             <span style={{ color: "var(--hs-text-light)", fontSize: 12 }}>ENDPOINT</span>
             <span>{MCP_URL}</span>
@@ -615,7 +615,7 @@ export default function Home() {
           </div>
           <div className="hs-auth-card" style={{ borderLeft: "3px solid #4A90D9" }}>
             <h4>🧠 Knowledge Store（企業の記憶）</h4>
-            <p>設計判断・命名規則・手順書・禁止事項・過去施策等の10カテゴリ。<strong>HubSpot内のCRMノートに保存。追加インフラ不要。</strong>初回は自動分析+質問で構築、以降は施策実行のたびに自動成長。</p>
+            <p>設計判断・命名規則・手順書・禁止事項・過去施策等の12カテゴリ。<strong>HubSpot内のCRMノートに保存。追加インフラ不要。</strong>初回は自動分析+質問で構築、以降は施策実行のたびに自動成長。</p>
           </div>
           <div className="hs-auth-card" style={{ borderLeft: "3px solid #10B981" }}>
             <h4>🔧 116 MCPツール（操作能力）</h4>
@@ -628,7 +628,7 @@ export default function Home() {
       <section className="hs-section">
         <div className="hs-section__label"><Sprocket size={14} /> GETTING STARTED</div>
         <h2 className="hs-section__title">3ステップで始める</h2>
-        <div className="hs-callout" style={{ maxWidth: 640, margin: "0 auto 24px", padding: "12px 16px", background: "var(--hs-orange-light)", borderRadius: 8, fontSize: 14, lineHeight: 1.6 }}>💡 <strong>まずは試したい方へ:</strong> <a href="https://developers.hubspot.com/docs/api/creating-test-accounts" target="_blank" rel="noopener noreferrer" style={{ color: "var(--hs-orange)" }}>HubSpotテストアカウント</a>を作成すれば、本番データに影響なく全機能を試せます。Skillなしでも116ツールのAPIラッパーとして使えます。</div>
+        <div className="hs-callout" style={{ maxWidth: 640, margin: "0 auto 24px", padding: "12px 16px", background: "var(--hs-orange-light)", borderRadius: 8, fontSize: 14, lineHeight: 1.6 }}>💡 <strong>まずは試したい方へ:</strong> <a href="https://developers.hubspot.com/docs/api/creating-test-accounts" target="_blank" rel="noopener noreferrer" style={{ color: "var(--hs-orange)" }}>HubSpotテストアカウント</a>を作成すれば、本番データに影響なく全機能を試せます。Skillなしでも117ツールのAPIラッパーとして使えます。</div>
         <div style={{ display: "grid", gap: 16, maxWidth: 640, margin: "0 auto" }}>
           <div className="hs-auth-card">
             <h4>① HubSpot Private Appを作成</h4>
@@ -663,9 +663,9 @@ export default function Home() {
             <div className="hs-auth-card" style={{ borderLeft: "3px solid #4A90D9", borderRadius: 0 }}>
               <h4 style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <span style={{ background: "#4A90D9", color: "white", width: 24, height: 24, borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>2</span>
-                10カテゴリの下書きを自動生成
+                12カテゴリの下書きを自動生成
               </h4>
-              <p style={{ marginLeft: 32 }}>スキャン結果から10カテゴリの下書きを自動生成。さらにAIが<strong>自己検証ループ</strong>を実行 — 各項目について「自分で追加調査できないか？」を再帰的にチェックし、ワークフローの詳細構造・フォームのフィールド構成・メールの件名パターン等を深掘りして、自力で答えを出せるものは全て解決します。</p>
+              <p style={{ marginLeft: 32 }}>スキャン結果から12カテゴリの下書きを自動生成。さらにAIが<strong>自己検証ループ</strong>を実行 — 各項目について「自分で追加調査できないか？」を再帰的にチェックし、ワークフローの詳細構造・フォームのフィールド構成・メールの件名パターン等を深掘りして、自力で答えを出せるものは全て解決します。</p>
             </div>
             <div className="hs-auth-card" style={{ borderLeft: "3px solid #8B5CF6", borderRadius: 0 }}>
               <h4 style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -893,7 +893,7 @@ export default function Home() {
           </div>
           <div className="hs-auth-card">
             <h4>❓ Skillなしでも動く？</h4>
-            <p>はい。MCPサーバーだけで116ツールのAPIラッパーとして機能します。Skillを追加すると「MA担当者」の判断力（自己検証・施策パターン・禁止事項チェック等）が加わります。</p>
+            <p>はい。MCPサーバーだけで117ツールのAPIラッパーとして機能します。Skillを追加すると「MA担当者」の判断力（自己検証・施策パターン・禁止事項チェック等）が加わります。</p>
           </div>
         </div>
       </section>

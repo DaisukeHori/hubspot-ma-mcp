@@ -29,7 +29,7 @@ mode:
 - replace: そのカテゴリの内容を丸ごと上書き（overview, naming, properties, workflows, patterns, guardrails向け）
 - append: 既存内容の末尾に追記（history向け。施策実行後の記録追加に使用）
 
-カテゴリ（10種）:
+カテゴリ（12種）:
 - design_decisions: 設計判断とその理由
 - naming_conventions: 命名規則
 - property_annotations: カスタムプロパティの注釈
@@ -40,10 +40,12 @@ mode:
 - contacts_segments: セグメント戦略
 - brand_voice: トーン・文体
 - integrations: 外部連携
+- goals: KPI目標
+- calendar: 施策カレンダー
 
 施策実行後に「今回のパターンを記録して」と言われたら、historyにappendし、必要に応じてpatternsもreplaceで更新する。`,
     {
-      category: z.enum(["design_decisions", "naming_conventions", "property_annotations", "workflow_annotations", "playbooks", "guardrails", "history", "contacts_segments", "brand_voice", "integrations"])
+      category: z.enum(["design_decisions", "naming_conventions", "property_annotations", "workflow_annotations", "playbooks", "guardrails", "history", "contacts_segments", "brand_voice", "integrations", "goals", "calendar"])
         .describe("更新するカテゴリ"),
       content: z.string().describe("更新する内容（Markdown形式推奨）"),
       mode: z.enum(["replace", "append"]).describe("replace=丸ごと上書き, append=末尾に追記"),

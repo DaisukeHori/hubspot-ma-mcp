@@ -155,6 +155,7 @@ import { registerHubspotKnowledgeGet } from "./tools/hubspot-knowledge-get";
 import { registerHubspotKnowledgeUpdate } from "./tools/hubspot-knowledge-update";
 import { registerHubspotContextSnapshot } from "./tools/hubspot-context-snapshot";
 import { registerHubspotKnowledgeBuild } from "./tools/hubspot-knowledge-build";
+import { registerHubspotMarketingReview } from "./tools/hubspot-marketing-review";
 
 
 /**
@@ -322,5 +323,6 @@ export function registerAllTools(server: McpServer) {
   registerHubspotKnowledgeUpdate(server);
   registerHubspotContextSnapshot(server);
   registerHubspotKnowledgeBuild(server);
+  registerHubspotMarketingReview(server);
 }
 

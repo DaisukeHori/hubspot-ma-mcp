@@ -9,6 +9,7 @@
 | `hubspot_knowledge_get` | ナレッジ読み込み | **毎回の会話開始時**（必須） |
 | `hubspot_knowledge_update` | ナレッジ更新 | 施策実行後、新知見獲得時 |
 | `hubspot_context_snapshot` | 現在設定のスナップショット | 施策設計時（必要セクションだけ） |
+| `hubspot_marketing_review` | マーケティング実績集計（リード数・メール統計・フォーム・キャンペーン） | goals存在時に毎回、月次レビュー時 |
 
 ## 🔧 CRM操作（20ツール）
 

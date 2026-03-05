@@ -5,7 +5,7 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 
 const BASE_URL = "https://api.hubapi.com";
 const KNOWLEDGE_EMAIL = "mcp-knowledge@system.internal";
-const CATEGORIES = ["design_decisions", "naming_conventions", "property_annotations", "workflow_annotations", "playbooks", "guardrails", "history", "contacts_segments", "brand_voice", "integrations"];
+const CATEGORIES = ["design_decisions", "naming_conventions", "property_annotations", "workflow_annotations", "playbooks", "guardrails", "history", "contacts_segments", "brand_voice", "integrations", "goals", "calendar"];
 
 async function fetchJson<T>(url: string, options: RequestInit): Promise<T> {
   const response = await fetch(url, options);
@@ -30,7 +30,7 @@ export function registerHubspotKnowledgeSetup(server: McpServer) {
 1. 専用コンタクト（mcp-knowledge@system.internal）を作成（既存なら再利用）
 2. 7カテゴリの空ナレッジノートを作成
 
-カテゴリ（10種）:
+カテゴリ（12種）:
 - design_decisions: アカウント全体の設計判断とその理由（なぜパイプラインをこう使うか、なぜチケットを使わないか等）
 - naming_conventions: 命名規則（WF・フォーム・リスト・メール・プロパティ・キャンペーン）
 - property_annotations: カスタムプロパティの注釈（用途・更新方法・触っていいか・依存先）
@@ -41,6 +41,8 @@ export function registerHubspotKnowledgeSetup(server: McpServer) {
 - contacts_segments: セグメント戦略（主要セグメント定義・施策との対応・リスト依存関係）
 - brand_voice: コミュニケーションのトーン・文体（件名フォーマット・本文トーン・禁止表現・CTA定型）
 - integrations: 外部連携・技術的な構成メモ（連携ツール・API設定・データフロー）
+- goals: マーケティングKPI目標（四半期/月次の数値目標・達成基準）
+- calendar: 施策カレンダー（月単位のスケジュール・準備タスク）
 
 セットアップ済みの場合はスキップされる。2回目以降は安全に実行可能。`,
     {},
@@ -128,6 +130,8 @@ export function registerHubspotKnowledgeSetup(server: McpServer) {
             contacts_segments: "セグメント戦略を記述。主要セグメントの定義、どのセグメントにどの施策を打つか、リストの依存関係。",
             brand_voice: "コミュニケーションのトーン・文体ルールを記述。件名フォーマット、本文トーン、禁止表現、CTA定型文、フッター定型。",
             integrations: "外部連携・技術構成メモを記述。連携ツール一覧、API設定、データフロー、定期同期の仕組み等。",
+            goals: "マーケティングKPI目標を記述。四半期/月次のリード獲得数、メール開封率、セミナー参加者数等の数値目標。目標に対する現在の進捗と達成基準。",
+            calendar: "施策カレンダーを記述。月単位の施策スケジュール。セミナー日程、NL配信日、キャンペーン期間等の予定と準備タスク。",
           };
 
           await fetchJson<{ id: string }>(
