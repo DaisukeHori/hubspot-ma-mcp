@@ -266,9 +266,8 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     ],
   },
   {
-
-  {
     category: "Goals（目標 / v3 読取専用）",
+    color: "#8B5CF6",
     tools: [
       { name: "goal_list", desc: "目標一覧取得", icon: "📊", api: "GET /crm/v3/objects/goal_targets", params: [{ name: "limit", required: false, desc: "取得件数" }, { name: "after", required: false, desc: "ページネーション" }] },
       { name: "goal_get", desc: "目標1件取得", icon: "📊", api: "GET /crm/v3/objects/goal_targets/{id}", params: [{ name: "goalId", required: true, desc: "目標ID" }] },
@@ -277,6 +276,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
   },
   {
     category: "Marketing Events（マーケティングイベント / v3）",
+    color: "#EC4899",
     tools: [
       { name: "marketing_event_list", desc: "イベント一覧取得", icon: "🎪", api: "GET /marketing/v3/marketing-events", params: [{ name: "limit", required: false, desc: "取得件数" }] },
       { name: "marketing_event_get", desc: "イベント1件取得", icon: "🎪", api: "GET /marketing/v3/marketing-events/{objectId}", params: [{ name: "objectId", required: true, desc: "イベントID" }] },
