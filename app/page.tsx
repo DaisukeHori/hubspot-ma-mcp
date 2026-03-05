@@ -145,7 +145,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     ],
   },
   {
-    category: "Properties（CRUD）",
+    category: "Properties（v3 / CRUD）",
     color: "#516F90",
     tools: [
       { name: "properties_list", desc: "プロパティ定義一覧", icon: "📑", api: "GET /crm/v3/properties/{objectType}", params: [{ name: "objectType", required: true, desc: "contacts / companies / deals / tickets 等" }] },
@@ -155,7 +155,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     ],
   },
   {
-    category: "Pipelines（CRUD）",
+    category: "Pipelines（v3 / CRUD）",
     color: "#7C98B6",
     tools: [
       { name: "pipeline_list", desc: "パイプライン一覧", icon: "🔧", api: "GET /crm/v3/pipelines/{objectType}", params: [{ name: "objectType", required: true, desc: "deals / tickets" }] },
@@ -187,7 +187,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     ],
   },
   {
-    category: "CMS（Blog & Pages）",
+    category: "CMS（Blog & Pages / v3）",
     color: "#FF8F59",
     tools: [
       { name: "cms_blog_list", desc: "ブログ記事一覧", icon: "📝", api: "GET /cms/v3/blogs/posts", params: [{ name: "limit", required: false, desc: "件数" }] },
@@ -266,7 +266,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     ],
   },
   {
-    category: "Knowledge Store & Context",
+    category: "Knowledge Store & Context（Internal）",
     color: "#F59E0B",
     tools: [
       { name: "hubspot_knowledge_setup", desc: "Knowledge Store 初回セットアップ", icon: "🏗️", api: "Internal (contacts + notes)", params: [] },
@@ -277,7 +277,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     ],
   },
   {
-    category: "Owners",
+    category: "Owners（v3）",
     color: "#7C8DB5",
     tools: [
       { name: "owner_list", desc: "担当者（オーナー）一覧取得", icon: "👤", api: "GET /crm/v3/owners", params: [{ name: "limit", required: false, desc: "取得件数" }] },
@@ -285,7 +285,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     ],
   },
   {
-    category: "Emails（メールエンゲージメント）",
+    category: "Emails（メールエンゲージメント / v3）",
     color: "#00BDA5",
     tools: [
       { name: "email_search", desc: "メール検索", icon: "🔎", api: "POST /crm/v3/objects/emails/search", params: [{ name: "query", required: false, desc: "検索キーワード" }] },
@@ -296,7 +296,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     ],
   },
   {
-    category: "Meetings（ミーティング）",
+    category: "Meetings（ミーティング / v3）",
     color: "#00A4BD",
     tools: [
       { name: "meeting_search", desc: "ミーティング検索", icon: "🔎", api: "POST /crm/v3/objects/meetings/search", params: [{ name: "query", required: false, desc: "検索キーワード" }] },
@@ -307,7 +307,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     ],
   },
   {
-    category: "Calls（通話）",
+    category: "Calls（通話 / v3）",
     color: "#516F90",
     tools: [
       { name: "call_search", desc: "通話検索", icon: "🔎", api: "POST /crm/v3/objects/calls/search", params: [{ name: "query", required: false, desc: "検索キーワード" }] },
@@ -318,7 +318,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     ],
   },
   {
-    category: "Quotes（見積もり）",
+    category: "Quotes（見積もり / v3 読取専用）",
     color: "#F5A623",
     tools: [
       { name: "quote_search", desc: "見積もり検索", icon: "🔎", api: "POST /crm/v3/objects/quotes/search", params: [{ name: "query", required: false, desc: "検索キーワード" }] },
@@ -765,6 +765,39 @@ export default function Home() {
 
       <div className="hs-divider" />
       <section id="specs" className="hs-section">
+
+      <div className="hs-divider" />
+      <section className="hs-section">
+        <div className="hs-section__label"><Sprocket size={14} /> IMPORTANT NOTICES</div>
+        <h2 className="hs-section__title">⚠️ 利用上の注意</h2>
+        <div style={{ display: "grid", gap: 16, maxWidth: 640, margin: "0 auto" }}>
+          <div className="hs-auth-card" style={{ borderLeft: "3px solid #E74C3C" }}>
+            <h4>🤖 Knowledge Storeの自動作成物</h4>
+            <p>初回セットアップで、HubSpotアカウント内に<strong>コンタクト1件</strong>（<code>mcp-knowledge@system.internal</code>）と<strong>CRMノート最大10件</strong>が自動作成されます。これらはAIの記憶領域です。<strong>削除するとKnowledge Storeの内容が全て失われます。</strong>コンタクト一覧では <code>@system.internal</code> で除外してください。</p>
+          </div>
+          <div className="hs-auth-card" style={{ borderLeft: "3px solid #E74C3C" }}>
+            <h4>📧 メール送信は取り消せない</h4>
+            <p><code>marketing_email_publish</code> は配信リスト全員に送信され、<strong>取り消し不可</strong>です。<code>single_send_email</code> は1通送信ですが、宛先にコンタクトが存在しない場合<strong>コンタクトが自動作成</strong>され、さらに<strong>自動的にマーケティングコンタクトに設定</strong>されます。</p>
+          </div>
+          <div className="hs-auth-card" style={{ borderLeft: "3px solid #F39C12" }}>
+            <h4>⚡ ワークフロー有効化の影響</h4>
+            <p>ワークフローを有効化（<code>isEnabled: true</code>）すると、エンロールメント条件に合致する<strong>全レコードに対して即座にアクションが実行される可能性</strong>があります。Skillが必ず確認を取りますが、ご注意ください。</p>
+          </div>
+          <div className="hs-auth-card" style={{ borderLeft: "3px solid #F39C12" }}>
+            <h4>📝 form_updateは全体置換</h4>
+            <p><code>form_update</code> はPUT（全体置換）です。省略したフィールドは削除されます。Skillは<code>form_get</code>で現在の定義を取得してから更新を行います。</p>
+          </div>
+          <div className="hs-auth-card" style={{ borderLeft: "3px solid #3498DB" }}>
+            <h4>🏢 Enterprise必須機能</h4>
+            <p><code>marketing_email_publish</code>、<code>single_send_email</code>、<code>custom_event_define/send</code> は <strong>Marketing Hub Enterprise</strong> が必要です。それ以外の機能はFree/Starter/Professionalでも利用可能です。</p>
+          </div>
+          <div className="hs-auth-card" style={{ borderLeft: "3px solid #3498DB" }}>
+            <h4>🔄 APIレート制限</h4>
+            <p>HubSpot標準のレート制限（Private App: 500,000リクエスト/日、Search: 4リクエスト/秒）が適用されます。<code>hubspot_context_snapshot</code> は内部で複数APIを呼び出すため、頻繁な実行は控えてください。</p>
+          </div>
+        </div>
+      </section>
+
         <div className="hs-section__label"><Sprocket size={14} /> TECH SPECS</div>
         <h2 className="hs-section__title">技術仕様</h2>
         <div className="hs-specs">
