@@ -120,6 +120,11 @@ import { registerCallDelete } from "./tools/call-delete";
 // ── Quotes ──
 import { registerQuoteSearch } from "./tools/quote-search";
 import { registerQuoteGet } from "./tools/quote-get";
+import { registerFormList } from "./tools/form-list";
+import { registerFormGet } from "./tools/form-get";
+import { registerFormCreate } from "./tools/form-create";
+import { registerFormUpdate } from "./tools/form-update";
+import { registerFormDelete } from "./tools/form-delete";
 
 
 /**
@@ -242,5 +247,12 @@ export function registerAllTools(server: McpServer) {
   // Quotes（2 tools）
   registerQuoteSearch(server);
   registerQuoteGet(server);
+
+  // Marketing Forms API v3
+  registerFormList(server);
+  registerFormGet(server);
+  registerFormCreate(server);
+  registerFormUpdate(server);
+  registerFormDelete(server);
 }
 
