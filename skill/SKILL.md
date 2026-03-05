@@ -166,6 +166,64 @@ description: HubSpot MA（マーケティングオートメーション）担当
 
 ---
 
+
+---
+
+## MCPツールマップ（116ツール）
+
+MCPサーバー接続時に各ツールのパラメータ詳細は自動で取得されます。
+ここでは **「何をしたい時にどのカテゴリを使うか」** を定義します。
+具体的なツールの組み合わせ順序は Knowledge Store の `playbooks` に従ってください。
+
+### 施策を組む時に使うツール
+
+| やりたいこと | 使うツール群 |
+|---|---|
+| キャンペーンを作る・管理する | `campaign_create` / `campaign_get` / `campaign_update` / `campaign_list` |
+| キャンペーンにアセットを紐付ける | `campaign_asset_associate`（メール・フォーム・WF・リスト・ブログ・LP等を紐付け） |
+| フォームを作る | `form_create`（フィールド構成はplaybooksと過去フォームを参照） |
+| リスト/セグメントを作る | `list_create`（MANUAL/DYNAMIC/SNAPSHOT） |
+| リストにメンバーを追加・削除 | `list_members_add` / `list_members_remove` |
+| マーケティングメールを作る | `marketing_email_create` → `marketing_email_update` → `marketing_email_publish`（承認後） |
+| 既存メールを複製して再利用 | `marketing_email_clone` |
+| 個別にメール1通を送る | `single_send_email`（テンプレート使用、Enterprise必須） |
+| ワークフローを作る・確認する | `workflow_create` / `workflow_get` / `workflow_list` |
+| イベントを記録する | `custom_event_send`（事前に `custom_event_define` で定義が必要） |
+
+### CRMデータを操作する時に使うツール
+
+| やりたいこと | 使うツール群 |
+|---|---|
+| コンタクトを探す・見る・作る・更新 | `contact_search` / `contact_get` / `contact_create` / `contact_update` |
+| 会社を探す・見る・作る・更新 | `company_search` / `company_get` / `company_create` / `company_update` |
+| 取引を探す・見る・作る・更新 | `deal_search` / `deal_get` / `deal_create` / `deal_update` |
+| レコード同士を紐付ける | `association_create` / `association_list` |
+| メモ・タスク・通話・ミーティングを記録 | `note_create` / `task_create` / `call_create` / `meeting_create` |
+
+### 設定を確認・変更する時に使うツール
+
+| やりたいこと | 使うツール群 |
+|---|---|
+| カスタムプロパティを確認・追加 | `properties_list` / `property_create`（property_annotationsを確認してから） |
+| パイプライン・ステージを確認・変更 | `pipeline_list` / `pipeline_update`（guardrailsを確認してから） |
+| 担当者（オーナー）を確認 | `owner_list` / `owner_get` |
+
+### Knowledge Store を操作する時に使うツール
+
+| やりたいこと | 使うツール群 |
+|---|---|
+| 初回セットアップ | `hubspot_knowledge_setup` |
+| 既存設定から自動学習 | `hubspot_knowledge_build`（初回オンボーディング） |
+| ナレッジを読む | `hubspot_knowledge_get`（毎回の会話開始時に必須） |
+| ナレッジを更新 | `hubspot_knowledge_update`（施策実行後、新知見獲得時） |
+| 現在の設定状態を確認 | `hubspot_context_snapshot`（必要セクションだけ指定） |
+
+### 組み合わせの原則
+
+1. **施策の具体的な組み合わせ順序は `playbooks` に書いてある。必ず参照してから動く。**
+2. playbooksに該当パターンがない場合は、上記マップを参考に**自分で設計案を組み、ユーザーに確認**する。
+3. 確認を得た新パターンは `playbooks` への追加を提案する。
+
 ## エラー対応
 
 | エラー | 対応 |
