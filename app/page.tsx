@@ -7,14 +7,23 @@ const TOKEN_PLACEHOLDER = "pat-na1-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
 
 function Sprocket({ size = 32, color = "#FF7A59" }: { size?: number; color?: string }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M50 10C27.9 10 10 27.9 10 50s17.9 40 40 40 40-17.9 40-40S72.1 10 50 10zm0 60c-11 0-20-9-20-20s9-20 20-20 20 9 20 20-9 20-20 20z" fill={color} />
-      <circle cx="50" cy="12" r="8" fill={color} />
-      <circle cx="83" cy="31" r="8" fill={color} />
-      <circle cx="83" cy="69" r="8" fill={color} />
-      <circle cx="50" cy="88" r="8" fill={color} />
-      <circle cx="17" cy="69" r="8" fill={color} />
-      <circle cx="17" cy="31" r="8" fill={color} />
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="7" fill={color} />
+      <g transform="translate(4,4)" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" fill="none">
+        <circle cx="12" cy="12" r="4" />
+        <circle cx="12" cy="12" r="1.5" fill="#fff" />
+        <line x1="12" y1="2" x2="12" y2="5" />
+        <line x1="12" y1="19" x2="12" y2="22" />
+        <line x1="2" y1="12" x2="5" y2="12" />
+        <line x1="19" y1="12" x2="22" y2="12" />
+        <line x1="4.9" y1="4.9" x2="7" y2="7" />
+        <line x1="17" y1="17" x2="19.1" y2="19.1" />
+        <line x1="19.1" y1="4.9" x2="17" y2="7" />
+        <line x1="7" y1="17" x2="4.9" y2="19.1" />
+        <circle cx="3" cy="3" r="1.8" fill="#fff" stroke="none" />
+        <circle cx="21" cy="21" r="1.8" fill="#fff" stroke="none" />
+        <circle cx="21" cy="3" r="1.8" fill="#fff" stroke="none" />
+      </g>
     </svg>
   );
 }
