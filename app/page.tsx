@@ -663,7 +663,7 @@ export default function Home() {
           </div>
           <div className="hs-auth-card">
             <h4>③ Claude Skillをインストール</h4>
-            <p>GitHubの <code>skill/</code> フォルダをzipにしてClaude.ai → Settings → Skills → Upload。初回会話でKnowledge Storeが自動構築されます。</p>
+            <p><a href="https://github.com/DaisukeHori/hubspot-ma-mcp/releases/download/v1.0.0/hubspot-ma-operator.zip" style={{ color: "var(--hs-orange)", fontWeight: 700 }}>hubspot-ma-operator.zip をダウンロード</a> → Claude.ai → Settings → Customize → Skills → Upload。初回会話でKnowledge Storeが自動構築されます。</p>
           </div>
         </div>
       </section>
