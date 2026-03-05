@@ -125,6 +125,13 @@ import { registerFormGet } from "./tools/form-get";
 import { registerFormCreate } from "./tools/form-create";
 import { registerFormUpdate } from "./tools/form-update";
 import { registerFormDelete } from "./tools/form-delete";
+import { registerListCreate } from "./tools/list-create";
+import { registerListSearch } from "./tools/list-search";
+import { registerListGet } from "./tools/list-get";
+import { registerListDelete } from "./tools/list-delete";
+import { registerListMembersGet } from "./tools/list-members-get";
+import { registerListMembersAdd } from "./tools/list-members-add";
+import { registerListMembersRemove } from "./tools/list-members-remove";
 
 
 /**
@@ -254,5 +261,13 @@ export function registerAllTools(server: McpServer) {
   registerFormCreate(server);
   registerFormUpdate(server);
   registerFormDelete(server);
+  // Lists (Segments) API v3
+  registerListCreate(server);
+  registerListSearch(server);
+  registerListGet(server);
+  registerListDelete(server);
+  registerListMembersGet(server);
+  registerListMembersAdd(server);
+  registerListMembersRemove(server);
 }
 
