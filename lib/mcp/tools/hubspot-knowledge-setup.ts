@@ -5,7 +5,7 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 
 const BASE_URL = "https://api.hubapi.com";
 const KNOWLEDGE_EMAIL = "mcp-knowledge@system.internal";
-const CATEGORIES = ["overview", "naming", "properties", "workflows", "patterns", "guardrails", "history"];
+const CATEGORIES = ["design_decisions", "naming_conventions", "property_annotations", "workflow_annotations", "playbooks", "guardrails", "history", "contacts_segments", "brand_voice", "integrations"];
 
 async function fetchJson<T>(url: string, options: RequestInit): Promise<T> {
   const response = await fetch(url, options);
@@ -30,14 +30,17 @@ export function registerHubspotKnowledgeSetup(server: McpServer) {
 1. 専用コンタクト（mcp-knowledge@system.internal）を作成（既存なら再利用）
 2. 7カテゴリの空ナレッジノートを作成
 
-カテゴリ:
-- overview: アカウント全体の設計思想・方針
-- naming: 命名規則（WF・フォーム・リスト・メール・プロパティ）
-- properties: 重要なカスタムプロパティの用途と注意事項
-- workflows: 既存ワークフローの意図と依存関係
-- patterns: 繰り返し施策のテンプレートパターン（セミナー・ニュースレター等）
-- guardrails: 触ってはいけない設定・やってはいけないこと
-- history: 過去施策の記録と学び
+カテゴリ（10種）:
+- design_decisions: アカウント全体の設計判断とその理由（なぜパイプラインをこう使うか、なぜチケットを使わないか等）
+- naming_conventions: 命名規則（WF・フォーム・リスト・メール・プロパティ・キャンペーン）
+- property_annotations: カスタムプロパティの注釈（用途・更新方法・触っていいか・依存先）
+- workflow_annotations: ワークフローの注釈（目的・テンプレートか個別か・依存関係・触っていいか）
+- playbooks: 施策の実行手順書（セミナー・ニュースレター・オンボーディング等の標準手順）
+- guardrails: 禁止事項・注意事項（削除禁止リスト・変更禁止ステージ・配信頻度制限等）
+- history: 過去施策の記録と学び（日付・施策名・結果・改善点）
+- contacts_segments: セグメント戦略（主要セグメント定義・施策との対応・リスト依存関係）
+- brand_voice: コミュニケーションのトーン・文体（件名フォーマット・本文トーン・禁止表現・CTA定型）
+- integrations: 外部連携・技術的な構成メモ（連携ツール・API設定・データフロー）
 
 セットアップ済みの場合はスキップされる。2回目以降は安全に実行可能。`,
     {},
@@ -115,13 +118,16 @@ export function registerHubspotKnowledgeSetup(server: McpServer) {
           }
 
           const descriptions: Record<string, string> = {
-            overview: "アカウント全体の設計思想・方針を記述してください。",
-            naming: "WF・フォーム・リスト・メール・プロパティの命名規則を記述してください。",
-            properties: "重要なカスタムプロパティの用途と注意事項を記述してください。",
-            workflows: "既存ワークフローの意図と依存関係を記述してください。",
-            patterns: "繰り返し施策（セミナー・ニュースレター等）のテンプレートパターンを記述してください。",
-            guardrails: "触ってはいけない設定・やってはいけないことを記述してください。",
-            history: "過去に実施した施策の記録と学びを追記してください。",
+            design_decisions: "アカウント全体の設計判断とその理由を記述。例: なぜパイプラインをこう使うか、なぜライフサイクルを3段階にしているか等。",
+            naming_conventions: "WF・フォーム・リスト・メール・プロパティ・キャンペーンの命名規則とパターン例を記述。",
+            property_annotations: "重要なカスタムプロパティの注釈を記述。プロパティ名ごとに: 用途、更新方法(手動/WF自動/API)、触っていいか(readonly/editable)、依存先。",
+            workflow_annotations: "既存ワークフローの注釈を記述。WF名ごとに: 目的(1行)、テンプレートか個別か、依存関係(トリガーとなるフォーム等)、触っていいか。",
+            playbooks: "施策の実行手順書を記述。セミナー・ニュースレター・オンボーディング等のタイプ別に、ステップ1〜Nと各ステップの理由・注意点。",
+            guardrails: "禁止事項・注意事項を記述。削除禁止リスト/WF/プロパティ、変更禁止ステージ順序、配信頻度制限、除外ルール等。",
+            history: "過去施策の記録を追記。日付、施策名、対象、使用アセット、結果(配信数/開封率/CTR)、学び(効果的だったこと/失敗/改善点)。",
+            contacts_segments: "セグメント戦略を記述。主要セグメントの定義、どのセグメントにどの施策を打つか、リストの依存関係。",
+            brand_voice: "コミュニケーションのトーン・文体ルールを記述。件名フォーマット、本文トーン、禁止表現、CTA定型文、フッター定型。",
+            integrations: "外部連携・技術構成メモを記述。連携ツール一覧、API設定、データフロー、定期同期の仕組み等。",
           };
 
           await fetchJson<{ id: string }>(

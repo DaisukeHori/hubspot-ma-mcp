@@ -29,18 +29,21 @@ mode:
 - replace: そのカテゴリの内容を丸ごと上書き（overview, naming, properties, workflows, patterns, guardrails向け）
 - append: 既存内容の末尾に追記（history向け。施策実行後の記録追加に使用）
 
-カテゴリ:
-- overview: 設計思想・方針
-- naming: 命名規則
-- properties: カスタムプロパティの用途と注意
-- workflows: WFの意図と依存関係
-- patterns: 施策テンプレート
+カテゴリ（10種）:
+- design_decisions: 設計判断とその理由
+- naming_conventions: 命名規則
+- property_annotations: カスタムプロパティの注釈
+- workflow_annotations: WFの注釈
+- playbooks: 施策の実行手順書
 - guardrails: 禁止事項
 - history: 過去施策の記録
+- contacts_segments: セグメント戦略
+- brand_voice: トーン・文体
+- integrations: 外部連携
 
 施策実行後に「今回のパターンを記録して」と言われたら、historyにappendし、必要に応じてpatternsもreplaceで更新する。`,
     {
-      category: z.enum(["overview", "naming", "properties", "workflows", "patterns", "guardrails", "history"])
+      category: z.enum(["design_decisions", "naming_conventions", "property_annotations", "workflow_annotations", "playbooks", "guardrails", "history", "contacts_segments", "brand_voice", "integrations"])
         .describe("更新するカテゴリ"),
       content: z.string().describe("更新する内容（Markdown形式推奨）"),
       mode: z.enum(["replace", "append"]).describe("replace=丸ごと上書き, append=末尾に追記"),

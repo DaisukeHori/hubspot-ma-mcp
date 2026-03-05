@@ -26,18 +26,21 @@ export function registerHubspotKnowledgeGet(server: McpServer) {
 
 会話の冒頭でcategory省略で全件取得し、設計思想・命名規則・パターン・禁止事項を把握することを推奨。
 
-カテゴリ:
-- overview: 設計思想・方針
-- naming: 命名規則
-- properties: カスタムプロパティの用途と注意
-- workflows: WFの意図と依存関係
-- patterns: 施策テンプレート
-- guardrails: 禁止事項
-- history: 過去施策の記録
+カテゴリ（10種）:
+- design_decisions: 設計判断とその理由
+- naming_conventions: 命名規則
+- property_annotations: カスタムプロパティの注釈（用途・更新方法・触っていいか）
+- workflow_annotations: WFの注釈（目的・依存関係・触っていいか）
+- playbooks: 施策の実行手順書
+- guardrails: 禁止事項・注意事項
+- history: 過去施策の記録と学び
+- contacts_segments: セグメント戦略
+- brand_voice: トーン・文体ルール
+- integrations: 外部連携・技術構成
 
 返却: カテゴリ名をキー、内容を値としたオブジェクト。`,
     {
-      category: z.enum(["overview", "naming", "properties", "workflows", "patterns", "guardrails", "history"]).optional()
+      category: z.enum(["design_decisions", "naming_conventions", "property_annotations", "workflow_annotations", "playbooks", "guardrails", "history", "contacts_segments", "brand_voice", "integrations"]).optional()
         .describe("取得するカテゴリ。省略時は全カテゴリを一括取得"),
     },
     async ({ category }) => {
