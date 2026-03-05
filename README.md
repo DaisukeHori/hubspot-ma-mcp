@@ -463,14 +463,39 @@ curl https://api.anthropic.com/v1/messages \
 | `analytics.behavioral_events.send` | イベント送信 | custom_event_send |
 | `behavioral_events.event_definitions.read_write` | イベント定義 | custom_event_define, custom_event_list_definitions |
 
-### Knowledge Store & Context — 4ツール
+### Knowledge Store & Context — 4ツール（AI MA担当者の「脳」）
+
+AIがMA担当者として機能するための暗黙知保存基盤。データはHubSpot内のCRMノートに保存され、追加インフラ不要。
 
 | ツール名 | 説明 |
 |:--|:--|
-| `hubspot_knowledge_setup` | Knowledge Store初回セットアップ（専用コンタクト+7カテゴリのナレッジノート作成） |
-| `hubspot_knowledge_get` | ナレッジ取得（設計思想・命名規則・施策パターン・禁止事項等） |
+| `hubspot_knowledge_setup` | 初回セットアップ（専用コンタクト + 10カテゴリのナレッジノート作成） |
+| `hubspot_knowledge_get` | ナレッジ取得（カテゴリ指定 or 全件取得） |
 | `hubspot_knowledge_update` | ナレッジ更新（replace=上書き / append=追記） |
-| `hubspot_context_snapshot` | HubSpot設定状態の一括スナップショット取得（プロパティ・WF・パイプライン・フォーム・リスト・メール・キャンペーン・イベント・オーナー） |
+| `hubspot_context_snapshot` | HubSpot全設定の一括スナップショット取得 |
+
+**ナレッジカテゴリ（10種）:**
+
+| カテゴリ | 内容 | 更新頻度 |
+|:--|:--|:--|
+| `design_decisions` | 設計判断とその理由（なぜパイプラインをこう使うか等） | 低（方針変更時） |
+| `naming_conventions` | 命名規則（WF・フォーム・リスト・メール・プロパティ・キャンペーン） | 低 |
+| `property_annotations` | カスタムプロパティ注釈（用途・更新方法・触っていいか・依存先） | 中（プロパティ追加時） |
+| `workflow_annotations` | WF注釈（目的・テンプレート/個別・依存関係・触っていいか） | 中（WF追加時） |
+| `playbooks` | 施策実行手順書（セミナー・ニュースレター・オンボーディング等） | 中（新パターン追加時） |
+| `guardrails` | 禁止事項・注意事項（削除禁止・変更禁止・配信制限等） | 低 |
+| `history` | 過去施策の記録と学び（日付・結果・改善点） | 高（施策実行後にappend） |
+| `contacts_segments` | セグメント戦略（定義・施策との対応・リスト依存関係） | 中 |
+| `brand_voice` | トーン・文体ルール（件名フォーマット・禁止表現・CTA定型） | 低 |
+| `integrations` | 外部連携・技術構成メモ（連携ツール・API設定・データフロー） | 低 |
+
+**AIの利用フロー:**
+```
+会話開始 → hubspot_knowledge_get() → 「うちのやり方」把握
+　　　　 → hubspot_context_snapshot() → 「今の設定状態」把握
+　　　　 → ユーザー指示に対して、knowledge+snapshotを踏まえた提案
+施策実行後 → hubspot_knowledge_update(category:"history", mode:"append") → 経験知蓄積
+```
 
 ## 自分でデプロイする
 
