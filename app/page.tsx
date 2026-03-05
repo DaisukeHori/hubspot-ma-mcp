@@ -618,6 +618,59 @@ export default function Home() {
         </div>
       </section>
 
+
+      <div className="hs-divider" />
+      <section className="hs-section">
+        <div className="hs-section__label"><Sprocket size={14} /> FIRST SESSION</div>
+        <h2 className="hs-section__title">初回オンボーディング</h2>
+        <p className="hs-section__desc">セットアップ完了後、最初の会話でAIが自動的にあなたのHubSpotを学習します。</p>
+        <div style={{ maxWidth: 640, margin: "0 auto" }}>
+          <div style={{ display: "grid", gap: 2 }}>
+            <div className="hs-auth-card" style={{ borderLeft: "3px solid var(--hs-orange)", borderRadius: "8px 8px 0 0" }}>
+              <h4 style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ background: "var(--hs-orange)", color: "white", width: 24, height: 24, borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>1</span>
+                AIが自動分析を開始
+              </h4>
+              <p style={{ marginLeft: 32 }}>「セミナーやるからよろしく」等の最初の指示で、AIがKnowledge Storeが空であることを検知。<code>hubspot_knowledge_build</code> を自動実行し、あなたのHubSpotの全設定（プロパティ・ワークフロー・パイプライン・フォーム・リスト・メール等）を一括スキャンします。</p>
+            </div>
+            <div className="hs-auth-card" style={{ borderLeft: "3px solid #4A90D9", borderRadius: 0 }}>
+              <h4 style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ background: "#4A90D9", color: "white", width: 24, height: 24, borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>2</span>
+                10カテゴリの下書きを自動生成
+              </h4>
+              <p style={{ marginLeft: 32 }}>スキャン結果から、設計判断・命名規則・プロパティ注釈・ワークフロー注釈・施策パターン・禁止事項・セグメント戦略等の10カテゴリに自動分類して下書きを作成。HubSpot内のCRMノートに保存されます。</p>
+            </div>
+            <div className="hs-auth-card" style={{ borderLeft: "3px solid #8B5CF6", borderRadius: 0 }}>
+              <h4 style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ background: "#8B5CF6", color: "white", width: 24, height: 24, borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>3</span>
+                AIからあなたへ質問
+              </h4>
+              <p style={{ marginLeft: 32 }}>AIだけでは判断できない設計意図について質問リストが提示されます。例：</p>
+              <ul style={{ marginLeft: 32, fontSize: 13, color: "var(--hs-text-light)", lineHeight: 1.8 }}>
+                <li>「取引パイプラインが1本ですが、意図的にシンプルにしている理由は？」</li>
+                <li>「チケットが未使用ですが、問い合わせ管理はどうしていますか？」</li>
+                <li>「メール件名にルールはありますか？」</li>
+                <li>「このワークフローは標準テンプレート？触っていい？」</li>
+              </ul>
+            </div>
+            <div className="hs-auth-card" style={{ borderLeft: "3px solid #10B981", borderRadius: 0 }}>
+              <h4 style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ background: "#10B981", color: "white", width: 24, height: 24, borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>4</span>
+                あなたが回答 → Knowledge完成
+              </h4>
+              <p style={{ marginLeft: 32 }}>回答をもとにAIがKnowledge Storeを補完。「なぜそうなっているか」「何を触ってはいけないか」が記録されます。口頭で伝えるだけで、AIが整形して保存します。</p>
+            </div>
+            <div className="hs-auth-card" style={{ borderLeft: "3px solid var(--hs-orange)", borderRadius: "0 0 8px 8px" }}>
+              <h4 style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ background: "var(--hs-orange)", color: "white", width: 24, height: 24, borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>5</span>
+                MA担当者として稼働開始
+              </h4>
+              <p style={{ marginLeft: 32 }}>以降の会話では、AIが毎回Knowledge Storeを読み込み、あなたの会社のやり方に従って施策を提案・実行します。施策を実行するたびにhistoryが蓄積され、<strong>使うほど賢くなります</strong>。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div className="hs-divider" />
       <section id="auth" className="hs-section">
         <div className="hs-section__label"><Sprocket size={14} /> AUTH MODES</div>
