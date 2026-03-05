@@ -132,6 +132,13 @@ import { registerListDelete } from "./tools/list-delete";
 import { registerListMembersGet } from "./tools/list-members-get";
 import { registerListMembersAdd } from "./tools/list-members-add";
 import { registerListMembersRemove } from "./tools/list-members-remove";
+import { registerMarketingEmailList } from "./tools/marketing-email-list";
+import { registerMarketingEmailGet } from "./tools/marketing-email-get";
+import { registerMarketingEmailCreate } from "./tools/marketing-email-create";
+import { registerMarketingEmailUpdate } from "./tools/marketing-email-update";
+import { registerMarketingEmailDelete } from "./tools/marketing-email-delete";
+import { registerMarketingEmailClone } from "./tools/marketing-email-clone";
+import { registerMarketingEmailPublish } from "./tools/marketing-email-publish";
 
 
 /**
@@ -269,5 +276,13 @@ export function registerAllTools(server: McpServer) {
   registerListMembersGet(server);
   registerListMembersAdd(server);
   registerListMembersRemove(server);
+  // Marketing Email API v3
+  registerMarketingEmailList(server);
+  registerMarketingEmailGet(server);
+  registerMarketingEmailCreate(server);
+  registerMarketingEmailUpdate(server);
+  registerMarketingEmailDelete(server);
+  registerMarketingEmailClone(server);
+  registerMarketingEmailPublish(server);
 }
 
