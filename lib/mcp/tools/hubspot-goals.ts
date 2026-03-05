@@ -85,10 +85,14 @@ filterGroups/sorts/propertiesはCRM Search API標準形式。`,
         })),
       })).optional().describe("検索フィルタ"),
       query: z.string().optional().describe("キーワード検索"),
+      sorts: z.array(z.object({
+        propertyName: z.string(),
+        direction: z.enum(["ASCENDING", "DESCENDING"]),
+      })).optional().describe("ソート（例: [{propertyName:'hs_start_datetime', direction:'DESCENDING'}]）"),
       limit: z.number().optional().describe("取得件数（デフォルト10）"),
       after: z.string().optional().describe("ページネーションカーソル"),
     },
-    async ({ filterGroups, query, limit, after }) => {
+    async ({ filterGroups, query, sorts, limit, after }) => {
       try {
         const body: Record<string, unknown> = {
           properties: GOAL_PROPS.split(","),
@@ -96,6 +100,7 @@ filterGroups/sorts/propertiesはCRM Search API標準形式。`,
         };
         if (filterGroups) body.filterGroups = filterGroups;
         if (query) body.query = query;
+        if (sorts) body.sorts = sorts;
         if (after) body.after = after;
         const data = await fetchJson<Record<string, unknown>>(
           `${BASE_URL}/crm/v3/objects/goal_targets/search`,

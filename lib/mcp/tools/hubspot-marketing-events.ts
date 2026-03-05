@@ -71,7 +71,11 @@ Marketing Events v3 API。イベント名・日時・開催者・URL・参加者
   server.tool(
     "marketing_event_create",
     `HubSpot に新しいマーケティングイベントを作成する。
-必須: eventName, externalEventId（外部システムでのイベントID）, externalAccountId（外部アカウントID）, eventOrganizer。
+必須: eventName, externalEventId, externalAccountId, eventOrganizer。
+externalEventIdは外部システムでのイベント一意識別子（Private Appの場合はUUID等を自分で決める）。
+externalAccountIdはアプリ識別子（Private AppのApp ID）。
+注意: externalEventId指定のエンドポイントは作成したアプリからのみアクセス可能。
+objectId指定のエンドポイントはどのアプリからでもアクセス可能。
 任意: eventType, eventDescription, eventUrl, startDateTime(ISO8601), endDateTime(ISO8601), customProperties。
 スコープ: crm.objects.marketing_events.write`,
     {
@@ -85,6 +89,7 @@ Marketing Events v3 API。イベント名・日時・開催者・URL・参加者
       startDateTime: z.string().optional().describe("開始日時（ISO8601）"),
       endDateTime: z.string().optional().describe("終了日時（ISO8601）"),
       eventCancelled: z.boolean().optional().describe("キャンセル済みか"),
+      eventCompleted: z.boolean().optional().describe("イベント完了済みか"),
       customProperties: z.array(z.object({
         name: z.string(),
         value: z.string(),
@@ -104,6 +109,7 @@ Marketing Events v3 API。イベント名・日時・開催者・URL・参加者
         if (params.startDateTime) body.startDateTime = params.startDateTime;
         if (params.endDateTime) body.endDateTime = params.endDateTime;
         if (params.eventCancelled !== undefined) body.eventCancelled = params.eventCancelled;
+        if (params.eventCompleted !== undefined) body.eventCompleted = params.eventCompleted;
         if (params.customProperties) body.customProperties = params.customProperties;
         const data = await fetchJson<Record<string, unknown>>(
           `${BASE_URL}/marketing/v3/marketing-events/events`,
@@ -129,6 +135,11 @@ Marketing Events v3 API。イベント名・日時・開催者・URL・参加者
       startDateTime: z.string().optional().describe("開始日時（ISO8601）"),
       endDateTime: z.string().optional().describe("終了日時（ISO8601）"),
       eventCancelled: z.boolean().optional().describe("キャンセル済みか"),
+      eventCompleted: z.boolean().optional().describe("イベント完了済みか"),
+      customProperties: z.array(z.object({
+        name: z.string(),
+        value: z.string(),
+      })).optional().describe("カスタムプロパティ"),
     },
     async ({ objectId, ...props }) => {
       try {
@@ -229,4 +240,67 @@ joinedAt/leftAtで参加・退出時刻も記録可能。
       } catch (error) { return handleError(error); }
     }
   );
+
+  // --- marketing_event_complete ---
+  server.tool(
+    "marketing_event_complete",
+    `マーケティングイベントを完了状態にする。
+イベント終了後にこのエンドポイントを呼ぶと、全参加者のattendance duration（参加時間）が計算され、
+タイムラインエントリが更新される。またNO_SHOW（登録済み未参加者）の状態が自動生成される。
+注意: externalEventIdを使用するため、イベントを作成したアプリ（Private App）からのみ呼び出し可能。`,
+    {
+      externalEventId: z.string().describe("外部イベントID（marketing_event_createで指定したもの）"),
+      externalAccountId: z.string().describe("外部アカウントID（marketing_event_createで指定したもの）"),
+    },
+    async ({ externalEventId, externalAccountId }) => {
+      try {
+        const data = await fetchJson<Record<string, unknown>>(
+          `${BASE_URL}/marketing/v3/marketing-events/events/${encodeURIComponent(externalEventId)}/complete`,
+          {
+            method: "POST",
+            headers: getHeaders(),
+            body: JSON.stringify({ externalAccountId }),
+          }
+        );
+        return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
+      } catch (error) { return handleError(error); }
+    }
+  );
+
+  // --- marketing_event_participations ---
+  server.tool(
+    "marketing_event_participations",
+    `マーケティングイベントの参加者集計データを取得する。
+2つのモード:
+- byEvent: 特定イベントの参加者数（registrants/attendees/cancellations/noShows）
+- byContact: 特定コンタクトの全イベント参加履歴（breakdown）
+Participant State API（2024年6月リリース）。`,
+    {
+      mode: z.enum(["byEvent", "byContact"]).describe("取得モード: byEvent=イベント別集計 / byContact=コンタクト別履歴"),
+      marketingEventId: z.string().optional().describe("byEvent時: マーケティングイベントのobjectId"),
+      contactIdentifier: z.string().optional().describe("byContact時: コンタクトIDまたはメールアドレス"),
+    },
+    async ({ mode, marketingEventId, contactIdentifier }) => {
+      try {
+        let url: string;
+        if (mode === "byEvent") {
+          if (!marketingEventId) {
+            return { content: [{ type: "text" as const, text: "byEventモードでは marketingEventId が必須です。" }] };
+          }
+          url = `${BASE_URL}/marketing/v3/marketing-events/participations/${marketingEventId}/counters`;
+        } else {
+          if (!contactIdentifier) {
+            return { content: [{ type: "text" as const, text: "byContactモードでは contactIdentifier（コンタクトIDまたはメールアドレス）が必須です。" }] };
+          }
+          url = `${BASE_URL}/marketing/v3/marketing-events/participations/contacts/${encodeURIComponent(contactIdentifier)}/breakdown`;
+        }
+        const data = await fetchJson<Record<string, unknown>>(url, {
+          method: "GET",
+          headers: getHeaders(),
+        });
+        return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
+      } catch (error) { return handleError(error); }
+    }
+  );
+
 }
