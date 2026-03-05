@@ -524,6 +524,35 @@ npm run dev
 
 ---
 
+
+## AI MA担当者スキル（Claude Skills対応）
+
+MCPサーバー（手足+記憶）に加えて、**AIの行動規範・判断基準**を定義するSkillファイルを同梱しています。
+
+### インストール方法
+
+1. `skill/` フォルダをzip化（または [Releases](https://github.com/DaisukeHori/hubspot-ma-mcp/releases) からダウンロード）
+2. Claude.ai → Settings → Customize → Skills → Upload
+3. MCPサーバーを接続
+4. 「セミナーやるからよろしく」と言うだけ
+
+### Skillが定義していること
+
+- **毎回の初動**: knowledge読み込み → snapshot → 対応
+- **判断の線引き**: 何を自律的にやり、何を確認するか
+- **施策タイプ別の手順**: セミナー/NL/フォローアップの標準フロー
+- **guardrails遵守**: 禁止事項チェックの徹底
+- **経験知の蓄積**: 施策実行後の自動記録ルール
+
+### Claude Code での利用
+
+```bash
+# プロジェクトにスキルを追加
+mkdir -p .claude/skills/hubspot-ma-operator
+cp skill/SKILL.md .claude/skills/hubspot-ma-operator/
+cp -r skill/references .claude/skills/hubspot-ma-operator/
+```
+
 ## 技術スタック
 
 | | |
