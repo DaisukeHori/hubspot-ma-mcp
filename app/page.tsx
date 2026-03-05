@@ -273,6 +273,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
       { name: "hubspot_knowledge_get", desc: "ナレッジ取得（設計思想・命名規則・パターン）", icon: "🧠", api: "Internal (notes search)", params: [{ name: "category", required: false, desc: "カテゴリ指定" }] },
       { name: "hubspot_knowledge_update", desc: "ナレッジ更新（replace/append）", icon: "✏️", api: "Internal (notes update)", params: [{ name: "category", required: true, desc: "カテゴリ" }, { name: "mode", required: true, desc: "replace/append" }] },
       { name: "hubspot_context_snapshot", desc: "HubSpot設定一括スナップショット", icon: "📸", api: "Internal (multi-API)", params: [{ name: "sections", required: false, desc: "取得セクション" }] },
+      { name: "hubspot_knowledge_build", desc: "既存設定→10カテゴリ自動分析+質問生成", icon: "🎓", api: "Internal (snapshot→analyze→save)", params: [{ name: "force", required: false, desc: "既存上書き" }] },
     ],
   },
   {
@@ -547,7 +548,7 @@ export default function Home() {
             MCP Protocol 2025-03-26 · Streamable HTTP
           </div>
           <h1>AIから<span>HubSpot CRM</span>を<br />直接操作しよう</h1>
-          <p className="hs-hero__sub">ワークフロー・CRM・商品・明細行・プロパティ・パイプライン・CMS をAIツールから直接操作できるMCPサーバー。115ツール搭載。</p>
+          <p className="hs-hero__sub">ワークフロー・CRM・商品・明細行・プロパティ・パイプライン・CMS をAIツールから直接操作できるMCPサーバー。116ツール搭載。</p>
           <div className="hs-hero__endpoint">
             <span style={{ color: "var(--hs-text-light)", fontSize: 12 }}>ENDPOINT</span>
             <span>{MCP_URL}</span>

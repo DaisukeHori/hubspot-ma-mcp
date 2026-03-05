@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "HubSpot MA MCP Server — 115ツール搭載のマーケティング自動化AI基盤",
+  title: "HubSpot MA MCP Server — 116ツール搭載のマーケティング自動化AI基盤",
   description:
-    "CRM・フォーム・リスト・マーケティングメール・ワークフローなど115ツールを搭載。Claude AIからHubSpotのマーケティング自動化を完全操作できるMCP（Model Context Protocol）サーバー。",
+    "CRM・フォーム・リスト・マーケティングメール・ワークフローなど116ツールを搭載。Claude AIからHubSpotのマーケティング自動化を完全操作できるMCP（Model Context Protocol）サーバー。",
   keywords: [
     "HubSpot",
     "MCP",
@@ -17,9 +17,9 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Daisuke Hori" }],
   openGraph: {
-    title: "HubSpot MA MCP Server — 115 Tools",
+    title: "HubSpot MA MCP Server — 116 Tools",
     description:
-      "CRM・フォーム・リスト・メール・ワークフローなど115ツールでHubSpotマーケティング自動化をAIから完全操作",
+      "CRM・フォーム・リスト・メール・ワークフローなど116ツールでHubSpotマーケティング自動化をAIから完全操作",
     url: "https://hubspot-ma-mcp.vercel.app",
     siteName: "HubSpot MA MCP Server",
     images: [
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "HubSpot MA MCP Server — 115 Tools for Marketing Automation with Claude AI",
+        alt: "HubSpot MA MCP Server — 116 Tools for Marketing Automation with Claude AI",
       },
     ],
     locale: "ja_JP",
@@ -35,9 +35,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "HubSpot MA MCP Server — 115 Tools",
+    title: "HubSpot MA MCP Server — 116 Tools",
     description:
-      "Claude AIからHubSpotのMA全操作を可能にする115ツール搭載MCPサーバー",
+      "Claude AIからHubSpotのMA全操作を可能にする116ツール搭載MCPサーバー",
     images: ["/og-image.png"],
   },
   icons: {
