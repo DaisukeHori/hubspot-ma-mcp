@@ -26,8 +26,9 @@ export function registerCustomEventSend(server: McpServer) {
       occurredAt: z.string().optional().describe("イベント発生日時（ISO8601形式）。省略時は現在時刻"),
       properties: z.record(z.string()).optional().describe("イベントプロパティ（キー:値）。custom_event_defineで定義したカスタムプロパティや、デフォルトプロパティ（hs_city, hs_country, hs_device_type, hs_page_id, hs_touchpoint_source等）"),
       utk: z.string().optional().describe("HubSpotトラッキングCookie値（Webイベントの場合）"),
+      uuid: z.string().optional().describe("冪等性キー（UUID形式）。同一uuidのイベントは重複送信されない。リトライ時の重複防止に使用"),
     },
-    async ({ eventName, objectId, email, occurredAt, properties, utk }) => {
+    async ({ eventName, objectId, email, occurredAt, properties, utk, uuid }) => {
       try {
         const body: Record<string, unknown> = { eventName };
         if (objectId) body.objectId = objectId;
@@ -35,6 +36,7 @@ export function registerCustomEventSend(server: McpServer) {
         if (occurredAt) body.occurredAt = occurredAt;
         if (properties) body.properties = properties;
         if (utk) body.utk = utk;
+        if (uuid) body.uuid = uuid;
 
         const response = await fetch(`${BASE_URL}/events/v3/send`, {
           method: "POST", headers: getHeaders(), body: JSON.stringify(body),

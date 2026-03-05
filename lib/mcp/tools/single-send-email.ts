@@ -37,18 +37,20 @@ export function registerSingleSendEmail(server: McpServer) {
       to: z.string().describe("送信先メールアドレス（例: 'customer@example.com'）"),
       from: z.string().optional().describe("送信元（'送信者名 <sender@example.com>' 形式）。省略時はテンプレートの設定を使用"),
       sendId: z.string().optional().describe("送信ID（重複防止用。同一sendIdのメールはアカウントあたり1回のみ送信される）"),
-      replyTo: z.array(z.string()).optional().describe("Reply-Toアドレスの配列"),
+      replyTo: z.string().optional().describe("Reply-Toアドレス（単一の文字列。例: 'reply@example.com'）"),
+      replyToList: z.array(z.string()).optional().describe("複数のReply-Toアドレス（配列。replyToと併用不可）"),
       cc: z.array(z.string()).optional().describe("CCアドレスの配列"),
       bcc: z.array(z.string()).optional().describe("BCCアドレスの配列"),
-      contactProperties: z.record(z.string()).optional().describe("コンタクトプロパティ（キー:値）。送信時にコンタクトレコードに設定される。テンプレート内で {{contact.firstname}} 等で参照可能。例: {firstname: '太郎', last_paid_date: '2026-03-01'}"),
-      customProperties: z.record(z.unknown()).optional().describe("カスタムプロパティ（キー:値）。テンプレート内で {{custom.propertyName}} で参照可能。コンタクトレコードには保存されない。配列も対応（Programmable Email Content使用時）"),
+      contactProperties: z.record(z.string()).optional().describe("コンタクトプロパティ（{key: value}形式）。送信時にコンタクトレコードに設定される。テンプレート内で {{contact.KEY}} で参照可能。例: {firstname: '太郎', last_paid_date: '2026-03-01'}。v4 APIではフラットオブジェクト形式"),
+      customProperties: z.record(z.unknown()).optional().describe("カスタムプロパティ（{key: value}形式）。テンプレート内で {{custom.KEY}} で参照可能。コンタクトレコードには保存されない。配列もサポート（Programmable Email Content使用時、HubL forループで展開可能）。v4 APIではフラットオブジェクト形式"),
     },
-    async ({ emailId, to, from, sendId, replyTo, cc, bcc, contactProperties, customProperties }) => {
+    async ({ emailId, to, from, sendId, replyTo, replyToList, cc, bcc, contactProperties, customProperties }) => {
       try {
         const message: Record<string, unknown> = { to };
         if (from) message.from = from;
         if (sendId) message.sendId = sendId;
         if (replyTo) message.replyTo = replyTo;
+        if (replyToList) message.replyToList = replyToList;
         if (cc) message.cc = cc;
         if (bcc) message.bcc = bcc;
 

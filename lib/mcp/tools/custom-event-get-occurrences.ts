@@ -33,8 +33,10 @@ export function registerCustomEventGetOccurrences(server: McpServer) {
       occurredBefore: z.string().optional().describe("この日時以前のイベント（ISO8601形式）"),
       limit: z.number().min(1).max(100).optional().describe("取得件数（デフォルト10）"),
       after: z.string().optional().describe("ページネーション用カーソル"),
+      sort: z.string().optional().describe("ソート順。'-occurredAt'=新しい順（デフォルト）、'occurredAt'=古い順"),
+      objectPropertyEmail: z.string().optional().describe("コンタクトのメールアドレスでイベント検索（objectType=contactと併用。objectIdの代わりにメールアドレスでフィルタ）"),
     },
-    async ({ eventType, objectType, objectId, occurredAfter, occurredBefore, limit, after }) => {
+    async ({ eventType, objectType, objectId, occurredAfter, occurredBefore, limit, after, sort, objectPropertyEmail }) => {
       try {
         const params = new URLSearchParams();
         if (eventType) params.set("eventType", eventType);
@@ -44,6 +46,8 @@ export function registerCustomEventGetOccurrences(server: McpServer) {
         if (occurredBefore) params.set("occurredBefore", occurredBefore);
         if (limit) params.set("limit", String(limit));
         if (after) params.set("after", after);
+        if (sort) params.set("sort", sort);
+        if (objectPropertyEmail) params.set("objectProperty.email", objectPropertyEmail);
         const qs = params.toString() ? `?${params.toString()}` : "";
 
         const result = await fetchJson<Record<string, unknown>>(

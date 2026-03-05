@@ -30,7 +30,7 @@ export function registerCustomEventDefine(server: McpServer) {
 スコープ: behavioral_events.event_definitions.read_write`,
     {
       label: z.string().describe("イベントの表示名（例: 'セミナー参加', '資料ダウンロード'）"),
-      name: z.string().describe("イベントの内部名（英数字アンダースコアのみ。例: 'seminar_attendance'）。自動的にプレフィックス付きのfullyQualifiedNameが生成される"),
+      name: z.string().optional().describe("イベントの内部名（英数字アンダースコアのみ。例: 'seminar_attendance'）。省略時はlabelから自動生成。自動的にプレフィックス付きのfullyQualifiedNameが生成される"),
       primaryObject: z.enum(["CONTACT", "COMPANY", "DEAL", "TICKET"]).describe("関連付けるオブジェクトタイプ"),
       description: z.string().optional().describe("イベントの説明"),
       includeDefaultProperties: z.boolean().optional().describe("デフォルトプロパティ（hs_city, hs_country等）を含めるか（デフォルト true）"),
@@ -44,13 +44,20 @@ export function registerCustomEventDefine(server: McpServer) {
           value: z.string().describe("選択肢の内部値"),
         })).optional().describe("enumeration型の選択肢"),
       })).optional().describe("カスタムプロパティ定義の配列。イベント固有のデータ項目（例: セミナー名、参加方法等）"),
+      customMatchingId: z.object({
+        primaryObjectRule: z.object({
+          eventPropertyName: z.string().describe("マッチングに使うイベントプロパティ名"),
+          targetObjectPropertyName: z.string().describe("マッチング対象のCRMオブジェクトプロパティ名"),
+        }),
+      }).optional().describe("カスタムマッチングルール。イベントプロパティ値でCRMレコードを特定する場合に使用（例: イベントのemail_addressプロパティでコンタクトのemailにマッチ）"),
     },
-    async ({ label, name, primaryObject, description, includeDefaultProperties, propertyDefinitions }) => {
+    async ({ label, name, primaryObject, description, includeDefaultProperties, propertyDefinitions, customMatchingId }) => {
       try {
         const body: Record<string, unknown> = { label, name, primaryObject };
         if (description) body.description = description;
         if (includeDefaultProperties !== undefined) body.includeDefaultProperties = includeDefaultProperties;
         if (propertyDefinitions) body.propertyDefinitions = propertyDefinitions;
+        if (customMatchingId) body.customMatchingId = customMatchingId;
 
         const result = await fetchJson<Record<string, unknown>>(
           `${BASE_URL}/events/v3/event-definitions`,

@@ -34,7 +34,7 @@ export function registerCampaignCreate(server: McpServer) {
         hs_start_date: z.string().optional().describe("開始日（YYYY-MM-DD形式）"),
         hs_end_date: z.string().optional().describe("終了日（YYYY-MM-DD形式）"),
         hs_notes: z.string().optional().describe("メモ・備考"),
-        hs_utm: z.record(z.string()).optional().describe("UTMパラメータ（JSON）。{utm_campaign, utm_source, utm_medium等}"),
+        hs_utm: z.record(z.string()).optional().describe("UTMパラメータ（オブジェクト）。{utm_campaign: 'campaign_name', utm_source: 'email', utm_medium: 'marketing_email', utm_content: '...'} 形式。2025/7以降読み書き対応"),
       }).describe("キャンペーンプロパティ。hs_nameは必須"),
     },
     async ({ properties }) => {
