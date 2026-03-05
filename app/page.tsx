@@ -217,6 +217,15 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     color: "#E74C8B",
     tools: [
       { name: "marketing_email_list", desc: "メール一覧取得（統計対応）", icon: "📧", api: "GET /marketing/v3/emails", params: [{ name: "limit", required: false, desc: "件数" }, { name: "includeStats", required: false, desc: "統計含む" }] },
+
+      { name: "marketing_email_get", desc: "メール詳細取得", icon: "🔍", api: "GET /marketing/v3/emails/:id", params: [{ name: "emailId", required: true, desc: "メールID" }, { name: "includeStats", required: false, desc: "統計含む" }] },
+      { name: "marketing_email_create", desc: "メール作成（DRAFT）", icon: "✨", api: "POST /marketing/v3/emails", params: [{ name: "name", required: true, desc: "メール名" }, { name: "subject", required: true, desc: "件名" }] },
+      { name: "marketing_email_update", desc: "メール更新（PATCH）", icon: "✍️", api: "PATCH /marketing/v3/emails/:id", params: [{ name: "emailId", required: true, desc: "メールID" }, { name: "properties", required: true, desc: "更新内容" }] },
+      { name: "marketing_email_delete", desc: "メールアーカイブ", icon: "🗑️", api: "DELETE /marketing/v3/emails/:id", params: [{ name: "emailId", required: true, desc: "メールID" }, { name: "confirm", required: true, desc: "true" }] },
+      { name: "marketing_email_clone", desc: "メール複製", icon: "📋", api: "POST /marketing/v3/emails/:id/clone", params: [{ name: "emailId", required: true, desc: "複製元ID" }, { name: "name", required: false, desc: "新メール名" }] },
+      { name: "marketing_email_publish", desc: "メール送信（Enterprise必須）", icon: "🚀", api: "POST /marketing/v3/emails/:id/publish", params: [{ name: "emailId", required: true, desc: "メールID" }, { name: "confirm", required: true, desc: "true" }] },
+    ],
+  },
   {
     category: "Single-Send（個別メール送信 / v4）",
     color: "#E74C8B",
@@ -240,18 +249,10 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     category: "Custom Events（カスタムイベント / v3）",
     color: "#10B981",
     tools: [
-      { name: "custom_event_define", desc: "イベント定義作成", icon: "📐", api: "POST /events/v3/event-definitions", params: [{ name: "name", required: true, desc: "イベント内部名" }, { name: "primaryObject", required: true, desc: "CONTACT等" }] },
+      { name: "custom_event_define", desc: "イベント定義作成", icon: "📐", api: "POST /events/v3/event-definitions", params: [{ name: "name", required: false, desc: "イベント内部名" }, { name: "primaryObject", required: true, desc: "CONTACT等" }] },
       { name: "custom_event_send", desc: "イベント送信", icon: "📡", api: "POST /events/v3/send", params: [{ name: "eventName", required: true, desc: "完全修飾名" }] },
       { name: "custom_event_list_definitions", desc: "イベント定義一覧", icon: "📋", api: "GET /events/v3/event-definitions", params: [{ name: "searchString", required: false, desc: "検索文字列" }] },
       { name: "custom_event_get_occurrences", desc: "イベント発生データ取得", icon: "📊", api: "GET /events/v3/events", params: [{ name: "eventType", required: false, desc: "イベントタイプ" }] },
-    ],
-  },
-      { name: "marketing_email_get", desc: "メール詳細取得", icon: "🔍", api: "GET /marketing/v3/emails/:id", params: [{ name: "emailId", required: true, desc: "メールID" }, { name: "includeStats", required: false, desc: "統計含む" }] },
-      { name: "marketing_email_create", desc: "メール作成（DRAFT）", icon: "✨", api: "POST /marketing/v3/emails", params: [{ name: "name", required: true, desc: "メール名" }, { name: "subject", required: true, desc: "件名" }] },
-      { name: "marketing_email_update", desc: "メール更新（PATCH）", icon: "✍️", api: "PATCH /marketing/v3/emails/:id", params: [{ name: "emailId", required: true, desc: "メールID" }, { name: "properties", required: true, desc: "更新内容" }] },
-      { name: "marketing_email_delete", desc: "メールアーカイブ", icon: "🗑️", api: "DELETE /marketing/v3/emails/:id", params: [{ name: "emailId", required: true, desc: "メールID" }, { name: "confirm", required: true, desc: "true" }] },
-      { name: "marketing_email_clone", desc: "メール複製", icon: "📋", api: "POST /marketing/v3/emails/:id/clone", params: [{ name: "emailId", required: true, desc: "複製元ID" }, { name: "name", required: false, desc: "新メール名" }] },
-      { name: "marketing_email_publish", desc: "メール送信（Enterprise必須）", icon: "🚀", api: "POST /marketing/v3/emails/:id/publish", params: [{ name: "emailId", required: true, desc: "メールID" }, { name: "confirm", required: true, desc: "true" }] },
     ],
   },
   {
