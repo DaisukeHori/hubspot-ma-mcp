@@ -182,43 +182,47 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     color: "#FF8F59",
     tools: [
       { name: "cms_blog_list", desc: "ブログ記事一覧", icon: "📝", api: "GET /cms/v3/blogs/posts", params: [{ name: "limit", required: false, desc: "件数" }] },
-        {
-          category: "Forms（フォーム / v3）",
-          tools: [
-            "form_list — フォーム一覧取得",
-            "form_get — フォーム詳細取得",
-            "form_create — マーケティングフォーム作成",
-            "form_update — フォーム更新（PUT全体置換）",
-            "form_delete — フォームアーカイブ",
-          ],
-        },
-        {
-          category: "Lists / Segments（リスト / v3）",
-          tools: [
-            "list_create — リスト作成（MANUAL/DYNAMIC/SNAPSHOT）",
-            "list_search — リスト検索",
-            "list_get — リスト詳細取得",
-            "list_delete — リスト削除（90日復元可能）",
-            "list_members_get — メンバー一覧取得",
-            "list_members_add — メンバー追加",
-            "list_members_remove — メンバー削除",
-          ],
-        },
-        {
-          category: "Marketing Emails（マーケティングメール / v3）",
-          tools: [
-            "marketing_email_list — メール一覧取得（統計対応）",
-            "marketing_email_get — メール詳細取得",
-            "marketing_email_create — メール作成（DRAFT）",
-            "marketing_email_update — メール更新（PATCH）",
-            "marketing_email_delete — メールアーカイブ",
-            "marketing_email_clone — メール複製（テンプレート再利用）",
-            "marketing_email_publish — メール送信（Enterprise必須）",
-          ],
-        },
+
       { name: "cms_blog_update", desc: "ブログ記事更新", icon: "✍️", api: "PATCH /cms/v3/blogs/posts/{id}", params: [{ name: "postId", required: true, desc: "記事 ID" }] },
       { name: "cms_page_list", desc: "ページ一覧", icon: "📄", api: "GET /cms/v3/pages/{type}", params: [{ name: "pageType", required: true, desc: "landing-pages / site-pages" }] },
       { name: "cms_page_update", desc: "ページ更新", icon: "🖊", api: "PATCH /cms/v3/pages/{type}/{id}", params: [{ name: "pageType", required: true, desc: "landing-pages / site-pages" }, { name: "pageId", required: true, desc: "ページ ID" }] },
+    ],
+  },
+  {
+    category: "Forms（フォーム / v3）",
+    color: "#FF6B4A",
+    tools: [
+      { name: "form_list", desc: "フォーム一覧取得", icon: "📝", api: "GET /marketing/v3/forms", params: [{ name: "limit", required: false, desc: "件数" }, { name: "formTypes", required: false, desc: "hubspot/captured/flow/blog_comment" }] },
+      { name: "form_get", desc: "フォーム詳細取得", icon: "🔍", api: "GET /marketing/v3/forms/:id", params: [{ name: "formId", required: true, desc: "フォームID (UUID)" }] },
+      { name: "form_create", desc: "フォーム作成", icon: "✨", api: "POST /marketing/v3/forms", params: [{ name: "name", required: true, desc: "フォーム名" }, { name: "fieldGroups", required: true, desc: "フィールド定義" }] },
+      { name: "form_update", desc: "フォーム更新（PUT全体置換）", icon: "✍️", api: "PUT /marketing/v3/forms/:id", params: [{ name: "formId", required: true, desc: "フォームID" }, { name: "fieldGroups", required: true, desc: "フィールド定義" }] },
+      { name: "form_delete", desc: "フォームアーカイブ", icon: "🗑️", api: "DELETE /marketing/v3/forms/:id", params: [{ name: "formId", required: true, desc: "フォームID" }, { name: "confirm", required: true, desc: "true" }] },
+    ],
+  },
+  {
+    category: "Lists / Segments（リスト / v3）",
+    color: "#4A90D9",
+    tools: [
+      { name: "list_create", desc: "リスト作成", icon: "📋", api: "POST /crm/v3/lists", params: [{ name: "name", required: true, desc: "リスト名" }, { name: "objectTypeId", required: true, desc: "0-1=コンタクト等" }, { name: "processingType", required: true, desc: "MANUAL/DYNAMIC/SNAPSHOT" }] },
+      { name: "list_search", desc: "リスト検索", icon: "🔍", api: "POST /crm/v3/lists/search", params: [{ name: "query", required: false, desc: "名前キーワード" }, { name: "processingTypes", required: false, desc: "処理タイプ" }] },
+      { name: "list_get", desc: "リスト詳細取得", icon: "📄", api: "GET /crm/v3/lists/:id", params: [{ name: "listId", required: true, desc: "ILS List ID" }, { name: "includeFilters", required: false, desc: "フィルタ含む" }] },
+      { name: "list_delete", desc: "リスト削除（90日復元可）", icon: "🗑️", api: "DELETE /crm/v3/lists/:id", params: [{ name: "listId", required: true, desc: "ILS List ID" }, { name: "confirm", required: true, desc: "true" }] },
+      { name: "list_members_get", desc: "メンバー一覧取得", icon: "👥", api: "GET /crm/v3/lists/:id/memberships", params: [{ name: "listId", required: true, desc: "ILS List ID" }, { name: "limit", required: false, desc: "件数" }] },
+      { name: "list_members_add", desc: "メンバー追加", icon: "➕", api: "PUT /crm/v3/lists/:id/memberships/add", params: [{ name: "listId", required: true, desc: "ILS List ID" }, { name: "recordIds", required: true, desc: "レコードID配列" }] },
+      { name: "list_members_remove", desc: "メンバー削除", icon: "➖", api: "PUT /crm/v3/lists/:id/memberships/remove", params: [{ name: "listId", required: true, desc: "ILS List ID" }, { name: "recordIds", required: true, desc: "レコードID配列" }] },
+    ],
+  },
+  {
+    category: "Marketing Emails（マーケティングメール / v3）",
+    color: "#E74C8B",
+    tools: [
+      { name: "marketing_email_list", desc: "メール一覧取得（統計対応）", icon: "📧", api: "GET /marketing/v3/emails", params: [{ name: "limit", required: false, desc: "件数" }, { name: "includeStats", required: false, desc: "統計含む" }] },
+      { name: "marketing_email_get", desc: "メール詳細取得", icon: "🔍", api: "GET /marketing/v3/emails/:id", params: [{ name: "emailId", required: true, desc: "メールID" }, { name: "includeStats", required: false, desc: "統計含む" }] },
+      { name: "marketing_email_create", desc: "メール作成（DRAFT）", icon: "✨", api: "POST /marketing/v3/emails", params: [{ name: "name", required: true, desc: "メール名" }, { name: "subject", required: true, desc: "件名" }] },
+      { name: "marketing_email_update", desc: "メール更新（PATCH）", icon: "✍️", api: "PATCH /marketing/v3/emails/:id", params: [{ name: "emailId", required: true, desc: "メールID" }, { name: "properties", required: true, desc: "更新内容" }] },
+      { name: "marketing_email_delete", desc: "メールアーカイブ", icon: "🗑️", api: "DELETE /marketing/v3/emails/:id", params: [{ name: "emailId", required: true, desc: "メールID" }, { name: "confirm", required: true, desc: "true" }] },
+      { name: "marketing_email_clone", desc: "メール複製", icon: "📋", api: "POST /marketing/v3/emails/:id/clone", params: [{ name: "emailId", required: true, desc: "複製元ID" }, { name: "name", required: false, desc: "新メール名" }] },
+      { name: "marketing_email_publish", desc: "メール送信（Enterprise必須）", icon: "🚀", api: "POST /marketing/v3/emails/:id/publish", params: [{ name: "emailId", required: true, desc: "メールID" }, { name: "confirm", required: true, desc: "true" }] },
     ],
   },
   {
