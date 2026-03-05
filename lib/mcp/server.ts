@@ -139,6 +139,17 @@ import { registerMarketingEmailUpdate } from "./tools/marketing-email-update";
 import { registerMarketingEmailDelete } from "./tools/marketing-email-delete";
 import { registerMarketingEmailClone } from "./tools/marketing-email-clone";
 import { registerMarketingEmailPublish } from "./tools/marketing-email-publish";
+import { registerSingleSendEmail } from "./tools/single-send-email";
+import { registerSingleSendStatus } from "./tools/single-send-status";
+import { registerCampaignList } from "./tools/campaign-list";
+import { registerCampaignGet } from "./tools/campaign-get";
+import { registerCampaignCreate } from "./tools/campaign-create";
+import { registerCampaignUpdate } from "./tools/campaign-update";
+import { registerCampaignAssetAssociate } from "./tools/campaign-asset-associate";
+import { registerCustomEventSend } from "./tools/custom-event-send";
+import { registerCustomEventDefine } from "./tools/custom-event-define";
+import { registerCustomEventListDefinitions } from "./tools/custom-event-list-definitions";
+import { registerCustomEventGetOccurrences } from "./tools/custom-event-get-occurrences";
 
 
 /**
@@ -284,5 +295,21 @@ export function registerAllTools(server: McpServer) {
   registerMarketingEmailDelete(server);
   registerMarketingEmailClone(server);
   registerMarketingEmailPublish(server);
+  // Single-Send API v4
+  registerSingleSendEmail(server);
+  registerSingleSendStatus(server);
+
+  // Campaigns API v3
+  registerCampaignList(server);
+  registerCampaignGet(server);
+  registerCampaignCreate(server);
+  registerCampaignUpdate(server);
+  registerCampaignAssetAssociate(server);
+
+  // Custom Events API v3
+  registerCustomEventSend(server);
+  registerCustomEventDefine(server);
+  registerCustomEventListDefinitions(server);
+  registerCustomEventGetOccurrences(server);
 }
 
