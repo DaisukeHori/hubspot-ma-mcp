@@ -571,7 +571,7 @@ export default function Home() {
             128 MCP Tools + Knowledge Store + Claude Skill
           </div>
           <h1>AIを<span>HubSpot</span>の<br />マーケティング担当者にする</h1>
-          <p className="hs-hero__sub">「セミナーやるからよろしく」で動くAI。128のMCPツール + 暗黙知を学習するKnowledge Store + 行動規範のClaude Skill。単なるAPIラッパーではなく、あなたの会社のHubSpotを理解したMA担当者として機能します。</p>
+          <p className="hs-hero__sub">HubSpot API v3/v4対応の128ツールMCPサーバー。接続するだけでAIからHubSpotを直接操作。さらにClaude Skillを追加すれば、あなたの会社のHubSpotを理解した自走するAIマーケターになります。</p>
           <div className="hs-hero__endpoint">
             <span style={{ color: "var(--hs-text-light)", fontSize: 12 }}>ENDPOINT</span>
             <span>{MCP_URL}</span>
@@ -583,6 +583,36 @@ export default function Home() {
 
       <div className="hs-divider" />
       <section className="hs-section">
+
+      <div className="hs-divider" />
+      <section className="hs-section">
+        <div className="hs-section__label"><Sprocket size={14} /> TWO WAYS TO USE</div>
+        <h2 className="hs-section__title">2つの使い方</h2>
+        <div className="hs-auth-grid">
+          <div className="hs-auth-card" style={{ borderTop: "3px solid #10B981" }}>
+            <span className="hs-auth-card__badge hs-auth-card__badge--rec">🔧 APIラッパー</span>
+            <h4>MCPサーバーとして使う</h4>
+            <p>接続するだけ。Skill不要・Knowledge Store不要。HubSpot API v3/v4の128ツールをAIから直接操作できます。</p>
+            <div style={{ marginTop: 12, padding: "8px 12px", background: "var(--hs-bg)", borderRadius: 6, fontSize: 13, lineHeight: 1.8 }}>
+              「山田さんのコンタクト情報教えて」<br />
+              「先月の取引一覧して」<br />
+              「フォームのフィールド確認して」<br />
+              「リストにメンバー追加して」
+            </div>
+          </div>
+          <div className="hs-auth-card" style={{ borderTop: "3px solid var(--hs-orange)" }}>
+            <span className="hs-auth-card__badge hs-auth-card__badge--alt">🧠 AIマーケター</span>
+            <h4>Skill追加で自走するAIに</h4>
+            <p>Claude Skillを追加すると、暗黙知を学習し、戦略的思考で施策を提案・実行する自走型AIマーケターになります。</p>
+            <div style={{ marginTop: 12, padding: "8px 12px", background: "var(--hs-bg)", borderRadius: 6, fontSize: 13, lineHeight: 1.8 }}>
+              「セミナーやるからよろしく」→ 全部組んで提案<br />
+              「今月の進捗どう？」→ ボトルネック特定+改善案<br />
+              「リード足りない」→ N1分析+既存顧客LTV検証
+            </div>
+          </div>
+        </div>
+      </section>
+
         <div className="hs-section__label"><Sprocket size={14} /> WHY THIS EXISTS</div>
         <h2 className="hs-section__title">なぜこれが必要か</h2>
         <p className="hs-section__desc">HubSpot APIを叩けるだけではMA担当者にはなれません。本当の担当者は「うちのやり方」を知っています。</p>
