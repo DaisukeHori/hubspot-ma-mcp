@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  HubSpot CRM・ワークフロー・メモ・タスク・関連付け・CMS を AI アシスタントから直接操作する MCP サーバー（81ツール）
+  HubSpot CRM・ワークフロー・メモ・タスク・関連付け・CMS を AI アシスタントから直接操作する MCP サーバー（100ツール）
 </p>
 
 <p align="center">
@@ -219,7 +219,7 @@ curl https://api.anthropic.com/v1/messages \
 
 ---
 
-## ツール一覧（81ツール）
+## ツール一覧（100ツール）
 
 ### Workflow（Automation v4）— 6ツール
 
@@ -391,9 +391,47 @@ curl https://api.anthropic.com/v1/messages \
 | `cms_blog_update` | ブログ記事更新 |
 | `cms_page_list` | ページ一覧取得 |
 | `cms_page_update` | ページ更新 |
+| `forms` | フォーム | form_list, form_get, form_create, form_update, form_delete |
+| `crm.lists.read` | リスト読取 | list_search, list_get, list_members_get |
+| `crm.lists.write` | リスト書込 | list_create, list_delete, list_members_add, list_members_remove |
+| `content` | マーケティングメール | marketing_email_list/get/create/update/delete/clone/publish |
 
 ---
 
+
+### Forms（フォーム）— 5ツール
+
+| ツール名 | 説明 |
+|:--|:--|
+| `form_list` | フォーム一覧取得（タイプ・アーカイブフィルタ対応） |
+| `form_get` | フォーム詳細取得（フィールド定義・設定・スタイル含む） |
+| `form_create` | マーケティングフォーム作成（フィールド・送信後アクション・GDPR設定） |
+| `form_update` | フォーム更新（PUT全体置換） |
+| `form_delete` | フォームアーカイブ |
+
+### Lists / Segments（リスト / セグメント）— 7ツール
+
+| ツール名 | 説明 |
+|:--|:--|
+| `list_create` | リスト作成（MANUAL/DYNAMIC/SNAPSHOT） |
+| `list_search` | リスト検索（名前・タイプ・オブジェクトで絞り込み） |
+| `list_get` | リスト詳細取得（フィルタ定義含む） |
+| `list_delete` | リスト削除（90日以内復元可能） |
+| `list_members_get` | リストメンバー一覧取得 |
+| `list_members_add` | リストにレコード追加（MANUAL/SNAPSHOTのみ） |
+| `list_members_remove` | リストからレコード削除（MANUAL/SNAPSHOTのみ） |
+
+### Marketing Emails（マーケティングメール）— 7ツール
+
+| ツール名 | 説明 |
+|:--|:--|
+| `marketing_email_list` | マーケティングメール一覧取得（統計・日時フィルタ対応） |
+| `marketing_email_get` | マーケティングメール詳細取得（本文・配信先・統計含む） |
+| `marketing_email_create` | マーケティングメール作成（DRAFT状態） |
+| `marketing_email_update` | マーケティングメール更新（PATCH部分更新） |
+| `marketing_email_delete` | マーケティングメールアーカイブ |
+| `marketing_email_clone` | マーケティングメール複製（テンプレート再利用） |
+| `marketing_email_publish` | マーケティングメール公開/送信（Enterprise必須） |
 ## 自分でデプロイする
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp&env=AUTH_MODE%2CHUBSPOT_ACCESS_TOKEN%2CMCP_API_KEY&envDescription=AUTH_MODE%3A+hubspot_token%28%E3%83%87%E3%83%95%E3%82%A9%E3%83%AB%E3%83%88%29+or+api_key+%7C+HUBSPOT_ACCESS_TOKEN%3A+api_key%E3%83%A2%E3%83%BC%E3%83%89%E6%99%82%E3%81%AB%E5%BF%85%E9%A0%88+%7C+MCP_API_KEY%3A+api_key%E3%83%A2%E3%83%BC%E3%83%89%E6%99%82%E3%81%AB%E5%BF%85%E9%A0%88&envLink=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp%23%E8%AA%8D%E8%A8%BC%E3%83%A2%E3%83%BC%E3%83%89&project-name=hubspot-ma-mcp&repository-name=hubspot-ma-mcp)

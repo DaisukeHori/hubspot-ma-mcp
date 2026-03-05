@@ -182,6 +182,40 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     color: "#FF8F59",
     tools: [
       { name: "cms_blog_list", desc: "ブログ記事一覧", icon: "📝", api: "GET /cms/v3/blogs/posts", params: [{ name: "limit", required: false, desc: "件数" }] },
+        {
+          category: "Forms（フォーム / v3）",
+          tools: [
+            "form_list — フォーム一覧取得",
+            "form_get — フォーム詳細取得",
+            "form_create — マーケティングフォーム作成",
+            "form_update — フォーム更新（PUT全体置換）",
+            "form_delete — フォームアーカイブ",
+          ],
+        },
+        {
+          category: "Lists / Segments（リスト / v3）",
+          tools: [
+            "list_create — リスト作成（MANUAL/DYNAMIC/SNAPSHOT）",
+            "list_search — リスト検索",
+            "list_get — リスト詳細取得",
+            "list_delete — リスト削除（90日復元可能）",
+            "list_members_get — メンバー一覧取得",
+            "list_members_add — メンバー追加",
+            "list_members_remove — メンバー削除",
+          ],
+        },
+        {
+          category: "Marketing Emails（マーケティングメール / v3）",
+          tools: [
+            "marketing_email_list — メール一覧取得（統計対応）",
+            "marketing_email_get — メール詳細取得",
+            "marketing_email_create — メール作成（DRAFT）",
+            "marketing_email_update — メール更新（PATCH）",
+            "marketing_email_delete — メールアーカイブ",
+            "marketing_email_clone — メール複製（テンプレート再利用）",
+            "marketing_email_publish — メール送信（Enterprise必須）",
+          ],
+        },
       { name: "cms_blog_update", desc: "ブログ記事更新", icon: "✍️", api: "PATCH /cms/v3/blogs/posts/{id}", params: [{ name: "postId", required: true, desc: "記事 ID" }] },
       { name: "cms_page_list", desc: "ページ一覧", icon: "📄", api: "GET /cms/v3/pages/{type}", params: [{ name: "pageType", required: true, desc: "landing-pages / site-pages" }] },
       { name: "cms_page_update", desc: "ページ更新", icon: "🖊", api: "PATCH /cms/v3/pages/{type}/{id}", params: [{ name: "pageType", required: true, desc: "landing-pages / site-pages" }, { name: "pageId", required: true, desc: "ページ ID" }] },
@@ -459,7 +493,7 @@ export default function Home() {
             MCP Protocol 2025-03-26 · Streamable HTTP
           </div>
           <h1>AIから<span>HubSpot CRM</span>を<br />直接操作しよう</h1>
-          <p className="hs-hero__sub">ワークフロー・CRM・商品・明細行・プロパティ・パイプライン・CMS をAIツールから直接操作できるMCPサーバー。81ツール搭載。</p>
+          <p className="hs-hero__sub">ワークフロー・CRM・商品・明細行・プロパティ・パイプライン・CMS をAIツールから直接操作できるMCPサーバー。100ツール搭載。</p>
           <div className="hs-hero__endpoint">
             <span style={{ color: "var(--hs-text-light)", fontSize: 12 }}>ENDPOINT</span>
             <span>{MCP_URL}</span>

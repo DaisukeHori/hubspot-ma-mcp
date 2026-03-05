@@ -50,11 +50,15 @@ export function registerFormUpdate(server: McpServer) {
         })).describe("フィールド定義の配列"),
       })).describe("フィールドグループの配列（PUT=全体置換。既存フィールドも全て含めること）"),
       configuration: z.record(z.unknown()).optional().describe("フォーム設定（language, postSubmitAction, lifecycleStages等）"),
+      displayOptions: z.record(z.unknown()).optional().describe("表示オプション（theme, submitButtonText, cssClass, style等）。form_getで取得した値を参照"),
+      legalConsentOptions: z.record(z.unknown()).optional().describe("法的同意オプション（GDPR対応。{type: 'none'|'legitimate_interest'|'consent'}）"),
     },
-    async ({ formId, name, formType, fieldGroups, configuration }) => {
+    async ({ formId, name, formType, fieldGroups, configuration, displayOptions, legalConsentOptions }) => {
       try {
         const body: Record<string, unknown> = { name, formType, fieldGroups };
         if (configuration) body.configuration = configuration;
+        if (displayOptions) body.displayOptions = displayOptions;
+        if (legalConsentOptions) body.legalConsentOptions = legalConsentOptions;
 
         const result = await fetchJson<Record<string, unknown>>(
           `${BASE_URL}/marketing/v3/forms/${formId}`,

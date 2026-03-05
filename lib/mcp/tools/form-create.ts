@@ -62,8 +62,18 @@ export function registerFormCreate(server: McpServer) {
           value: z.string().describe("ライフサイクルステージ（subscriber, lead, marketingqualifiedlead, salesqualifiedlead, opportunity, customer）"),
         })).optional().describe("フォーム送信時に設定するライフサイクルステージ。コンタクト(0-1)と会社(0-2)の両方を指定する必要がある"),
       }).optional().describe("フォームの設定（言語、送信後アクション、ライフサイクルステージ等）"),
+      displayOptions: z.object({
+        renderRawHtml: z.boolean().optional().describe("生HTMLでレンダリングするか"),
+        theme: z.string().optional().describe("テーマ: default_style / canvas / none"),
+        submitButtonText: z.string().optional().describe("送信ボタンのテキスト（例: '送信', 'Submit'）"),
+        cssClass: z.string().optional().describe("CSSクラス名（例: 'hs-form stacked'）"),
+        style: z.record(z.string()).optional().describe("スタイル設定（fontFamily, labelTextColor, labelTextSize, helpTextColor, helpTextSize, submitColor, submitFontColor, submitSize, submitAlignment, backgroundWidth等）"),
+      }).optional().describe("フォームの表示オプション（テーマ・ボタンテキスト・CSSスタイル設定）"),
+      legalConsentOptions: z.object({
+        type: z.enum(["none", "legitimate_interest", "consent"]).describe("同意タイプ: none=なし, legitimate_interest=正当な利益, consent=明示的同意（GDPR）"),
+      }).optional().describe("法的同意オプション（GDPR対応。type=none で同意不要）"),
     },
-    async ({ name, formType, fieldGroups, configuration }) => {
+    async ({ name, formType, fieldGroups, configuration, displayOptions, legalConsentOptions }) => {
       try {
         const body: Record<string, unknown> = {
           name,
@@ -71,6 +81,8 @@ export function registerFormCreate(server: McpServer) {
           fieldGroups,
         };
         if (configuration) body.configuration = configuration;
+        if (displayOptions) body.displayOptions = displayOptions;
+        if (legalConsentOptions) body.legalConsentOptions = legalConsentOptions;
 
         const result = await fetchJson<Record<string, unknown>>(
           `${BASE_URL}/marketing/v3/forms`,
