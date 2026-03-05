@@ -161,14 +161,24 @@ Knowledge Storeのセットアップ（hubspot_knowledge_setup）がまだの場
           ddLines.push(`### パイプライン構成`);
           ddLines.push(`- 取引パイプライン: ${pipelines.deals.length}本（${pipelines.deals.map((p) => `「${p.label}」${p.stages.length}ステージ`).join("、")}）`);
           if (pipelines.deals.length === 1) {
-            questions.push("[design_decisions] 取引パイプラインが1本のみです。複数の営業プロセスを1本で管理している理由はありますか？（例: 事業が単一、意図的にシンプルにしている等）");
+            const dealStages = pipelines.deals?.[0]?.stages?.length || 0;
+            questions.push(`[design_decisions] 取引パイプラインが1本（${pipelines.deals?.[0]?.label || "default"}、${dealStages}ステージ）のみです。事業構造がシンプルであるため1本で運用しているという認識で合っていますか？（Yes/Noでお答えください）`);
           }
         }
         if (pipelines.tickets?.length) {
           ddLines.push(`- チケットパイプライン: ${pipelines.tickets.length}本`);
         } else {
           ddLines.push(`- チケットパイプライン: 未使用`);
-          questions.push("[design_decisions] チケット（サポート）パイプラインが未使用です。問い合わせ管理はどのように行っていますか？（カスタムプロパティ、外部ツール、使う予定なし等）");
+          // コンタクトのカスタムプロパティから問い合わせ管理の形跡を探す
+          const inquiryProps = (customProps.contacts || []).filter((p: PropertySummary) => 
+            /inquiry|contact_form|問い合わせ|toiawase|support|相談/i.test(p.name + p.label + (p.description || ""))
+          );
+          if (inquiryProps.length > 0) {
+            const propNames = inquiryProps.map((p: PropertySummary) => `「${p.label}」(${p.name})`).join("、");
+            questions.push(`[design_decisions] チケットパイプラインが未使用ですが、コンタクトのカスタムプロパティに${propNames}があるため、問い合わせをチケットではなくコンタクトのプロパティで管理しているという認識で正しいでしょうか？（Yes/No）`);
+          } else {
+            questions.push("[design_decisions] チケットパイプラインが未使用です。問い合わせ管理は外部ツール（メール・チャット等）で行っており、HubSpotでは追跡していないという認識で合っていますか？（Yes/No。違う場合は管理方法を教えてください）");
+          }
         }
         ddLines.push(`\n### 規模感`);
         ddLines.push(`- カスタムプロパティ: ${totalCustomProps}件（contacts: ${customProps.contacts?.length || 0}, companies: ${customProps.companies?.length || 0}, deals: ${customProps.deals?.length || 0}, tickets: ${customProps.tickets?.length || 0}）`);
@@ -177,8 +187,16 @@ Knowledge Storeのセットアップ（hubspot_knowledge_setup）がまだの場
         ddLines.push(`- リスト/セグメント: ${lists.length}件`);
         ddLines.push(`- マーケティングメール: ${emails.length}件`);
         ddLines.push(`- オーナー（担当者）: ${owners.length}名`);
-        questions.push("[design_decisions] このアカウントの主な用途は何ですか？（MA中心、営業管理中心、カスタマーサポート、統合利用等）");
-        questions.push("[design_decisions] ライフサイクルステージはどこまで運用していますか？（例: subscriber→lead→customerの3段階のみ、全段階フル活用等）");
+        // データから用途を推論
+          const hasMA = forms.length > 0 || emails.length > 0 || workflows.length > 3;
+          const hasSales = (pipelines.deals?.length || 0) > 0;
+          const hasSupport = (pipelines.tickets?.length || 0) > 0;
+          const usageGuess = hasMA && hasSales ? "マーケティング+営業管理の統合利用"
+            : hasMA ? "マーケティング自動化が中心"
+            : hasSales ? "営業管理が中心"
+            : "導入初期段階";
+          questions.push(`[design_decisions] データから見て、このアカウントは「${usageGuess}」という認識で合っていますか？（Yes/No）`);
+        questions.push("[design_decisions] ライフサイクルステージの運用範囲について — フォーム送信でleadに設定し、成約でcustomerに変更するシンプルな運用をしているという認識で合っていますか？（Yes/No。より複雑な運用をしている場合はお知らせください）");
         drafts.design_decisions = ddLines.join("\n");
 
         // --- naming_conventions ---
@@ -196,7 +214,21 @@ Knowledge Storeのセットアップ（hubspot_knowledge_setup）がまだの場
           ncLines.push(`\n### リスト名のサンプル`);
           lists.slice(0, 10).forEach((l) => ncLines.push(`- ${l.name}`));
         }
-        questions.push("[naming_conventions] 上記の名前にルールやパターンはありますか？（例: [目的]_[対象]_[YYYYMM] 等）意図的な命名規則があれば教えてください。なければ「特にない」でOKです。");
+        // 命名パターンを自動検出（日付、アンダースコア区切り等）
+          const allNames = [...workflows.map((w: WorkflowSummary) => w.name), ...forms.map((f: FormSummary) => f.name), ...lists.map((l: ListSummary) => l.name)];
+          const hasDatePattern = allNames.some(n => /20[0-9]{2}/.test(n));
+          const hasUnderscorePattern = allNames.filter(n => n.includes("_")).length > allNames.length * 0.3;
+          const hasJapanese = allNames.some(n => /[\u3000-\u9FFF]/.test(n));
+          
+          let namingGuess = "特定のルールなし（自由命名）";
+          if (hasUnderscorePattern && hasDatePattern) {
+            namingGuess = "アンダースコア区切り+日付付き（例: xxx_yyy_202604）";
+          } else if (hasUnderscorePattern) {
+            namingGuess = "アンダースコア区切り（例: xxx_yyy_zzz）";
+          } else if (hasJapanese) {
+            namingGuess = "日本語名（例: セミナー申込フォーム）";
+          }
+          questions.push(`[naming_conventions] 命名パターンを分析した結果、「${namingGuess}」のルールで運用しているように見えます。この認識で合っていますか？（Yes/No。別のルールがあれば教えてください）`);
         drafts.naming_conventions = ncLines.join("\n");
 
         // --- property_annotations ---
@@ -211,7 +243,17 @@ Knowledge Storeのセットアップ（hubspot_knowledge_setup）がまだの場
           });
         }
         if (totalCustomProps > 0) {
-          questions.push(`[property_annotations] カスタムプロパティが${totalCustomProps}件あります。特に重要なもの（WFで自動更新されるもの、手動変更禁止のもの等）があれば教えてください。`);
+          // WFで使われていそうなプロパティを推定（名前にcount/date/status/flagを含む）
+          const autoProps = Object.values(customProps).flat().filter((p: PropertySummary) =>
+            /count|_count|_date|_flag|_status|auto|自動/i.test(p.name + (p.description || ""))
+          );
+          if (autoProps.length > 0) {
+            const autoNames = autoProps.slice(0, 5).map((p: PropertySummary) => `「${p.label}」(${p.name})`).join("、");
+            questions.push(`[property_annotations] ${autoNames} はワークフローで自動更新されるプロパティに見えるため、手動変更禁止として記録しておきます。この認識で合っていますか？（Yes/No）`);
+          }
+          if (totalCustomProps > 10) {
+            questions.push(`[property_annotations] カスタムプロパティが${totalCustomProps}件あります。全て一覧に記録しましたが、特に「絶対に触るな」というものがあればお知らせください。なければこのまま進めます。（補足があればどうぞ）`);
+          }
         }
         drafts.property_annotations = paLines.join("\n");
 
@@ -223,9 +265,17 @@ Knowledge Storeのセットアップ（hubspot_knowledge_setup）がまだの場
           waLines.push(`  - 目的: ？　テンプレート/個別: ？　触っていいか: ？`);
         });
         if (workflows.length > 0) {
-          questions.push(`[workflow_annotations] ワークフローが${workflows.length}件あります。特に重要なもの（標準テンプレートとして使い回すもの、触ってはいけないもの）を教えてください。`);
+          // 有効WFの中で類似名のグループを探す（テンプレートの兆候）
+          const enabledNames = workflows.filter((w: WorkflowSummary) => w.isEnabled).map((w: WorkflowSummary) => w.name);
+          const templateCandidates = enabledNames.filter(n => /template|テンプレ|base|ベース|standard|標準/i.test(n));
+          
+          if (templateCandidates.length > 0) {
+            questions.push(`[workflow_annotations] 「${templateCandidates.join("」「")}」はテンプレートWFとして今後の施策でも複製して使う正本という認識で合っていますか？（Yes/No）`);
+          } else {
+            questions.push(`[workflow_annotations] 有効なワークフローが${enabledWFs}件ありますが、この中に「新規施策の際に複製して使うテンプレート」的なものはありますか？ない場合はNoで構いません。`);
+          }
           if (disabledWFs > 0) {
-            questions.push(`[workflow_annotations] 無効なワークフローが${disabledWFs}件あります。これらは不要なもの？一時停止中？削除していいもの？`);
+            questions.push(`[workflow_annotations] 無効なワークフローが${disabledWFs}件あります。過去の施策で使い終わったものと思われますが、削除せず参考用に残しているという認識で合っていますか？（Yes/No）`);
           }
         }
         drafts.workflow_annotations = waLines.join("\n");
@@ -237,7 +287,19 @@ Knowledge Storeのセットアップ（hubspot_knowledge_setup）がまだの場
         pbLines.push("### ニュースレター/定期配信\n手順: （未入力）\n");
         pbLines.push("### 新規リード獲得キャンペーン\n手順: （未入力）\n");
         pbLines.push("### 顧客オンボーディング\n手順: （未入力）\n");
-        questions.push("[playbooks] 定期的に繰り返している施策はありますか？（セミナー、ニュースレター、キャンペーン等）あれば「いつもこういう手順でやっている」を教えてください。");
+        // フォームとメールの存在から施策パターンを推定
+          const hasSeminarHint = [...forms.map((f: FormSummary) => f.name), ...emails.map((e: EmailSummary) => e.name || "")].some(n => /seminar|セミナー|event|イベント|webinar|ウェビナー/i.test(n));
+          const hasNLHint = emails.some((e: EmailSummary) => /newsletter|ニュースレター|定期|月刊|NL/i.test((e.name || "") + (e.subject || "")));
+          
+          const patterns: string[] = [];
+          if (hasSeminarHint) patterns.push("セミナー/イベント施策");
+          if (hasNLHint) patterns.push("ニュースレター/定期配信");
+          
+          if (patterns.length > 0) {
+            questions.push(`[playbooks] 既存のフォーム・メールから「${patterns.join("」と「")}」を定期的に実施しているように見えます。これらの標準手順を記録しておくので、次回からAIが自動で同じパターンを組めるようになります。この認識で合っていますか？（Yes/No。他にもある場合は追加してください）`);
+          } else {
+            questions.push("[playbooks] 繰り返し実施している施策パターンは現時点では検出できませんでした。定期的な施策（セミナー、ニュースレター等）があれば教えてください。なければNoで構いません。");
+          }
         drafts.playbooks = pbLines.join("\n");
 
         // --- guardrails ---
@@ -245,8 +307,8 @@ Knowledge Storeのセットアップ（hubspot_knowledge_setup）がまだの場
         grLines.push("### 削除禁止\n- （未入力: 削除してはいけないリスト・WF・プロパティがあれば記述）\n");
         grLines.push("### 変更禁止\n- （未入力: 変更してはいけないパイプラインステージ・プロパティ設定があれば記述）\n");
         grLines.push("### 配信ルール\n- （未入力: メール配信の頻度制限・除外ルールがあれば記述）\n");
-        questions.push("[guardrails] 「これだけは触るな / 変えるな / 削除するな」というものはありますか？");
-        questions.push("[guardrails] メール配信の頻度制限やサプレッションルールはありますか？（例: 週1回まで、特定セグメントには送らない等）");
+        questions.push("[guardrails] 禁止事項について — 現時点で削除禁止・変更禁止のアセットは特にないという認識で合っていますか？（Yes/No。ある場合は具体的に教えてください）");
+        questions.push("[guardrails] メール配信について — 特に頻度制限（例: 週1回まで）や特定セグメントへの配信除外ルールは設けていないという認識で合っていますか？（Yes/No）");
         drafts.guardrails = grLines.join("\n");
 
         // --- history ---
@@ -260,7 +322,12 @@ Knowledge Storeのセットアップ（hubspot_knowledge_setup）がまだの場
             csLines.push(`- **${l.name}** — ${l.processingType} / メンバー${l.size || "?"}件`);
           });
         }
-        questions.push("[contacts_segments] 主要なコンタクトセグメントは何ですか？（例: 見込み客、既存顧客、VIP、休眠顧客等）どのセグメントにどんな施策を打ちますか？");
+        if (lists.length > 0) {
+            const listNames = lists.slice(0, 5).map((l: ListSummary) => `「${l.name}」(${l.processingType}、${l.size || "?"}件)`).join("、");
+            questions.push(`[contacts_segments] 既存リストとして${listNames}等があります。これらが主要なセグメント分けという認識で合っていますか？（Yes/No。他にも重要なセグメントの考え方があれば教えてください）`);
+          } else {
+            questions.push("[contacts_segments] リスト/セグメントが未作成です。現時点ではコンタクトのセグメント分けは行っていないという認識で合っていますか？（Yes/No）");
+          }
         drafts.contacts_segments = csLines.join("\n");
 
         // --- brand_voice ---
@@ -276,7 +343,19 @@ Knowledge Storeのセットアップ（hubspot_knowledge_setup）がまだの場
             bvLines.push(`- ${e.subject} (${e.state})`);
           });
         }
-        questions.push("[brand_voice] メールの件名にルールはありますか？（例: 必ず【会社名】を入れる等）本文はフォーマル？カジュアル？");
+        // メール件名からパターンを抽出
+          const subjects = emails.filter((e: EmailSummary) => e.subject).map((e: EmailSummary) => e.subject!);
+          const bracketPattern = subjects.filter(s => /【.*?】/.test(s));
+          const hasBracketRule = bracketPattern.length > subjects.length * 0.3 && bracketPattern.length > 0;
+          
+          if (hasBracketRule) {
+            // 【】内の共通文字列を抽出
+            const brackets = bracketPattern.map(s => { const m = s.match(/【(.*?)】/); return m ? m[1] : ""; }).filter(Boolean);
+            const commonBracket = brackets.length > 0 ? brackets[0] : "";
+            questions.push(`[brand_voice] 過去のメール件名を分析した結果、「【${commonBracket}】○○」の形式が標準ルールのようです。今後のメールもこのフォーマットを踏襲してよろしいでしょうか？（Yes/No）`);
+          } else if (subjects.length > 0) {
+            questions.push("[brand_voice] 過去のメール件名に明確な共通フォーマットは検出できませんでした。件名のルール（例: 会社名を入れる等）があれば教えてください。なければ自由形式として記録します。");
+          }
         drafts.brand_voice = bvLines.join("\n");
 
         // --- integrations ---
@@ -284,7 +363,7 @@ Knowledge Storeのセットアップ（hubspot_knowledge_setup）がまだの場
         intLines.push("### 連携ツール\n- （未入力: Salesforce, Slack, Zoom, Stripe等の連携があれば記述）\n");
         intLines.push("### データフロー\n- （未入力: どのツールからどのデータがHubSpotに入るか）\n");
         intLines.push("### API連携\n- （未入力: 定期同期、Webhook等）\n");
-        questions.push("[integrations] HubSpotと連携している外部ツールはありますか？（Slack通知、Zoom連携、会計ソフト連携等）");
+        questions.push("[integrations] HubSpotと連携している外部ツールは現時点ではAPIからは検出できませんでした。Slack・Zoom・会計ソフト等との連携がある場合は教えてください。特になければNoで構いません。");
         drafts.integrations = intLines.join("\n");
 
         // ========== 3. Knowledge Store に保存 ==========

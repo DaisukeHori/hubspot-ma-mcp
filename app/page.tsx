@@ -645,12 +645,12 @@ export default function Home() {
                 <span style={{ background: "#8B5CF6", color: "white", width: 24, height: 24, borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>3</span>
                 AIからあなたへ質問
               </h4>
-              <p style={{ marginLeft: 32 }}>AIだけでは判断できない設計意図について質問リストが提示されます。例：</p>
+              <p style={{ marginLeft: 32 }}>AIが既存データを分析し、8割正しい仮説を立てた上でYes/Noで確認します。例：</p>
               <ul style={{ marginLeft: 32, fontSize: 13, color: "var(--hs-text-light)", lineHeight: 1.8 }}>
-                <li>「取引パイプラインが1本ですが、意図的にシンプルにしている理由は？」</li>
-                <li>「チケットが未使用ですが、問い合わせ管理はどうしていますか？」</li>
-                <li>「メール件名にルールはありますか？」</li>
-                <li>「このワークフローは標準テンプレート？触っていい？」</li>
+                <li>「パイプラインが1本のみで、事業構造がシンプルなため統合運用しているという認識で合っていますか？」</li>
+                <li>「チケット未使用ですが、コンタクトのカスタムプロパティ"inquiry_status"で問い合わせ管理をしているように見えます。正しいですか？」</li>
+                <li>「過去のメール件名を分析すると【レヴォル】で始まるルールがあるようです。踏襲してよろしいですか？」</li>
+                <li>「このワークフローは他WFと構造が類似しており、テンプレートとして正本管理してよろしいですか？」</li>
               </ul>
             </div>
             <div className="hs-auth-card" style={{ borderLeft: "3px solid #10B981", borderRadius: 0 }}>
