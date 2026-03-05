@@ -217,6 +217,35 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     color: "#E74C8B",
     tools: [
       { name: "marketing_email_list", desc: "メール一覧取得（統計対応）", icon: "📧", api: "GET /marketing/v3/emails", params: [{ name: "limit", required: false, desc: "件数" }, { name: "includeStats", required: false, desc: "統計含む" }] },
+  {
+    category: "Single-Send（個別メール送信 / v4）",
+    color: "#E74C8B",
+    tools: [
+      { name: "single_send_email", desc: "テンプレートメール1通送信（Enterprise必須）", icon: "📨", api: "POST /marketing/v4/email/single-send", params: [{ name: "emailId", required: true, desc: "テンプレートID" }, { name: "to", required: true, desc: "宛先メール" }] },
+      { name: "single_send_status", desc: "送信ステータス確認", icon: "📊", api: "GET /marketing/v3/email/send-statuses/:id", params: [{ name: "statusId", required: true, desc: "ステータスID" }] },
+    ],
+  },
+  {
+    category: "Campaigns（キャンペーン / v3）",
+    color: "#8B5CF6",
+    tools: [
+      { name: "campaign_list", desc: "キャンペーン一覧取得", icon: "📋", api: "GET /marketing/v3/campaigns", params: [{ name: "limit", required: false, desc: "件数" }] },
+      { name: "campaign_get", desc: "キャンペーン詳細取得", icon: "🔍", api: "GET /marketing/v3/campaigns/:id", params: [{ name: "campaignId", required: true, desc: "キャンペーンGUID" }] },
+      { name: "campaign_create", desc: "キャンペーン作成", icon: "✨", api: "POST /marketing/v3/campaigns", params: [{ name: "hs_name", required: true, desc: "キャンペーン名" }] },
+      { name: "campaign_update", desc: "キャンペーン更新（PATCH）", icon: "✍️", api: "PATCH /marketing/v3/campaigns/:id", params: [{ name: "campaignId", required: true, desc: "キャンペーンGUID" }] },
+      { name: "campaign_asset_associate", desc: "アセット紐付け/解除", icon: "🔗", api: "PUT/DELETE /campaigns/:id/assets/:type/:assetId", params: [{ name: "assetType", required: true, desc: "MARKETING_EMAIL/FORM/WORKFLOW等" }] },
+    ],
+  },
+  {
+    category: "Custom Events（カスタムイベント / v3）",
+    color: "#10B981",
+    tools: [
+      { name: "custom_event_define", desc: "イベント定義作成", icon: "📐", api: "POST /events/v3/event-definitions", params: [{ name: "name", required: true, desc: "イベント内部名" }, { name: "primaryObject", required: true, desc: "CONTACT等" }] },
+      { name: "custom_event_send", desc: "イベント送信", icon: "📡", api: "POST /events/v3/send", params: [{ name: "eventName", required: true, desc: "完全修飾名" }] },
+      { name: "custom_event_list_definitions", desc: "イベント定義一覧", icon: "📋", api: "GET /events/v3/event-definitions", params: [{ name: "searchString", required: false, desc: "検索文字列" }] },
+      { name: "custom_event_get_occurrences", desc: "イベント発生データ取得", icon: "📊", api: "GET /events/v3/events", params: [{ name: "eventType", required: false, desc: "イベントタイプ" }] },
+    ],
+  },
       { name: "marketing_email_get", desc: "メール詳細取得", icon: "🔍", api: "GET /marketing/v3/emails/:id", params: [{ name: "emailId", required: true, desc: "メールID" }, { name: "includeStats", required: false, desc: "統計含む" }] },
       { name: "marketing_email_create", desc: "メール作成（DRAFT）", icon: "✨", api: "POST /marketing/v3/emails", params: [{ name: "name", required: true, desc: "メール名" }, { name: "subject", required: true, desc: "件名" }] },
       { name: "marketing_email_update", desc: "メール更新（PATCH）", icon: "✍️", api: "PATCH /marketing/v3/emails/:id", params: [{ name: "emailId", required: true, desc: "メールID" }, { name: "properties", required: true, desc: "更新内容" }] },
@@ -497,7 +526,7 @@ export default function Home() {
             MCP Protocol 2025-03-26 · Streamable HTTP
           </div>
           <h1>AIから<span>HubSpot CRM</span>を<br />直接操作しよう</h1>
-          <p className="hs-hero__sub">ワークフロー・CRM・商品・明細行・プロパティ・パイプライン・CMS をAIツールから直接操作できるMCPサーバー。100ツール搭載。</p>
+          <p className="hs-hero__sub">ワークフロー・CRM・商品・明細行・プロパティ・パイプライン・CMS をAIツールから直接操作できるMCPサーバー。111ツール搭載。</p>
           <div className="hs-hero__endpoint">
             <span style={{ color: "var(--hs-text-light)", fontSize: 12 }}>ENDPOINT</span>
             <span>{MCP_URL}</span>

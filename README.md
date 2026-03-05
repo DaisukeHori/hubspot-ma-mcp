@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  HubSpot CRM・ワークフロー・メモ・タスク・関連付け・CMS を AI アシスタントから直接操作する MCP サーバー（100ツール）
+  HubSpot CRM・ワークフロー・メモ・タスク・関連付け・CMS を AI アシスタントから直接操作する MCP サーバー（111ツール）
 </p>
 
 <p align="center">
@@ -219,7 +219,7 @@ curl https://api.anthropic.com/v1/messages \
 
 ---
 
-## ツール一覧（100ツール）
+## ツール一覧（111ツール）
 
 ### Workflow（Automation v4）— 6ツール
 
@@ -432,6 +432,37 @@ curl https://api.anthropic.com/v1/messages \
 | `marketing_email_delete` | マーケティングメールアーカイブ |
 | `marketing_email_clone` | マーケティングメール複製（テンプレート再利用） |
 | `marketing_email_publish` | マーケティングメール公開/送信（Enterprise必須） |
+### Single-Send（個別メール送信 / v4）— 2ツール
+
+| ツール名 | 説明 |
+|:--|:--|
+| `single_send_email` | テンプレートメールを1通送信（Enterprise必須） |
+| `single_send_status` | 送信ステータス確認 |
+
+### Campaigns（キャンペーン管理 / v3）— 5ツール
+
+| ツール名 | 説明 |
+|:--|:--|
+| `campaign_list` | キャンペーン一覧取得 |
+| `campaign_get` | キャンペーン詳細取得 |
+| `campaign_create` | キャンペーン作成 |
+| `campaign_update` | キャンペーン更新（PATCH） |
+| `campaign_asset_associate` | キャンペーンにアセット（メール・フォーム・WF等）紐付け/解除 |
+
+### Custom Events（カスタムイベント / v3）— 4ツール
+
+| ツール名 | 説明 |
+|:--|:--|
+| `custom_event_define` | カスタムイベント定義作成（スキーマ定義） |
+| `custom_event_send` | カスタムイベント送信（オカレンスデータ） |
+| `custom_event_list_definitions` | イベント定義一覧取得 |
+| `custom_event_get_occurrences` | イベント発生データ取得 |
+| `marketing-email` | Single-Send | single_send_email, single_send_status |
+| `marketing.campaigns.read` | キャンペーン読取 | campaign_list, campaign_get |
+| `marketing.campaigns.write` | キャンペーン書込 | campaign_create, campaign_update, campaign_asset_associate |
+| `analytics.behavioral_events.send` | イベント送信 | custom_event_send |
+| `behavioral_events.event_definitions.read_write` | イベント定義 | custom_event_define, custom_event_list_definitions |
+
 ## 自分でデプロイする
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp&env=AUTH_MODE%2CHUBSPOT_ACCESS_TOKEN%2CMCP_API_KEY&envDescription=AUTH_MODE%3A+hubspot_token%28%E3%83%87%E3%83%95%E3%82%A9%E3%83%AB%E3%83%88%29+or+api_key+%7C+HUBSPOT_ACCESS_TOKEN%3A+api_key%E3%83%A2%E3%83%BC%E3%83%89%E6%99%82%E3%81%AB%E5%BF%85%E9%A0%88+%7C+MCP_API_KEY%3A+api_key%E3%83%A2%E3%83%BC%E3%83%89%E6%99%82%E3%81%AB%E5%BF%85%E9%A0%88&envLink=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp%23%E8%AA%8D%E8%A8%BC%E3%83%A2%E3%83%BC%E3%83%89&project-name=hubspot-ma-mcp&repository-name=hubspot-ma-mcp)
