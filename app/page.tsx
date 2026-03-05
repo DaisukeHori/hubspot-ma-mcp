@@ -579,6 +579,32 @@ export default function Home() {
 
       <div className="hs-divider" />
       <section className="hs-section">
+
+      <div className="hs-divider" />
+      <section className="hs-section">
+        <div className="hs-section__label"><Sprocket size={14} /> SECURITY</div>
+        <h2 className="hs-section__title">🔒 セキュリティ</h2>
+        <p className="hs-section__desc">公開エンドポイントにHubSpotトークンを送る安全性について</p>
+        <div style={{ display: "grid", gap: 12, maxWidth: 640, margin: "0 auto" }}>
+          <div className="hs-auth-card">
+            <h4>✅ HTTPS（TLS暗号化）で保護</h4>
+            <p>全通信はVercelのHTTPS上で暗号化されます。トークンが平文で流れることはありません。</p>
+          </div>
+          <div className="hs-auth-card">
+            <h4>✅ ステートレス — 保存もログもしない</h4>
+            <p>トークンはリクエスト処理中にのみ使用され、終了と同時に破棄されます。データベースもログ出力もありません。</p>
+          </div>
+          <div className="hs-auth-card">
+            <h4>✅ ソースコード全公開</h4>
+            <p>処理の全てを <a href="https://github.com/DaisukeHori/hubspot-ma-mcp" target="_blank" rel="noopener noreferrer" style={{ color: "var(--hs-orange)" }}>GitHub</a> で確認できます。<code>app/api/mcp/route.ts</code> と <code>lib/hubspot/auth-context.ts</code> がトークン処理の全てです。</p>
+          </div>
+          <div className="hs-auth-card">
+            <h4>🏢 不安な場合は自分でデプロイ</h4>
+            <p>Vercelに1クリックデプロイして <code>api_key</code> モードで運用すれば、トークンをサーバー環境変数に固定。外部に一切送信しません。</p>
+          </div>
+        </div>
+      </section>
+
         <div className="hs-section__label"><Sprocket size={14} /> ARCHITECTURE</div>
         <h2 className="hs-section__title">3層アーキテクチャ</h2>
         <p className="hs-section__desc">Skill（固定・全企業共通）+ Knowledge Store（可変・企業固有）+ MCPツール（API操作）の3層で構成。</p>
@@ -602,6 +628,7 @@ export default function Home() {
       <section className="hs-section">
         <div className="hs-section__label"><Sprocket size={14} /> GETTING STARTED</div>
         <h2 className="hs-section__title">3ステップで始める</h2>
+        <div className="hs-callout" style={{ maxWidth: 640, margin: "0 auto 24px", padding: "12px 16px", background: "var(--hs-orange-light)", borderRadius: 8, fontSize: 14, lineHeight: 1.6 }}>💡 <strong>まずは試したい方へ:</strong> <a href="https://developers.hubspot.com/docs/api/creating-test-accounts" target="_blank" rel="noopener noreferrer" style={{ color: "var(--hs-orange)" }}>HubSpotテストアカウント</a>を作成すれば、本番データに影響なく全機能を試せます。Skillなしでも116ツールのAPIラッパーとして使えます。</div>
         <div style={{ display: "grid", gap: 16, maxWidth: 640, margin: "0 auto" }}>
           <div className="hs-auth-card">
             <h4>① HubSpot Private Appを作成</h4>
@@ -666,6 +693,54 @@ export default function Home() {
                 MA担当者として稼働開始
               </h4>
               <p style={{ marginLeft: 32 }}>以降の会話では、AIが毎回Knowledge Storeを読み込み、あなたの会社のやり方に従って施策を提案・実行します。施策を実行するたびにhistoryが蓄積され、<strong>使うほど賢くなります</strong>。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="hs-divider" />
+
+      <div className="hs-divider" />
+      <section className="hs-section">
+        <div className="hs-section__label"><Sprocket size={14} /> EXAMPLE</div>
+        <h2 className="hs-section__title">使用例：セミナー施策</h2>
+        <div style={{ maxWidth: 640, margin: "0 auto" }}>
+          <div style={{ background: "var(--hs-white)", border: "1px solid var(--hs-border)", borderRadius: 12, padding: 24, fontSize: 14, lineHeight: 1.8 }}>
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontWeight: 700, color: "var(--hs-orange)", marginBottom: 4 }}>👤 あなた</div>
+              <div style={{ background: "#FFF7ED", padding: "8px 12px", borderRadius: 8 }}>来月セミナーやるからよろしく</div>
+            </div>
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontWeight: 700, color: "var(--hs-obsidian)", marginBottom: 4 }}>🤖 AI</div>
+              <div style={{ background: "var(--hs-bg)", padding: "12px 16px", borderRadius: 8, fontSize: 13 }}>
+                Knowledge Storeを確認しました。playbooksに「セミナー施策」の標準パターンがあります。<br /><br />
+                <strong>以下の構成で進めます：</strong><br />
+                📌 キャンペーン: seminar_202604_spring<br />
+                📝 フォーム: registration_seminar_202604<br />
+                　　 フィールド: メール（必須）・氏名（必須）・会社名・参加形式<br />
+                📋 リスト: seminar_202604_applicants<br />
+                📧 メール: 告知 → 3日前リマインド → 当日リマインド<br /><br />
+                <strong>確認事項:</strong><br />
+                ・セミナー名と日時を教えてください<br />
+                ・対象は全コンタクトでよいですか？<br />
+                ・フォームに追加したいフィールドはありますか？
+              </div>
+            </div>
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontWeight: 700, color: "var(--hs-orange)", marginBottom: 4 }}>👤 あなた</div>
+              <div style={{ background: "#FFF7ED", padding: "8px 12px", borderRadius: 8 }}>4/20の14時、オンライン。対象は全員。フォームはそれでいい</div>
+            </div>
+            <div>
+              <div style={{ fontWeight: 700, color: "var(--hs-obsidian)", marginBottom: 4 }}>🤖 AI</div>
+              <div style={{ background: "var(--hs-bg)", padding: "12px 16px", borderRadius: 8, fontSize: 13 }}>
+                ✅ キャンペーン作成完了<br />
+                ✅ フォーム作成完了<br />
+                ✅ リスト作成完了<br />
+                ✅ 告知メール下書き作成完了<br />
+                ✅ 全アセットをキャンペーンに紐付け完了<br /><br />
+                告知メールの件名は「【○○】4/20 オンラインセミナーのご案内」で作成しました。<br />
+                内容を確認しますか？
+              </div>
             </div>
           </div>
         </div>
@@ -794,6 +869,31 @@ export default function Home() {
           <div className="hs-auth-card" style={{ borderLeft: "3px solid #3498DB" }}>
             <h4>🔄 APIレート制限</h4>
             <p>HubSpot標準のレート制限（Private App: 500,000リクエスト/日、Search: 4リクエスト/秒）が適用されます。<code>hubspot_context_snapshot</code> は内部で複数APIを呼び出すため、頻繁な実行は控えてください。</p>
+          </div>
+        </div>
+      </section>
+
+
+      <div className="hs-divider" />
+      <section className="hs-section">
+        <div className="hs-section__label"><Sprocket size={14} /> TEAM & FAQ</div>
+        <h2 className="hs-section__title">チーム利用 & よくある質問</h2>
+        <div style={{ display: "grid", gap: 12, maxWidth: 640, margin: "0 auto" }}>
+          <div className="hs-auth-card">
+            <h4>👥 チームで使う場合</h4>
+            <p>同じHubSpotトークン（同じアカウント）→ <strong>同じKnowledge Storeを共有</strong>。全員が同じ暗黙知を参照できます。異なるHubSpotアカウント → 完全に分離された独立環境。</p>
+          </div>
+          <div className="hs-auth-card">
+            <h4>❓ Knowledge Storeを間違えて更新したら？</h4>
+            <p><code>hubspot_knowledge_update</code> の <code>mode: "replace"</code> で上書き修正可能。コンタクトを誤削除した場合は <code>hubspot_knowledge_setup</code> 再実行で復元（ただし内容は再構築が必要）。</p>
+          </div>
+          <div className="hs-auth-card">
+            <h4>❓ Freeプランでも使える？</h4>
+            <p>CRM操作・プロパティ・パイプライン・フォーム・リスト・Knowledge Store等の大半は利用可能。メール送信（publish）・Single-Send・カスタムイベントは<strong>Enterprise必須</strong>です。</p>
+          </div>
+          <div className="hs-auth-card">
+            <h4>❓ Skillなしでも動く？</h4>
+            <p>はい。MCPサーバーだけで116ツールのAPIラッパーとして機能します。Skillを追加すると「MA担当者」の判断力（自己検証・施策パターン・禁止事項チェック等）が加わります。</p>
           </div>
         </div>
       </section>
