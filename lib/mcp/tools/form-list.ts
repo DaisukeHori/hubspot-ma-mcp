@@ -13,7 +13,7 @@ async function fetchJson<T>(url: string, options: RequestInit): Promise<T> {
       const body = await response.json();
       message = body.message || JSON.stringify(body);
     } catch { /* ignore */ }
-    throw new HubSpotError(message, response.status);
+    throw new HubSpotError(response.status, message);
   }
   return response.json() as Promise<T>;
 }

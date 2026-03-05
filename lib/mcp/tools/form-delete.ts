@@ -32,7 +32,7 @@ export function registerFormDelete(server: McpServer) {
         if (!response.ok) {
           let message = response.statusText;
           try { const body = await response.json(); message = body.message || JSON.stringify(body); } catch { /* ignore */ }
-          throw new HubSpotError(message, response.status);
+          throw new HubSpotError(response.status, message);
         }
         return {
           content: [{ type: "text" as const, text: `フォーム ${formId} をアーカイブしました。` }],
