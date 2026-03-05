@@ -259,6 +259,16 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     color: "#10B981",
     tools: [
       { name: "custom_event_define", desc: "イベント定義作成", icon: "📐", api: "POST /events/v3/event-definitions", params: [{ name: "name", required: false, desc: "イベント内部名" }, { name: "primaryObject", required: true, desc: "CONTACT等" }] },
+  {
+    category: "Knowledge Store & Context",
+    color: "#F59E0B",
+    tools: [
+      { name: "hubspot_knowledge_setup", desc: "Knowledge Store 初回セットアップ", icon: "🏗️", api: "Internal (contacts + notes)", params: [] },
+      { name: "hubspot_knowledge_get", desc: "ナレッジ取得（設計思想・命名規則・パターン）", icon: "🧠", api: "Internal (notes search)", params: [{ name: "category", required: false, desc: "overview/naming/properties/workflows/patterns/guardrails/history" }] },
+      { name: "hubspot_knowledge_update", desc: "ナレッジ更新（replace/append）", icon: "✏️", api: "Internal (notes update)", params: [{ name: "category", required: true, desc: "カテゴリ" }, { name: "content", required: true, desc: "内容" }, { name: "mode", required: true, desc: "replace/append" }] },
+      { name: "hubspot_context_snapshot", desc: "HubSpot設定状態の一括取得", icon: "📸", api: "Internal (multi-API aggregate)", params: [{ name: "sections", required: false, desc: "properties_custom/workflows/pipelines/forms/lists/emails/campaigns/events/owners" }] },
+    ],
+  },
       { name: "custom_event_send", desc: "イベント送信", icon: "📡", api: "POST /events/v3/send", params: [{ name: "eventName", required: true, desc: "完全修飾名" }] },
       { name: "custom_event_list_definitions", desc: "イベント定義一覧", icon: "📋", api: "GET /events/v3/event-definitions", params: [{ name: "searchString", required: false, desc: "検索文字列" }] },
       { name: "custom_event_get_occurrences", desc: "イベント発生データ取得", icon: "📊", api: "GET /events/v3/events", params: [{ name: "eventType", required: false, desc: "イベントタイプ" }] },
@@ -536,7 +546,7 @@ export default function Home() {
             MCP Protocol 2025-03-26 · Streamable HTTP
           </div>
           <h1>AIから<span>HubSpot CRM</span>を<br />直接操作しよう</h1>
-          <p className="hs-hero__sub">ワークフロー・CRM・商品・明細行・プロパティ・パイプライン・CMS をAIツールから直接操作できるMCPサーバー。111ツール搭載。</p>
+          <p className="hs-hero__sub">ワークフロー・CRM・商品・明細行・プロパティ・パイプライン・CMS をAIツールから直接操作できるMCPサーバー。115ツール搭載。</p>
           <div className="hs-hero__endpoint">
             <span style={{ color: "var(--hs-text-light)", fontSize: 12 }}>ENDPOINT</span>
             <span>{MCP_URL}</span>

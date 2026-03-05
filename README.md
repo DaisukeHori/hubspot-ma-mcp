@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  HubSpot CRM・ワークフロー・メモ・タスク・関連付け・CMS を AI アシスタントから直接操作する MCP サーバー（111ツール）
+  HubSpot CRM・ワークフロー・メモ・タスク・関連付け・CMS を AI アシスタントから直接操作する MCP サーバー（115ツール）
 </p>
 
 <p align="center">
@@ -219,7 +219,7 @@ curl https://api.anthropic.com/v1/messages \
 
 ---
 
-## ツール一覧（111ツール）
+## ツール一覧（115ツール）
 
 ### Workflow（Automation v4）— 6ツール
 
@@ -462,6 +462,15 @@ curl https://api.anthropic.com/v1/messages \
 | `marketing.campaigns.write` | キャンペーン書込 | campaign_create, campaign_update, campaign_asset_associate |
 | `analytics.behavioral_events.send` | イベント送信 | custom_event_send |
 | `behavioral_events.event_definitions.read_write` | イベント定義 | custom_event_define, custom_event_list_definitions |
+
+### Knowledge Store & Context — 4ツール
+
+| ツール名 | 説明 |
+|:--|:--|
+| `hubspot_knowledge_setup` | Knowledge Store初回セットアップ（専用コンタクト+7カテゴリのナレッジノート作成） |
+| `hubspot_knowledge_get` | ナレッジ取得（設計思想・命名規則・施策パターン・禁止事項等） |
+| `hubspot_knowledge_update` | ナレッジ更新（replace=上書き / append=追記） |
+| `hubspot_context_snapshot` | HubSpot設定状態の一括スナップショット取得（プロパティ・WF・パイプライン・フォーム・リスト・メール・キャンペーン・イベント・オーナー） |
 
 ## 自分でデプロイする
 

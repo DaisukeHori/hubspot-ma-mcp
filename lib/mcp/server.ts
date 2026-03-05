@@ -150,6 +150,10 @@ import { registerCustomEventSend } from "./tools/custom-event-send";
 import { registerCustomEventDefine } from "./tools/custom-event-define";
 import { registerCustomEventListDefinitions } from "./tools/custom-event-list-definitions";
 import { registerCustomEventGetOccurrences } from "./tools/custom-event-get-occurrences";
+import { registerHubspotKnowledgeSetup } from "./tools/hubspot-knowledge-setup";
+import { registerHubspotKnowledgeGet } from "./tools/hubspot-knowledge-get";
+import { registerHubspotKnowledgeUpdate } from "./tools/hubspot-knowledge-update";
+import { registerHubspotContextSnapshot } from "./tools/hubspot-context-snapshot";
 
 
 /**
@@ -311,5 +315,10 @@ export function registerAllTools(server: McpServer) {
   registerCustomEventDefine(server);
   registerCustomEventListDefinitions(server);
   registerCustomEventGetOccurrences(server);
+  // Knowledge Store & Context
+  registerHubspotKnowledgeSetup(server);
+  registerHubspotKnowledgeGet(server);
+  registerHubspotKnowledgeUpdate(server);
+  registerHubspotContextSnapshot(server);
 }
 
