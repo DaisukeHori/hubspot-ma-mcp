@@ -266,6 +266,27 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     ],
   },
   {
+
+  {
+    category: "Goals（目標 / v3 読取専用）",
+    tools: [
+      { name: "goal_list", desc: "目標一覧取得", icon: "📊", api: "GET /crm/v3/objects/goal_targets", params: [{ name: "limit", required: false, desc: "取得件数" }, { name: "after", required: false, desc: "ページネーション" }] },
+      { name: "goal_get", desc: "目標1件取得", icon: "📊", api: "GET /crm/v3/objects/goal_targets/{id}", params: [{ name: "goalId", required: true, desc: "目標ID" }] },
+      { name: "goal_search", desc: "目標検索", icon: "📊", api: "POST /crm/v3/objects/goal_targets/search", params: [{ name: "filterGroups", required: false, desc: "検索フィルタ" }, { name: "query", required: false, desc: "キーワード" }] },
+    ],
+  },
+  {
+    category: "Marketing Events（マーケティングイベント / v3）",
+    tools: [
+      { name: "marketing_event_list", desc: "イベント一覧取得", icon: "🎪", api: "GET /marketing/v3/marketing-events", params: [{ name: "limit", required: false, desc: "取得件数" }] },
+      { name: "marketing_event_get", desc: "イベント1件取得", icon: "🎪", api: "GET /marketing/v3/marketing-events/{objectId}", params: [{ name: "objectId", required: true, desc: "イベントID" }] },
+      { name: "marketing_event_create", desc: "イベント作成", icon: "🎪", api: "POST /marketing/v3/marketing-events/events", params: [{ name: "eventName", required: true, desc: "イベント名" }, { name: "externalEventId", required: true, desc: "外部ID" }, { name: "externalAccountId", required: true, desc: "外部アカウントID" }, { name: "eventOrganizer", required: true, desc: "主催者" }, { name: "startDateTime", required: false, desc: "開始日時(ISO8601)" }, { name: "endDateTime", required: false, desc: "終了日時" }] },
+      { name: "marketing_event_update", desc: "イベント更新(PATCH)", icon: "🎪", api: "PATCH /marketing/v3/marketing-events/{objectId}", params: [{ name: "objectId", required: true, desc: "イベントID" }, { name: "eventName", required: false, desc: "イベント名" }] },
+      { name: "marketing_event_delete", desc: "イベント削除", icon: "🎪", api: "DELETE /marketing/v3/marketing-events/{objectId}", params: [{ name: "objectId", required: true, desc: "イベントID" }, { name: "confirm", required: true, desc: "true必須" }] },
+      { name: "marketing_event_attendance", desc: "参加状態記録(REGISTERED/ATTENDED/CANCELLED)", icon: "🎪", api: "POST /marketing/v3/marketing-events/{objectId}/attendance/{state}/create", params: [{ name: "objectId", required: true, desc: "イベントID" }, { name: "subscriberState", required: true, desc: "REGISTERED/ATTENDED/CANCELLED" }, { name: "contactIds", required: false, desc: "コンタクトID配列" }, { name: "emails", required: false, desc: "メール配列" }] },
+    ],
+  },
+  {
     category: "Knowledge Store & Context（Internal）",
     color: "#F59E0B",
     tools: [
@@ -545,10 +566,10 @@ export default function Home() {
         <div className={`hs-hero__inner hs-fade ${mounted ? "hs-fade--in" : ""}`}>
           <div className="hs-hero__tag">
             <span className="hs-hero__tag-icon">⚡</span>
-            117 MCP Tools + Knowledge Store + Claude Skill
+            126 MCP Tools + Knowledge Store + Claude Skill
           </div>
           <h1>AIを<span>HubSpot</span>の<br />マーケティング担当者にする</h1>
-          <p className="hs-hero__sub">「セミナーやるからよろしく」で動くAI。117のMCPツール + 暗黙知を学習するKnowledge Store + 行動規範のClaude Skill。単なるAPIラッパーではなく、あなたの会社のHubSpotを理解したMA担当者として機能します。</p>
+          <p className="hs-hero__sub">「セミナーやるからよろしく」で動くAI。126のMCPツール + 暗黙知を学習するKnowledge Store + 行動規範のClaude Skill。単なるAPIラッパーではなく、あなたの会社のHubSpotを理解したMA担当者として機能します。</p>
           <div className="hs-hero__endpoint">
             <span style={{ color: "var(--hs-text-light)", fontSize: 12 }}>ENDPOINT</span>
             <span>{MCP_URL}</span>
@@ -628,7 +649,7 @@ export default function Home() {
       <section className="hs-section">
         <div className="hs-section__label"><Sprocket size={14} /> GETTING STARTED</div>
         <h2 className="hs-section__title">3ステップで始める</h2>
-        <div className="hs-callout" style={{ maxWidth: 640, margin: "0 auto 24px", padding: "12px 16px", background: "var(--hs-orange-light)", borderRadius: 8, fontSize: 14, lineHeight: 1.6 }}>💡 <strong>まずは試したい方へ:</strong> <a href="https://developers.hubspot.com/docs/api/creating-test-accounts" target="_blank" rel="noopener noreferrer" style={{ color: "var(--hs-orange)" }}>HubSpotテストアカウント</a>を作成すれば、本番データに影響なく全機能を試せます。Skillなしでも117ツールのAPIラッパーとして使えます。</div>
+        <div className="hs-callout" style={{ maxWidth: 640, margin: "0 auto 24px", padding: "12px 16px", background: "var(--hs-orange-light)", borderRadius: 8, fontSize: 14, lineHeight: 1.6 }}>💡 <strong>まずは試したい方へ:</strong> <a href="https://developers.hubspot.com/docs/api/creating-test-accounts" target="_blank" rel="noopener noreferrer" style={{ color: "var(--hs-orange)" }}>HubSpotテストアカウント</a>を作成すれば、本番データに影響なく全機能を試せます。Skillなしでも126ツールのAPIラッパーとして使えます。</div>
         <div style={{ display: "grid", gap: 16, maxWidth: 640, margin: "0 auto" }}>
           <div className="hs-auth-card">
             <h4>① HubSpot Private Appを作成</h4>
@@ -893,7 +914,7 @@ export default function Home() {
           </div>
           <div className="hs-auth-card">
             <h4>❓ Skillなしでも動く？</h4>
-            <p>はい。MCPサーバーだけで117ツールのAPIラッパーとして機能します。Skillを追加すると「MA担当者」の判断力（自己検証・施策パターン・禁止事項チェック等）が加わります。</p>
+            <p>はい。MCPサーバーだけで126ツールのAPIラッパーとして機能します。Skillを追加すると「MA担当者」の判断力（自己検証・施策パターン・禁止事項チェック等）が加わります。</p>
           </div>
         </div>
       </section>
