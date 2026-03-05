@@ -42,7 +42,11 @@ export function registerHubspotKnowledgeBuild(server: McpServer) {
 初回のオンボーディング時に1回実行。既存のknowledgeがある場合はスキップするかforceで上書き。
 Knowledge Storeのセットアップ（hubspot_knowledge_setup）がまだの場合は自動実行される。
 
-所要時間: 30秒〜1分（API呼び出し回数が多いため）。`,
+所要時間: 30秒〜1分（API呼び出し回数が多いため）。
+
+重要: このツールの返却値（初期質問リスト）をそのままユーザーに出してはいけない。
+AIはSKILLの「自己検証ループ」に従い、各質問に対して追加調査を行い、
+自力で答えが出る質問を解決してから、残った質問だけをユーザーに提示すること。`,
     {
       force: z.boolean().optional().describe("既存のknowledgeを上書きするか（デフォルト false。trueにすると既存の下書きを全て上書き）"),
     },

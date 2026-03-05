@@ -638,14 +638,14 @@ export default function Home() {
                 <span style={{ background: "#4A90D9", color: "white", width: 24, height: 24, borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>2</span>
                 10カテゴリの下書きを自動生成
               </h4>
-              <p style={{ marginLeft: 32 }}>スキャン結果から、設計判断・命名規則・プロパティ注釈・ワークフロー注釈・施策パターン・禁止事項・セグメント戦略等の10カテゴリに自動分類して下書きを作成。HubSpot内のCRMノートに保存されます。</p>
+              <p style={{ marginLeft: 32 }}>スキャン結果から10カテゴリの下書きを自動生成。さらにAIが<strong>自己検証ループ</strong>を実行 — 各項目について「自分で追加調査できないか？」を再帰的にチェックし、ワークフローの詳細構造・フォームのフィールド構成・メールの件名パターン等を深掘りして、自力で答えを出せるものは全て解決します。</p>
             </div>
             <div className="hs-auth-card" style={{ borderLeft: "3px solid #8B5CF6", borderRadius: 0 }}>
               <h4 style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <span style={{ background: "#8B5CF6", color: "white", width: 24, height: 24, borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>3</span>
                 AIからあなたへ質問
               </h4>
-              <p style={{ marginLeft: 32 }}>AIが既存データを分析し、8割正しい仮説を立てた上でYes/Noで確認します。例：</p>
+              <p style={{ marginLeft: 32 }}>AIが再帰的に自己検証した結果、<strong>本当に自分では判断できないことだけ</strong>が質問として残ります。全てデータに基づく仮説付きのYes/No形式です。例：</p>
               <ul style={{ marginLeft: 32, fontSize: 13, color: "var(--hs-text-light)", lineHeight: 1.8 }}>
                 <li>「パイプラインが1本のみで、事業構造がシンプルなため統合運用しているという認識で合っていますか？」</li>
                 <li>「チケット未使用ですが、コンタクトのカスタムプロパティ"inquiry_status"で問い合わせ管理をしているように見えます。正しいですか？」</li>
