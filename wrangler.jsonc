@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hubspot-ma-mcp",
+  "main": "workers/index.ts",
+  "compatibility_date": "2025-04-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // tsconfig パスエイリアス (@/* → ./*) を解決するため
+  "tsconfig": "tsconfig.worker.json",
+
+  // agents SDK が動的 import する "ai" (Vercel AI SDK) のシム
+  "alias": {
+    "ai": "./workers/shims/ai.ts"
+  },
+
+  // 環境変数（デフォルト値）
+  // 本番では wrangler secret / ダッシュボードで設定する
+  "vars": {
+    "AUTH_MODE": "hubspot_token"
+  }
+}

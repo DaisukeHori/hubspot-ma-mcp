@@ -7,10 +7,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "dev:cf": "wrangler dev",
+    "deploy:cf": "wrangler deploy",
+    "cf:secret": "wrangler secret"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.25.2",
+    "agents": "^0.7.5",
     "mcp-handler": "^1.0.7",
     "next": "^15",
     "react": "^19",
@@ -18,9 +22,11 @@
     "zod": "^3"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260307.1",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.71.0"
   }
 }
