@@ -152,6 +152,10 @@ HubSpot → Settings → Integrations → Private Apps → Create
 
 ### ステップ2: MCPサーバーを接続
 
+公開サーバー（`hubspot-ma-mcp.vercel.app`）を使うか、自分専用サーバーをデプロイできます。
+
+> **💡 自分専用サーバーをデプロイしたい場合:** [自分でデプロイする](#自分でデプロイする)セクションのワンクリックデプロイを使ってください。トークンをサーバー側で管理する安全な構成が可能です。
+
 **Claude.ai（Web）:**
 Settings → MCP → Add:
 - URL: `https://hubspot-ma-mcp.vercel.app/api/mcp`

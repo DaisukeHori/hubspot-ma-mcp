@@ -248,7 +248,15 @@ body{font-family:'Lexend Deca',-apple-system,BlinkMacSystemFont,sans-serif;color
   <div class="hs-callout" style="max-width:640px;margin:0 auto 24px;padding:12px 16px;background:var(--hs-orange-light);border-radius:8px;font-size:14px;line-height:1.6;border-left:none">💡 <strong>まずは試したい方へ:</strong> <a href="https://developers.hubspot.com/docs/api/creating-test-accounts" target="_blank" rel="noopener noreferrer" style="color:var(--hs-orange)">HubSpotテストアカウント</a>を作成すれば、本番データに影響なく全機能を試せます。Skillなしでも128ツールのAPIラッパーとして使えます。</div>
   <div style="display:grid;gap:16px;max-width:640px;margin:0 auto">
     <div class="hs-auth-card"><h4>① HubSpot Private Appを作成</h4><p>Settings → Integrations → Private Apps → Create。必要なスコープを付与してAccess Tokenをコピー。</p></div>
-    <div class="hs-auth-card"><h4>② MCPサーバーを接続</h4><p>Claude.ai / Claude Desktop / Cursor / VS Code 等から接続。Authorizationヘッダーにトークンを設定。</p></div>
+    <div class="hs-auth-card">
+      <h4>② MCPサーバーに接続</h4>
+      <p style="margin-bottom:12px"><strong>公開サーバーを使う場合:</strong> 下の<a href="#setup" style="color:var(--hs-orange)">クイック接続</a>から、お使いのAIクライアントの設定をコピーするだけ。</p>
+      <p style="margin-bottom:12px"><strong>自分専用サーバーをデプロイする場合:</strong> ワンクリックでVercelまたはCloudflare Workersにデプロイ。トークンをサーバー側で管理する安全な構成。</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp&env=AUTH_MODE%2CHUBSPOT_ACCESS_TOKEN%2CMCP_API_KEY&envDescription=AUTH_MODE%3A+hubspot_token%28%E3%83%87%E3%83%95%E3%82%A9%E3%83%AB%E3%83%88%29+or+api_key+%7C+HUBSPOT_ACCESS_TOKEN%3A+api_key%E3%83%A2%E3%83%BC%E3%83%89%E6%99%82%E3%81%AB%E5%BF%85%E9%A0%88+%7C+MCP_API_KEY%3A+api_key%E3%83%A2%E3%83%BC%E3%83%89%E6%99%82%E3%81%AB%E5%BF%85%E9%A0%88&envLink=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp%23%E8%AA%8D%E8%A8%BC%E3%83%A2%E3%83%BC%E3%83%89&project-name=hubspot-ma-mcp&repository-name=hubspot-ma-mcp" target="_blank" rel="noopener noreferrer" class="hs-btn hs-btn--primary" style="font-size:13px;padding:8px 16px">▲ Vercel</a>
+        <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/DaisukeHori/hubspot-ma-mcp" target="_blank" rel="noopener noreferrer" class="hs-btn" style="font-size:13px;padding:8px 16px;background:#F48120;color:white;border:none">⚡ Cloudflare</a>
+      </div>
+    </div>
     <div class="hs-auth-card"><h4>③ Claude Skillをインストール</h4><p><a href="https://github.com/DaisukeHori/hubspot-ma-mcp/releases/download/v1.0.0/hubspot-ma-operator.zip" style="color:var(--hs-orange);font-weight:700">hubspot-ma-operator.zip をダウンロード</a> → Claude.ai → Settings → Customize → Skills → Upload。初回会話でKnowledge Storeが自動構築されます。</p></div>
   </div>
 </section>
