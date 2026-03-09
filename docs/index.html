@@ -214,16 +214,104 @@ body{font-family:'Lexend Deca',-apple-system,BlinkMacSystemFont,sans-serif;color
 
 <div class="hs-divider"></div>
 
-<!-- ===== SECURITY ===== -->
+<!-- ===== THREE OPTIONS ===== -->
+<section id="deploy" class="hs-section">
+  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> THREE OPTIONS</div>
+  <h2 class="hs-section__title">3つの始め方</h2>
+  <p class="hs-section__desc">公開サーバーにそのまま接続するか、自分専用サーバーをデプロイするか選べます。機能・ツール数は全て同一です。</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+    <div class="hs-auth-card" style="border-top:3px solid #10B981">
+      <span class="hs-auth-card__badge hs-auth-card__badge--rec">最速</span>
+      <h4>🌐 公開サーバーを使う</h4>
+      <p>デプロイ不要。MCPクライアントにエンドポイントURLを設定するだけ。HubSpotトークンはリクエストごとにBearerヘッダーで送信。</p>
+      <div style="margin-top:12px;padding:8px 12px;background:var(--hs-bg);border-radius:6px;font-size:12px;font-family:'SF Mono','Fira Code',monospace;word-break:break-all">https://hubspot-ma-mcp.vercel.app/api/mcp</div>
+      <div style="margin-top:12px;font-size:13px;color:var(--hs-text-light)">
+        <strong>メリット:</strong> 設定だけで即利用<br>
+        <strong>注意:</strong> トークンをクライアント側で管理
+      </div>
+    </div>
+    <div class="hs-auth-card" style="border-top:3px solid var(--hs-obsidian)">
+      <span class="hs-auth-card__badge hs-auth-card__badge--alt">おすすめ</span>
+      <h4>▲ Vercelにデプロイ</h4>
+      <p>ワンクリックで自分専用サーバーを作成。<code>api_key</code>モードでトークンをサーバー側に固定できる安全な構成。Next.js 15ベース。</p>
+      <div style="margin-top:12px">
+        <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp&env=AUTH_MODE%2CHUBSPOT_ACCESS_TOKEN%2CMCP_API_KEY&envDescription=AUTH_MODE%3A+hubspot_token%28%E3%83%87%E3%83%95%E3%82%A9%E3%83%AB%E3%83%88%29+or+api_key+%7C+HUBSPOT_ACCESS_TOKEN%3A+api_key%E3%83%A2%E3%83%BC%E3%83%89%E6%99%82%E3%81%AB%E5%BF%85%E9%A0%88+%7C+MCP_API_KEY%3A+api_key%E3%83%A2%E3%83%BC%E3%83%89%E6%99%82%E3%81%AB%E5%BF%85%E9%A0%88&envLink=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp%23%E8%AA%8D%E8%A8%BC%E3%83%A2%E3%83%BC%E3%83%89&project-name=hubspot-ma-mcp&repository-name=hubspot-ma-mcp" target="_blank" rel="noopener noreferrer" class="hs-btn hs-btn--primary" style="font-size:13px;padding:8px 20px;width:100%">▲ Deploy with Vercel</a>
+      </div>
+      <div style="margin-top:12px;font-size:13px;color:var(--hs-text-light)">
+        <strong>手順:</strong> ボタン → GitHub連携 → 環境変数設定 → 完了<br>
+        <strong>メリット:</strong> api_keyモード対応、自動SSL、プレビューデプロイ
+      </div>
+    </div>
+    <div class="hs-auth-card" style="border-top:3px solid #F48120">
+      <span class="hs-auth-card__badge" style="background:#FFF3E0;color:#E65100">コスト最適</span>
+      <h4>⚡ Cloudflare Workersにデプロイ</h4>
+      <p>エッジで動作。I/O待ち時間が課金されないため、外部API呼び出しが多い用途ではコスト効率が高い。無料枠で十分運用可能。</p>
+      <div style="margin-top:12px">
+        <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/DaisukeHori/hubspot-ma-mcp" target="_blank" rel="noopener noreferrer" class="hs-btn" style="font-size:13px;padding:8px 20px;width:100%;background:#F48120;color:white;border:none">⚡ Deploy to Cloudflare</a>
+      </div>
+      <div style="margin-top:12px;font-size:13px;color:var(--hs-text-light)">
+        <strong>手順:</strong> ボタン → Cloudflare認証 → GitHub連携 → 完了<br>
+        <strong>メリット:</strong> 無料枠大、コールドスタート5ms未満、グローバルエッジ
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hs-divider"></div>
+
+<!-- ===== GETTING STARTED ===== -->
 <section class="hs-section">
-  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> SECURITY</div>
-  <h2 class="hs-section__title">🔒 セキュリティ</h2>
-  <p class="hs-section__desc">公開エンドポイントにHubSpotトークンを送る安全性について</p>
-  <div style="display:grid;gap:12px;max-width:640px;margin:0 auto">
-    <div class="hs-auth-card"><h4>✅ HTTPS（TLS暗号化）で保護</h4><p>全通信はVercelのHTTPS上で暗号化されます。トークンが平文で流れることはありません。</p></div>
-    <div class="hs-auth-card"><h4>✅ ステートレス — 保存もログもしない</h4><p>トークンはリクエスト処理中にのみ使用され、終了と同時に破棄されます。データベースもログ出力もありません。</p></div>
-    <div class="hs-auth-card"><h4>✅ ソースコード全公開</h4><p>処理の全てを <a href="https://github.com/DaisukeHori/hubspot-ma-mcp" target="_blank" rel="noopener noreferrer" style="color:var(--hs-orange)">GitHub</a> で確認できます。<code>app/api/mcp/route.ts</code> と <code>lib/hubspot/auth-context.ts</code> がトークン処理の全てです。</p></div>
-    <div class="hs-auth-card"><h4>🏢 不安な場合は自分でデプロイ</h4><p>Vercelに1クリックデプロイして <code>api_key</code> モードで運用すれば、トークンをサーバー環境変数に固定。外部に一切送信しません。</p></div>
+  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> GETTING STARTED</div>
+  <h2 class="hs-section__title">3ステップで始める</h2>
+  <div class="hs-callout" style="max-width:640px;margin:0 auto 24px;padding:12px 16px;background:var(--hs-orange-light);border-radius:8px;font-size:14px;line-height:1.6;border-left:none">💡 <strong>まずは試したい方へ:</strong> <a href="https://developers.hubspot.com/docs/api/creating-test-accounts" target="_blank" rel="noopener noreferrer" style="color:var(--hs-orange)">HubSpotテストアカウント</a>を作成すれば、本番データに影響なく全機能を試せます。</div>
+  <div style="display:grid;gap:16px;max-width:640px;margin:0 auto">
+    <div class="hs-auth-card"><h4>① HubSpot Private Appを作成</h4><p>Settings → Integrations → Private Apps → Create。必要なスコープを付与してAccess Tokenをコピー。<a href="#auth" style="color:var(--hs-orange)">スコープ一覧はこちら →</a></p></div>
+    <div class="hs-auth-card"><h4>② MCPサーバーに接続</h4><p>上の<a href="#deploy" style="color:var(--hs-orange)">3つの始め方</a>から方式を選び、お使いのAIクライアントから接続。<a href="#setup" style="color:var(--hs-orange)">クライアント別の設定はこちら →</a></p></div>
+    <div class="hs-auth-card"><h4>③ Claude Skillをインストール（推奨）</h4><p><a href="https://github.com/DaisukeHori/hubspot-ma-mcp/releases/download/v1.0.0/hubspot-ma-operator.zip" style="color:var(--hs-orange);font-weight:700">hubspot-ma-operator.zip をダウンロード</a> → Claude.ai → Settings → Customize → Skills → Upload。Skillなしでも128ツールはそのまま使えます。</p></div>
+  </div>
+</section>
+
+<div class="hs-divider"></div>
+
+<!-- ===== QUICK SETUP ===== -->
+<section id="setup" class="hs-section">
+  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> QUICK SETUP</div>
+  <h2 class="hs-section__title">クイック接続</h2>
+  <p class="hs-section__desc">お使いのAIクライアントを選択して、設定をコピーするだけ。自分でデプロイした場合はURLを差し替えてください。</p>
+  <div id="clients-container" style="display:flex;flex-direction:column;gap:8px"></div>
+</section>
+
+<div class="hs-divider"></div>
+
+<!-- ===== AUTH MODES ===== -->
+<section id="auth" class="hs-section">
+  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> AUTH MODES</div>
+  <h2 class="hs-section__title">認証モード</h2>
+  <p class="hs-section__desc">環境変数 <code>AUTH_MODE</code> で認証方式を切り替え。公開サーバーと組織専用サーバーに対応。</p>
+  <div class="hs-auth-grid">
+    <div class="hs-auth-card"><span class="hs-auth-card__badge hs-auth-card__badge--rec">① hubspot_token</span><h4>HubSpot トークン直接渡し</h4><p>各ユーザーが <code>Authorization: Bearer &lt;HubSpot PAT&gt;</code> で自分のトークンを渡す。MCPサーバー自体への認証はなし。公開サーバー・個人利用向け。</p></div>
+    <div class="hs-auth-card"><span class="hs-auth-card__badge hs-auth-card__badge--alt">② api_key</span><h4>APIキーでゲート</h4><p><code>MCP_API_KEY</code> でサーバーアクセスを制限。HubSpot トークンは環境変数に固定。<strong>デプロイした組織だけ</strong>が使えるセキュアな構成。</p></div>
+  </div>
+  <div style="margin-top:40px">
+    <h3 style="font-size:20px;font-weight:700;color:var(--hs-obsidian);margin-bottom:16px">HubSpot Private App トークンの発行方法</h3>
+    <ol style="font-size:14px;line-height:2;color:var(--hs-text);padding-left:20px">
+      <li><a href="https://app.hubspot.com/" target="_blank" rel="noopener noreferrer" style="color:var(--hs-orange)">HubSpot</a> にログイン → 右上の ⚙️ 設定アイコン</li>
+      <li>左メニュー「Integrations」→「Private Apps」</li>
+      <li>「Create a private app」をクリック</li>
+      <li>Basic Info: アプリ名（例: MCP Server）を入力</li>
+      <li>「Scopes」タブで下記の権限にチェック</li>
+      <li>「Create app」→ 表示される Access Token（<code>pat-na1-xxxx...</code>）をコピー</li>
+    </ol>
+  </div>
+  <div style="margin-top:28px">
+    <h4 style="font-size:16px;font-weight:700;color:var(--hs-obsidian);margin-bottom:12px">必要なスコープ（権限）</h4>
+    <div style="overflow-x:auto">
+      <table style="width:100%;font-size:13px;border-collapse:collapse;border:1px solid var(--hs-border);border-radius:var(--hs-radius)">
+        <thead><tr style="background:var(--hs-bg);border-bottom:2px solid var(--hs-border)"><th style="padding:10px 14px;text-align:left;color:var(--hs-text-light);font-weight:700">スコープ</th><th style="padding:10px 14px;text-align:left;color:var(--hs-text-light);font-weight:700">対象ツール</th><th style="padding:10px 14px;text-align:center;color:var(--hs-text-light);font-weight:700;width:60px">必須</th></tr></thead>
+        <tbody id="scope-table"></tbody>
+      </table>
+    </div>
+    <p style="font-size:12px;color:var(--hs-text-light);margin-top:8px">※ CMS スコープは CMS Hub 契約がある場合のみ利用可能です。不要な場合はチェック不要です。</p>
   </div>
 </section>
 
@@ -243,29 +331,18 @@ body{font-family:'Lexend Deca',-apple-system,BlinkMacSystemFont,sans-serif;color
 
 <div class="hs-divider"></div>
 
-<!-- ===== GETTING STARTED ===== -->
+<!-- ===== SECURITY ===== -->
 <section class="hs-section">
-  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> GETTING STARTED</div>
-  <h2 class="hs-section__title">3ステップで始める</h2>
-  <div class="hs-callout" style="max-width:640px;margin:0 auto 24px;padding:12px 16px;background:var(--hs-orange-light);border-radius:8px;font-size:14px;line-height:1.6;border-left:none">💡 <strong>まずは試したい方へ:</strong> <a href="https://developers.hubspot.com/docs/api/creating-test-accounts" target="_blank" rel="noopener noreferrer" style="color:var(--hs-orange)">HubSpotテストアカウント</a>を作成すれば、本番データに影響なく全機能を試せます。Skillなしでも128ツールのAPIラッパーとして使えます。</div>
-  <div style="display:grid;gap:16px;max-width:640px;margin:0 auto">
-    <div class="hs-auth-card"><h4>① HubSpot Private Appを作成</h4><p>Settings → Integrations → Private Apps → Create。必要なスコープを付与してAccess Tokenをコピー。</p></div>
-    <div class="hs-auth-card">
-      <h4>② MCPサーバーに接続</h4>
-      <p style="margin-bottom:12px"><strong>公開サーバーを使う場合:</strong> 下の<a href="#setup" style="color:var(--hs-orange)">クイック接続</a>から、お使いのAIクライアントの設定をコピーするだけ。</p>
-      <p style="margin-bottom:12px"><strong>自分専用サーバーをデプロイする場合:</strong> ワンクリックでVercelまたはCloudflare Workersにデプロイ。トークンをサーバー側で管理する安全な構成。</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp&env=AUTH_MODE%2CHUBSPOT_ACCESS_TOKEN%2CMCP_API_KEY&envDescription=AUTH_MODE%3A+hubspot_token%28%E3%83%87%E3%83%95%E3%82%A9%E3%83%AB%E3%83%88%29+or+api_key+%7C+HUBSPOT_ACCESS_TOKEN%3A+api_key%E3%83%A2%E3%83%BC%E3%83%89%E6%99%82%E3%81%AB%E5%BF%85%E9%A0%88+%7C+MCP_API_KEY%3A+api_key%E3%83%A2%E3%83%BC%E3%83%89%E6%99%82%E3%81%AB%E5%BF%85%E9%A0%88&envLink=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp%23%E8%AA%8D%E8%A8%BC%E3%83%A2%E3%83%BC%E3%83%89&project-name=hubspot-ma-mcp&repository-name=hubspot-ma-mcp" target="_blank" rel="noopener noreferrer" class="hs-btn hs-btn--primary" style="font-size:13px;padding:8px 16px">▲ Vercel</a>
-        <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/DaisukeHori/hubspot-ma-mcp" target="_blank" rel="noopener noreferrer" class="hs-btn" style="font-size:13px;padding:8px 16px;background:#F48120;color:white;border:none">⚡ Cloudflare</a>
-      </div>
-    </div>
-    <div class="hs-auth-card"><h4>③ Claude Skillをインストール</h4><p><a href="https://github.com/DaisukeHori/hubspot-ma-mcp/releases/download/v1.0.0/hubspot-ma-operator.zip" style="color:var(--hs-orange);font-weight:700">hubspot-ma-operator.zip をダウンロード</a> → Claude.ai → Settings → Customize → Skills → Upload。初回会話でKnowledge Storeが自動構築されます。</p></div>
+  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> SECURITY</div>
+  <h2 class="hs-section__title">🔒 セキュリティ</h2>
+  <p class="hs-section__desc">公開エンドポイントにHubSpotトークンを送る安全性について</p>
+  <div style="display:grid;gap:12px;max-width:640px;margin:0 auto">
+    <div class="hs-auth-card"><h4>✅ HTTPS（TLS暗号化）で保護</h4><p>全通信はHTTPS上で暗号化されます。トークンが平文で流れることはありません。</p></div>
+    <div class="hs-auth-card"><h4>✅ ステートレス — 保存もログもしない</h4><p>トークンはリクエスト処理中にのみ使用され、終了と同時に破棄されます。データベースもログ出力もありません。</p></div>
+    <div class="hs-auth-card"><h4>✅ ソースコード全公開</h4><p>処理の全てを <a href="https://github.com/DaisukeHori/hubspot-ma-mcp" target="_blank" rel="noopener noreferrer" style="color:var(--hs-orange)">GitHub</a> で確認できます。</p></div>
+    <div class="hs-auth-card"><h4>🏢 不安な場合は自分でデプロイ</h4><p><a href="#deploy" style="color:var(--hs-orange)">Vercel/Cloudflareにデプロイ</a>して <code>api_key</code> モードで運用すれば、トークンをサーバー環境変数に固定。外部に一切送信しません。</p></div>
   </div>
 </section>
-
-<div class="hs-divider"></div>
-
-<!-- ===== ONBOARDING ===== -->
 <section class="hs-section">
   <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> FIRST SESSION</div>
   <h2 class="hs-section__title">初回オンボーディング</h2>
@@ -316,50 +393,6 @@ body{font-family:'Lexend Deca',-apple-system,BlinkMacSystemFont,sans-serif;color
       <div><div style="font-weight:700;color:var(--hs-obsidian);margin-bottom:4px">🤖 AI</div><div style="background:var(--hs-bg);padding:12px 16px;border-radius:8px;font-size:13px">✅ キャンペーン作成完了<br>✅ フォーム作成完了<br>✅ リスト作成完了<br>✅ 告知メール下書き作成完了<br>✅ 全アセットをキャンペーンに紐付け完了<br><br>告知メールの件名は「【○○】4/20 オンラインセミナーのご案内」で作成しました。<br>内容を確認しますか？</div></div>
     </div>
   </div>
-</section>
-
-<div class="hs-divider"></div>
-
-<!-- ===== AUTH MODES ===== -->
-<section id="auth" class="hs-section">
-  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> AUTH MODES</div>
-  <h2 class="hs-section__title">認証モード</h2>
-  <p class="hs-section__desc">環境変数 <code>AUTH_MODE</code> で認証方式を切り替え。公開サーバーと組織専用サーバーに対応。</p>
-  <div class="hs-auth-grid">
-    <div class="hs-auth-card"><span class="hs-auth-card__badge hs-auth-card__badge--rec">① hubspot_token</span><h4>HubSpot トークン直接渡し</h4><p>各ユーザーが <code>Authorization: Bearer &lt;HubSpot PAT&gt;</code> で自分のトークンを渡す。MCPサーバー自体への認証はなし。公開サーバー・個人利用向け。</p></div>
-    <div class="hs-auth-card"><span class="hs-auth-card__badge hs-auth-card__badge--alt">② api_key</span><h4>APIキーでゲート</h4><p><code>MCP_API_KEY</code> でサーバーアクセスを制限。HubSpot トークンは環境変数に固定。<strong>デプロイした組織だけ</strong>が使えるセキュアな構成。</p></div>
-  </div>
-  <div style="margin-top:40px">
-    <h3 style="font-size:20px;font-weight:700;color:var(--hs-obsidian);margin-bottom:16px">HubSpot Private App トークンの発行方法</h3>
-    <ol style="font-size:14px;line-height:2;color:var(--hs-text);padding-left:20px">
-      <li><a href="https://app.hubspot.com/" target="_blank" rel="noopener noreferrer" style="color:var(--hs-orange)">HubSpot</a> にログイン → 右上の ⚙️ 設定アイコン</li>
-      <li>左メニュー「Integrations」→「Private Apps」</li>
-      <li>「Create a private app」をクリック</li>
-      <li>Basic Info: アプリ名（例: MCP Server）を入力</li>
-      <li>「Scopes」タブで下記の権限にチェック</li>
-      <li>「Create app」→ 表示される Access Token（<code>pat-na1-xxxx...</code>）をコピー</li>
-    </ol>
-  </div>
-  <div style="margin-top:28px">
-    <h4 style="font-size:16px;font-weight:700;color:var(--hs-obsidian);margin-bottom:12px">必要なスコープ（権限）</h4>
-    <div style="overflow-x:auto">
-      <table style="width:100%;font-size:13px;border-collapse:collapse;border:1px solid var(--hs-border);border-radius:var(--hs-radius)">
-        <thead><tr style="background:var(--hs-bg);border-bottom:2px solid var(--hs-border)"><th style="padding:10px 14px;text-align:left;color:var(--hs-text-light);font-weight:700">スコープ</th><th style="padding:10px 14px;text-align:left;color:var(--hs-text-light);font-weight:700">対象ツール</th><th style="padding:10px 14px;text-align:center;color:var(--hs-text-light);font-weight:700;width:60px">必須</th></tr></thead>
-        <tbody id="scope-table"></tbody>
-      </table>
-    </div>
-    <p style="font-size:12px;color:var(--hs-text-light);margin-top:8px">※ CMS スコープは CMS Hub 契約がある場合のみ利用可能です。不要な場合はチェック不要です。</p>
-  </div>
-</section>
-
-<div class="hs-divider"></div>
-
-<!-- ===== QUICK SETUP ===== -->
-<section id="setup" class="hs-section">
-  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> QUICK SETUP</div>
-  <h2 class="hs-section__title">クイック接続</h2>
-  <p class="hs-section__desc">お使いのAIクライアントを選択して、設定をコピーするだけ。トークンはHubSpot Private Appで発行してください。</p>
-  <div id="clients-container" style="display:flex;flex-direction:column;gap:8px"></div>
 </section>
 
 <div class="hs-divider"></div>
@@ -416,7 +449,7 @@ body{font-family:'Lexend Deca',-apple-system,BlinkMacSystemFont,sans-serif;color
     <div class="hs-spec"><div class="hs-spec__label">API</div><div class="hs-spec__value">CRM v3 + Associations v4 + CMS v3 + Automation v4</div></div>
     <div class="hs-spec"><div class="hs-spec__label">Hosting</div><div class="hs-spec__value">Vercel / Cloudflare Workers</div></div>
   </div>
-  <div class="hs-cta-banner" id="deploy">
+  <div class="hs-cta-banner">
     <h3>組織専用サーバーをデプロイしよう</h3>
     <p>ワンクリックで自分専用のMCPサーバーをデプロイ。Vercel または Cloudflare Workers から選べます。</p>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
