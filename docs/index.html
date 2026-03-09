@@ -172,20 +172,20 @@ body{font-family:'Lexend Deca',-apple-system,BlinkMacSystemFont,sans-serif;color
   <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> TWO WAYS TO USE</div>
   <h2 class="hs-section__title">2つの使い方</h2>
   <div class="hs-auth-grid">
-    <div class="hs-auth-card" style="border-top:3px solid #10B981">
-      <span class="hs-auth-card__badge hs-auth-card__badge--rec">🔧 APIラッパー</span>
-      <h4>MCPサーバーとして使う</h4>
-      <p>接続するだけ。Skill不要・Knowledge Store不要。HubSpot API v3/v4の128ツールをAIから直接操作できます。</p>
-      <div style="margin-top:12px;padding:8px 12px;background:var(--hs-bg);border-radius:6px;font-size:13px;line-height:1.8">
-        「山田さんのコンタクト情報教えて」<br>「先月の取引一覧して」<br>「フォームのフィールド確認して」<br>「リストにメンバー追加して」
-      </div>
-    </div>
     <div class="hs-auth-card" style="border-top:3px solid var(--hs-orange)">
       <span class="hs-auth-card__badge hs-auth-card__badge--alt">🧠 AIマーケター</span>
       <h4>Skill追加で自走するAIに</h4>
       <p>Claude Skillを追加すると、暗黙知を学習し、戦略的思考で施策を提案・実行する自走型AIマーケターになります。</p>
       <div style="margin-top:12px;padding:8px 12px;background:var(--hs-bg);border-radius:6px;font-size:13px;line-height:1.8">
         「セミナーやるからよろしく」→ 全部組んで提案<br>「今月の進捗どう？」→ ボトルネック特定+改善案<br>「リード足りない」→ N1分析+既存顧客LTV検証
+      </div>
+    </div>
+    <div class="hs-auth-card" style="border-top:3px solid #10B981">
+      <span class="hs-auth-card__badge hs-auth-card__badge--rec">🔧 APIラッパー</span>
+      <h4>MCPサーバーとして使う</h4>
+      <p>接続するだけ。Skill不要・Knowledge Store不要。HubSpot API v3/v4の128ツールをAIから直接操作できます。</p>
+      <div style="margin-top:12px;padding:8px 12px;background:var(--hs-bg);border-radius:6px;font-size:13px;line-height:1.8">
+        「山田さんのコンタクト情報教えて」<br>「先月の取引一覧して」<br>「フォームのフィールド確認して」<br>「リストにメンバー追加して」
       </div>
     </div>
   </div>
@@ -209,6 +209,35 @@ body{font-family:'Lexend Deca',-apple-system,BlinkMacSystemFont,sans-serif;color
       <h4>MA担当者</h4>
       <p>「セミナーよろしく」→ 過去のパターンを参照し、命名規則に従い、禁止事項を確認し、80%を自分で組んで提案。<strong>使うほど賢くなる。</strong></p>
     </div>
+  </div>
+</section>
+
+<div class="hs-divider"></div>
+
+<!-- ===== ARCHITECTURE ===== -->
+<section class="hs-section">
+  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> ARCHITECTURE</div>
+  <h2 class="hs-section__title">3層アーキテクチャ</h2>
+  <p class="hs-section__desc">Skill（固定・全企業共通）+ Knowledge Store（可変・企業固有）+ MCPツール（API操作）の3層で構成。</p>
+  <div style="display:grid;gap:16px;max-width:640px;margin:0 auto">
+    <div class="hs-auth-card" style="border-left:3px solid var(--hs-orange)"><h4>🎯 Claude Skill（判断規範）</h4><p>MA担当者としての行動規範。「Knowledge Storeを毎回読め」「記載がないことは推測するな」「施策後は必ず記録しろ」。<strong>全企業共通。書き換え不要。</strong></p></div>
+    <div class="hs-auth-card" style="border-left:3px solid #4A90D9"><h4>🧠 Knowledge Store（企業の記憶）</h4><p>設計判断・命名規則・手順書・禁止事項・過去施策等の12カテゴリ。<strong>HubSpot内のCRMノートに保存。追加インフラ不要。</strong>初回は自動分析+質問で構築、以降は施策実行のたびに自動成長。</p></div>
+    <div class="hs-auth-card" style="border-left:3px solid #10B981"><h4>🔧 128 MCPツール（操作能力）</h4><p>CRM・フォーム・リスト・メール・WF・キャンペーン・イベント等、HubSpot APIを完全カバー。Skillの指示とKnowledgeの知識に基づいて動く「手足」。</p></div>
+  </div>
+</section>
+
+<div class="hs-divider"></div>
+
+<!-- ===== SECURITY ===== -->
+<section class="hs-section">
+  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> SECURITY</div>
+  <h2 class="hs-section__title">🔒 セキュリティ</h2>
+  <p class="hs-section__desc">公開エンドポイントにHubSpotトークンを送る安全性について</p>
+  <div style="display:grid;gap:12px;max-width:640px;margin:0 auto">
+    <div class="hs-auth-card"><h4>✅ HTTPS（TLS暗号化）で保護</h4><p>全通信はHTTPS上で暗号化されます。トークンが平文で流れることはありません。</p></div>
+    <div class="hs-auth-card"><h4>✅ ステートレス — 保存もログもしない</h4><p>トークンはリクエスト処理中にのみ使用され、終了と同時に破棄されます。データベースもログ出力もありません。</p></div>
+    <div class="hs-auth-card"><h4>✅ ソースコード全公開</h4><p>処理の全てを <a href="https://github.com/DaisukeHori/hubspot-ma-mcp" target="_blank" rel="noopener noreferrer" style="color:var(--hs-orange)">GitHub</a> で確認できます。</p></div>
+    <div class="hs-auth-card"><h4>🏢 不安な場合は自分でデプロイ</h4><p><a href="#deploy" style="color:var(--hs-orange)">Vercel/Cloudflareにデプロイ</a>して <code>api_key</code> モードで運用すれば、トークンをサーバー環境変数に固定。外部に一切送信しません。</p></div>
   </div>
 </section>
 
@@ -273,16 +302,6 @@ body{font-family:'Lexend Deca',-apple-system,BlinkMacSystemFont,sans-serif;color
 
 <div class="hs-divider"></div>
 
-<!-- ===== QUICK SETUP ===== -->
-<section id="setup" class="hs-section">
-  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> QUICK SETUP</div>
-  <h2 class="hs-section__title">クイック接続</h2>
-  <p class="hs-section__desc">お使いのAIクライアントを選択して、設定をコピーするだけ。自分でデプロイした場合はURLを差し替えてください。</p>
-  <div id="clients-container" style="display:flex;flex-direction:column;gap:8px"></div>
-</section>
-
-<div class="hs-divider"></div>
-
 <!-- ===== AUTH MODES ===== -->
 <section id="auth" class="hs-section">
   <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> AUTH MODES</div>
@@ -317,32 +336,17 @@ body{font-family:'Lexend Deca',-apple-system,BlinkMacSystemFont,sans-serif;color
 
 <div class="hs-divider"></div>
 
-<!-- ===== ARCHITECTURE ===== -->
-<section class="hs-section">
-  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> ARCHITECTURE</div>
-  <h2 class="hs-section__title">3層アーキテクチャ</h2>
-  <p class="hs-section__desc">Skill（固定・全企業共通）+ Knowledge Store（可変・企業固有）+ MCPツール（API操作）の3層で構成。</p>
-  <div style="display:grid;gap:16px;max-width:640px;margin:0 auto">
-    <div class="hs-auth-card" style="border-left:3px solid var(--hs-orange)"><h4>🎯 Claude Skill（判断規範）</h4><p>MA担当者としての行動規範。「Knowledge Storeを毎回読め」「記載がないことは推測するな」「施策後は必ず記録しろ」。<strong>全企業共通。書き換え不要。</strong></p></div>
-    <div class="hs-auth-card" style="border-left:3px solid #4A90D9"><h4>🧠 Knowledge Store（企業の記憶）</h4><p>設計判断・命名規則・手順書・禁止事項・過去施策等の12カテゴリ。<strong>HubSpot内のCRMノートに保存。追加インフラ不要。</strong>初回は自動分析+質問で構築、以降は施策実行のたびに自動成長。</p></div>
-    <div class="hs-auth-card" style="border-left:3px solid #10B981"><h4>🔧 128 MCPツール（操作能力）</h4><p>CRM・フォーム・リスト・メール・WF・キャンペーン・イベント等、HubSpot APIを完全カバー。Skillの指示とKnowledgeの知識に基づいて動く「手足」。</p></div>
-  </div>
+<!-- ===== QUICK SETUP ===== -->
+<section id="setup" class="hs-section">
+  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> QUICK SETUP</div>
+  <h2 class="hs-section__title">クイック接続</h2>
+  <p class="hs-section__desc">お使いのAIクライアントを選択して、設定をコピーするだけ。自分でデプロイした場合はURLを差し替えてください。</p>
+  <div id="clients-container" style="display:flex;flex-direction:column;gap:8px"></div>
 </section>
 
 <div class="hs-divider"></div>
 
-<!-- ===== SECURITY ===== -->
-<section class="hs-section">
-  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> SECURITY</div>
-  <h2 class="hs-section__title">🔒 セキュリティ</h2>
-  <p class="hs-section__desc">公開エンドポイントにHubSpotトークンを送る安全性について</p>
-  <div style="display:grid;gap:12px;max-width:640px;margin:0 auto">
-    <div class="hs-auth-card"><h4>✅ HTTPS（TLS暗号化）で保護</h4><p>全通信はHTTPS上で暗号化されます。トークンが平文で流れることはありません。</p></div>
-    <div class="hs-auth-card"><h4>✅ ステートレス — 保存もログもしない</h4><p>トークンはリクエスト処理中にのみ使用され、終了と同時に破棄されます。データベースもログ出力もありません。</p></div>
-    <div class="hs-auth-card"><h4>✅ ソースコード全公開</h4><p>処理の全てを <a href="https://github.com/DaisukeHori/hubspot-ma-mcp" target="_blank" rel="noopener noreferrer" style="color:var(--hs-orange)">GitHub</a> で確認できます。</p></div>
-    <div class="hs-auth-card"><h4>🏢 不安な場合は自分でデプロイ</h4><p><a href="#deploy" style="color:var(--hs-orange)">Vercel/Cloudflareにデプロイ</a>して <code>api_key</code> モードで運用すれば、トークンをサーバー環境変数に固定。外部に一切送信しません。</p></div>
-  </div>
-</section>
+<!-- ===== ONBOARDING ===== -->
 <section class="hs-section">
   <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> FIRST SESSION</div>
   <h2 class="hs-section__title">初回オンボーディング</h2>
@@ -351,29 +355,23 @@ body{font-family:'Lexend Deca',-apple-system,BlinkMacSystemFont,sans-serif;color
     <div style="display:grid;gap:2px">
       <div class="hs-auth-card" style="border-left:3px solid var(--hs-orange);border-radius:8px 8px 0 0">
         <h4 style="display:flex;align-items:center;gap:8px"><span style="background:var(--hs-orange);color:white;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">1</span>AIが自動分析を開始</h4>
-        <p style="margin-left:32px">「セミナーやるからよろしく」等の最初の指示で、AIがKnowledge Storeが空であることを検知。<code>hubspot_knowledge_build</code> を自動実行し、あなたのHubSpotの全設定（プロパティ・ワークフロー・パイプライン・フォーム・リスト・メール等）を一括スキャンします。</p>
+        <p style="margin-left:32px">「セミナーやるからよろしく」等の最初の指示で、AIがKnowledge Storeが空であることを検知。<code>hubspot_knowledge_build</code> を自動実行し、あなたのHubSpotの全設定を一括スキャンします。</p>
       </div>
       <div class="hs-auth-card" style="border-left:3px solid #4A90D9;border-radius:0">
         <h4 style="display:flex;align-items:center;gap:8px"><span style="background:#4A90D9;color:white;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">2</span>12カテゴリの下書きを自動生成</h4>
-        <p style="margin-left:32px">スキャン結果から12カテゴリの下書きを自動生成。さらにAIが<strong>自己検証ループ</strong>を実行 — 各項目について「自分で追加調査できないか？」を再帰的にチェックし、ワークフローの詳細構造・フォームのフィールド構成・メールの件名パターン等を深掘りして、自力で答えを出せるものは全て解決します。</p>
+        <p style="margin-left:32px">スキャン結果から下書きを自動生成。さらにAIが<strong>自己検証ループ</strong>を実行し、自力で答えを出せるものは全て解決します。</p>
       </div>
       <div class="hs-auth-card" style="border-left:3px solid #8B5CF6;border-radius:0">
         <h4 style="display:flex;align-items:center;gap:8px"><span style="background:#8B5CF6;color:white;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">3</span>AIからあなたへ質問</h4>
-        <p style="margin-left:32px">AIが再帰的に自己検証した結果、<strong>本当に自分では判断できないことだけ</strong>が質問として残ります。全てデータに基づく仮説付きのYes/No形式です。例：</p>
-        <ul style="margin-left:32px;font-size:13px;color:var(--hs-text-light);line-height:1.8">
-          <li>「パイプラインが1本のみで、事業構造がシンプルなため統合運用しているという認識で合っていますか？」</li>
-          <li>「チケット未使用ですが、コンタクトのカスタムプロパティ"inquiry_status"で問い合わせ管理をしているように見えます。正しいですか？」</li>
-          <li>「過去のメール件名を分析すると【レヴォル】で始まるルールがあるようです。踏襲してよろしいですか？」</li>
-          <li>「このワークフローは他WFと構造が類似しており、テンプレートとして正本管理してよろしいですか？」</li>
-        </ul>
+        <p style="margin-left:32px"><strong>本当に自分では判断できないことだけ</strong>が仮説付きYes/Noで質問されます。</p>
       </div>
       <div class="hs-auth-card" style="border-left:3px solid #10B981;border-radius:0">
         <h4 style="display:flex;align-items:center;gap:8px"><span style="background:#10B981;color:white;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">4</span>あなたが回答 → Knowledge完成</h4>
-        <p style="margin-left:32px">回答をもとにAIがKnowledge Storeを補完。「なぜそうなっているか」「何を触ってはいけないか」が記録されます。口頭で伝えるだけで、AIが整形して保存します。</p>
+        <p style="margin-left:32px">回答をもとにKnowledge Storeを補完。口頭で伝えるだけでAIが整形して保存します。</p>
       </div>
       <div class="hs-auth-card" style="border-left:3px solid var(--hs-orange);border-radius:0 0 8px 8px">
         <h4 style="display:flex;align-items:center;gap:8px"><span style="background:var(--hs-orange);color:white;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">5</span>MA担当者として稼働開始</h4>
-        <p style="margin-left:32px">以降の会話では、AIが毎回Knowledge Storeを読み込み、あなたの会社のやり方に従って施策を提案・実行します。施策を実行するたびにhistoryが蓄積され、<strong>使うほど賢くなります</strong>。</p>
+        <p style="margin-left:32px">以降はAIが毎回Knowledge Storeを読み込み、あなたの会社のやり方に従って施策を提案・実行。<strong>使うほど賢くなります</strong>。</p>
       </div>
     </div>
   </div>
