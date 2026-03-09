@@ -2,6 +2,14 @@
 
 **AIをHubSpotのマーケティング担当者にする。**
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp&env=AUTH_MODE%2CHUBSPOT_ACCESS_TOKEN%2CMCP_API_KEY&envDescription=AUTH_MODE%3A+hubspot_token%28%E3%83%87%E3%83%95%E3%82%A9%E3%83%AB%E3%83%88%29+or+api_key+%7C+HUBSPOT_ACCESS_TOKEN%3A+api_key%E3%83%A2%E3%83%BC%E3%83%89%E6%99%82%E3%81%AB%E5%BF%85%E9%A0%88+%7C+MCP_API_KEY%3A+api_key%E3%83%A2%E3%83%BC%E3%83%89%E6%99%82%E3%81%AB%E5%BF%85%E9%A0%88&envLink=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp%23%E8%AA%8D%E8%A8%BC%E3%83%A2%E3%83%BC%E3%83%89&project-name=hubspot-ma-mcp&repository-name=hubspot-ma-mcp)
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/DaisukeHori/hubspot-ma-mcp)
+[![Claude Skill](https://img.shields.io/badge/Claude_Skill-Download-FF7A59)](https://github.com/DaisukeHori/hubspot-ma-mcp/releases/download/v1.0.0/hubspot-ma-operator.zip)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+> **エンドポイント:** `https://hubspot-ma-mcp.vercel.app/api/mcp`
+> **LP:** [daisukehori.github.io/hubspot-ma-mcp](https://daisukehori.github.io/hubspot-ma-mcp/)
+
 「来月セミナーやるからよろしく」と言うだけで、キャンペーン作成・フォーム作成・リスト作成・メール配信・ワークフロー設計までAIが一貫して実行します。
 
 128のMCPツール + Knowledge Store（暗黙知の記憶） + Claude Skill（行動規範）の3層構造で、単なるAPIラッパーではなく**あなたの会社のHubSpotを理解したMA担当者**として機能します。
