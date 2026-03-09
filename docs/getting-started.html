@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>始め方 — HubSpot MA MCP Server</title>
+<meta name="description" content="3つのデプロイ方法、クイック接続、認証モード、128ツール一覧。">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg"><symbol id="sprocket" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#FF7A59"/><g transform="translate(4,4)" stroke="#fff" stroke-width="1.8" stroke-linecap="round" fill="none"><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1.5" fill="#fff"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="19.1" y1="4.9" x2="17" y2="7"/><line x1="7" y1="17" x2="4.9" y2="19.1"/><circle cx="3" cy="3" r="1.8" fill="#fff" stroke="none"/><circle cx="21" cy="21" r="1.8" fill="#fff" stroke="none"/><circle cx="21" cy="3" r="1.8" fill="#fff" stroke="none"/></g></symbol></svg>
+
+<nav class="hs-nav"><div class="hs-nav__inner">
+  <a href="index.html" class="hs-nav__brand"><svg width="28" height="28"><use href="#sprocket"/></svg>HubSpot MA</a>
+  <ul class="hs-nav__links">
+    <li><a href="index.html">価値</a></li>
+    <li><a href="how-it-works.html">仕組み</a></li>
+    <li><a href="getting-started.html" class="active">始め方</a></li>
+    <li><a href="https://github.com/DaisukeHori/hubspot-ma-mcp/releases/download/v1.0.0/hubspot-ma-operator.zip">Skill DL</a></li>
+    <li><a href="https://github.com/DaisukeHori/hubspot-ma-mcp" target="_blank">GitHub</a></li>
+  </ul>
+  <span class="hs-badge"><span class="hs-badge__dot"></span> Operational</span>
+</div></nav>
+
+<div class="hs-page-header">
+  <h1>始め方</h1>
+  <p>3つのデプロイ方法から選んで、3ステップで使い始められます。</p>
+</div>
+
+<div class="hs-divider"></div>
+
+<!-- 3つの始め方 -->
+<section id="deploy" class="hs-section">
+  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> THREE OPTIONS</div>
+  <h2 class="hs-section__title">3つの始め方</h2>
+  <p class="hs-section__desc">公開サーバーにそのまま接続するか、自分専用サーバーをデプロイするか選べます。機能・ツール数は全て同一です。</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+    <div class="hs-auth-card" style="border-top:3px solid #10B981">
+      <span class="hs-auth-card__badge hs-auth-card__badge--rec">最速</span>
+      <h4>🌐 公開サーバーを使う</h4>
+      <p>デプロイ不要。MCPクライアントにURLを設定するだけ。</p>
+      <div style="margin-top:12px;padding:8px 12px;background:var(--hs-bg);border-radius:6px;font-size:12px;font-family:'SF Mono','Fira Code',monospace;word-break:break-all">https://hubspot-ma-mcp.vercel.app/api/mcp</div>
+      <div style="margin-top:12px;font-size:13px;color:var(--hs-text-light)"><strong>メリット:</strong> 設定だけで即利用<br><strong>注意:</strong> トークンをクライアント側で管理</div>
+    </div>
+    <div class="hs-auth-card" style="border-top:3px solid var(--hs-obsidian)">
+      <span class="hs-auth-card__badge hs-auth-card__badge--alt">おすすめ</span>
+      <h4>▲ Vercelにデプロイ</h4>
+      <p>ワンクリックで自分専用サーバー。<code>api_key</code>モードでトークンをサーバー側に固定。</p>
+      <div style="margin-top:12px"><a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FDaisukeHori%2Fhubspot-ma-mcp&env=AUTH_MODE%2CHUBSPOT_ACCESS_TOKEN%2CMCP_API_KEY&envDescription=AUTH_MODE%3A+hubspot_token+or+api_key&project-name=hubspot-ma-mcp&repository-name=hubspot-ma-mcp" target="_blank" class="hs-btn hs-btn--primary" style="font-size:13px;padding:8px 20px;width:100%">▲ Deploy with Vercel</a></div>
+      <div style="margin-top:12px;font-size:13px;color:var(--hs-text-light)"><strong>手順:</strong> ボタン → GitHub連携 → 環境変数設定 → 完了</div>
+    </div>
+    <div class="hs-auth-card" style="border-top:3px solid #F48120">
+      <span class="hs-auth-card__badge" style="background:#FFF3E0;color:#E65100">コスト最適</span>
+      <h4>⚡ Cloudflare Workersにデプロイ</h4>
+      <p>エッジで動作。I/O待ち無課金。無料枠で十分運用可能。</p>
+      <div style="margin-top:12px"><a href="https://deploy.workers.cloudflare.com/?url=https://github.com/DaisukeHori/hubspot-ma-mcp" target="_blank" class="hs-btn" style="font-size:13px;padding:8px 20px;width:100%;background:#F48120;color:white;border:none">⚡ Deploy to Cloudflare</a></div>
+      <div style="margin-top:12px;font-size:13px;color:var(--hs-text-light)"><strong>手順:</strong> ボタン → Cloudflare認証 → GitHub連携 → 完了</div>
+    </div>
+  </div>
+</section>
+
+<div class="hs-divider"></div>
+
+<!-- 3ステップ -->
+<section class="hs-section">
+  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> GETTING STARTED</div>
+  <h2 class="hs-section__title">3ステップで始める</h2>
+  <div class="hs-callout" style="max-width:640px;margin:0 auto 24px;padding:12px 16px;background:var(--hs-orange-light);border-radius:8px;font-size:14px;line-height:1.6;border-left:none">💡 <strong>まずは試したい方へ:</strong> <a href="https://developers.hubspot.com/docs/api/creating-test-accounts" target="_blank" style="color:var(--hs-orange)">HubSpotテストアカウント</a>を作成すれば、本番データに影響なく全機能を試せます。</div>
+  <div style="display:grid;gap:16px;max-width:640px;margin:0 auto">
+    <div class="hs-auth-card"><h4>① HubSpot Private Appを作成</h4><p>Settings → Integrations → Private Apps → Create。必要なスコープを付与してAccess Tokenをコピー。<a href="#auth" style="color:var(--hs-orange)">スコープ一覧 →</a></p></div>
+    <div class="hs-auth-card"><h4>② MCPサーバーに接続</h4><p>上の<a href="#deploy" style="color:var(--hs-orange)">3つの始め方</a>から方式を選び、<a href="#setup" style="color:var(--hs-orange)">クライアント別の設定</a>をコピー。</p></div>
+    <div class="hs-auth-card"><h4>③ Claude Skillをインストール（推奨）</h4><p><a href="https://github.com/DaisukeHori/hubspot-ma-mcp/releases/download/v1.0.0/hubspot-ma-operator.zip" style="color:var(--hs-orange);font-weight:700">hubspot-ma-operator.zip をダウンロード</a> → Claude.ai → Settings → Customize → Skills → Upload。</p></div>
+  </div>
+</section>
+
+<div class="hs-divider"></div>
+
+<!-- 認証モード -->
+<section id="auth" class="hs-section">
+  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> AUTH MODES</div>
+  <h2 class="hs-section__title">認証モード</h2>
+  <p class="hs-section__desc">環境変数 <code>AUTH_MODE</code> で認証方式を切り替え。</p>
+  <div class="hs-auth-grid">
+    <div class="hs-auth-card"><span class="hs-auth-card__badge hs-auth-card__badge--rec">① hubspot_token</span><h4>HubSpot トークン直接渡し</h4><p>各ユーザーが <code>Authorization: Bearer &lt;HubSpot PAT&gt;</code> で自分のトークンを渡す。公開サーバー・個人利用向け。</p></div>
+    <div class="hs-auth-card"><span class="hs-auth-card__badge hs-auth-card__badge--alt">② api_key</span><h4>APIキーでゲート</h4><p><code>MCP_API_KEY</code> でアクセス制限。HubSpot トークンは環境変数に固定。<strong>デプロイした組織だけ</strong>が使えるセキュアな構成。</p></div>
+  </div>
+  <div style="margin-top:40px">
+    <h3 style="font-size:20px;font-weight:700;color:var(--hs-obsidian);margin-bottom:16px">HubSpot Private App トークンの発行方法</h3>
+    <ol style="font-size:14px;line-height:2;color:var(--hs-text);padding-left:20px">
+      <li><a href="https://app.hubspot.com/" target="_blank" style="color:var(--hs-orange)">HubSpot</a> にログイン → ⚙️ 設定</li>
+      <li>Integrations → Private Apps → Create a private app</li>
+      <li>「Scopes」タブで下記の権限にチェック</li>
+      <li>「Create app」→ Access Token（<code>pat-na1-xxxx...</code>）をコピー</li>
+    </ol>
+  </div>
+  <div style="margin-top:28px">
+    <h4 style="font-size:16px;font-weight:700;color:var(--hs-obsidian);margin-bottom:12px">必要なスコープ（権限）</h4>
+    <div style="overflow-x:auto">
+      <table style="width:100%;font-size:13px;border-collapse:collapse;border:1px solid var(--hs-border);border-radius:var(--hs-radius)">
+        <thead><tr style="background:var(--hs-bg);border-bottom:2px solid var(--hs-border)"><th style="padding:10px 14px;text-align:left;color:var(--hs-text-light);font-weight:700">スコープ</th><th style="padding:10px 14px;text-align:left;color:var(--hs-text-light);font-weight:700">対象ツール</th><th style="padding:10px 14px;text-align:center;color:var(--hs-text-light);font-weight:700;width:60px">必須</th></tr></thead>
+        <tbody id="scope-table"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="hs-divider"></div>
+
+<!-- クイック接続 -->
+<section id="setup" class="hs-section">
+  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> QUICK SETUP</div>
+  <h2 class="hs-section__title">クイック接続</h2>
+  <p class="hs-section__desc">お使いのAIクライアントを選択して、設定をコピーするだけ。自分でデプロイした場合はURLを差し替えてください。</p>
+  <div id="clients-container" style="display:flex;flex-direction:column;gap:8px"></div>
+</section>
+
+<div class="hs-divider"></div>
+
+<!-- ツール -->
+<section id="tools" class="hs-section">
+  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> 128 TOOLS</div>
+  <h2 class="hs-section__title">API操作ツール + Knowledge Store <span style="font-size:16px;font-weight:500;color:var(--hs-text-light)" id="total-tools-count"></span></h2>
+  <p class="hs-section__desc">各ツールをクリックすると、APIエンドポイントとパラメータの詳細が表示されます。</p>
+  <div class="hs-category-grid" id="tools-container"></div>
+</section>
+
+<div class="hs-divider"></div>
+
+<!-- 注意事項 -->
+<section class="hs-section">
+  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> IMPORTANT NOTICES</div>
+  <h2 class="hs-section__title">⚠️ 利用上の注意</h2>
+  <div style="display:grid;gap:16px;max-width:640px;margin:0 auto">
+    <div class="hs-auth-card" style="border-left:3px solid #E74C3C"><h4>🤖 Knowledge Storeの自動作成物</h4><p>初回セットアップで<strong>コンタクト1件</strong>（<code>mcp-knowledge@system.internal</code>）と<strong>CRMノート最大10件</strong>が自動作成されます。<strong>削除するとKnowledge Storeが失われます。</strong></p></div>
+    <div class="hs-auth-card" style="border-left:3px solid #E74C3C"><h4>📧 メール送信は取り消せない</h4><p><code>marketing_email_publish</code> は配信リスト全員に送信され、<strong>取り消し不可</strong>です。</p></div>
+    <div class="hs-auth-card" style="border-left:3px solid #F39C12"><h4>⚡ ワークフロー有効化の影響</h4><p>有効化すると条件合致する<strong>全レコードに即座にアクション実行</strong>の可能性があります。</p></div>
+    <div class="hs-auth-card" style="border-left:3px solid #3498DB"><h4>🏢 Enterprise必須機能</h4><p><code>marketing_email_publish</code>、<code>single_send_email</code>、<code>custom_event_*</code> は <strong>Marketing Hub Enterprise</strong> が必要です。</p></div>
+  </div>
+</section>
+
+<div class="hs-divider"></div>
+
+<!-- FAQ -->
+<section class="hs-section">
+  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> FAQ</div>
+  <h2 class="hs-section__title">よくある質問</h2>
+  <div style="display:grid;gap:12px;max-width:640px;margin:0 auto">
+    <div class="hs-auth-card"><h4>👥 チームで使う場合</h4><p>同じHubSpotトークン → <strong>同じKnowledge Storeを共有</strong>。異なるアカウント → 完全分離。</p></div>
+    <div class="hs-auth-card"><h4>❓ Freeプランでも使える？</h4><p>CRM操作・フォーム・リスト・Knowledge Store等の大半は利用可能。メール送信・カスタムイベントはEnterprise必須。</p></div>
+    <div class="hs-auth-card"><h4>❓ Skillなしでも動く？</h4><p>はい。128ツールのAPIラッパーとして機能します。Skillを追加するとMA担当者の判断力が加わります。</p></div>
+  </div>
+</section>
+
+<div class="hs-divider"></div>
+
+<!-- 技術仕様 -->
+<section class="hs-section">
+  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> TECH SPECS</div>
+  <h2 class="hs-section__title">技術仕様</h2>
+  <div class="hs-specs">
+    <div class="hs-spec"><div class="hs-spec__label">Framework</div><div class="hs-spec__value">Next.js 15 / CF Workers</div></div>
+    <div class="hs-spec"><div class="hs-spec__label">Transport</div><div class="hs-spec__value">Streamable HTTP</div></div>
+    <div class="hs-spec"><div class="hs-spec__label">Protocol</div><div class="hs-spec__value">MCP 2025-03-26</div></div>
+    <div class="hs-spec"><div class="hs-spec__label">Auth</div><div class="hs-spec__value">2 Modes</div></div>
+    <div class="hs-spec"><div class="hs-spec__label">API</div><div class="hs-spec__value">CRM v3 + Associations v4 + CMS v3 + Automation v4</div></div>
+    <div class="hs-spec"><div class="hs-spec__label">Hosting</div><div class="hs-spec__value">Vercel / Cloudflare Workers</div></div>
+  </div>
+</section>
+
+<footer class="hs-footer"><a href="https://github.com/DaisukeHori/hubspot-ma-mcp" target="_blank">GitHub</a> · <a href="https://revol.co.jp" target="_blank">Revol Co., Ltd.</a> · MIT License</footer>
+
+<script>
+const MCP_URL="https://hubspot-ma-mcp.vercel.app/api/mcp";
+const TOKEN_PH="pat-na1-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
+
+function copyText(t,b){navigator.clipboard.writeText(t).catch(()=>{const e=document.createElement("textarea");e.value=t;document.body.appendChild(e);e.select();document.execCommand("copy");document.body.removeChild(e)});const o=b.textContent;b.textContent="✓ コピー完了";setTimeout(()=>b.textContent=o,2000)}
+function escHtml(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+
+const CLIENTS=[
+  {id:"claude-web",name:"Claude.ai",icon:"◈",desc:"Web版（Pro/Max/Team/Enterprise）",copy:`${MCP_URL}?token=${TOKEN_PH}`,label:"URLをコピー",steps:['設定→コネクタ→「カスタムコネクタを追加」','URLを貼り付け（トークン部分を置換）'],note:"URLにトークンが含まれます。共有PCでの利用にはご注意ください。"},
+  {id:"claude-desktop",name:"Claude Desktop",icon:"◇",desc:"デスクトップアプリ",copy:JSON.stringify({mcpServers:{"hubspot-ma":{command:"npx",args:["mcp-remote",MCP_URL,"--header",`Authorization:Bearer ${TOKEN_PH}`]}}},null,2),label:"JSONをコピー",steps:["macOS: ~/Library/Application Support/Claude/claude_desktop_config.json","Windows: %APPDATA%\\\\Claude\\\\claude_desktop_config.json","トークンを置換→再起動"]},
+  {id:"claude-code",name:"Claude Code",icon:"⌘",desc:"ターミナルCLI",copy:`claude mcp add --transport http hubspot-ma ${MCP_URL} --header "Authorization:Bearer ${TOKEN_PH}"`,label:"コマンドをコピー",steps:["トークンを置換して実行"]},
+  {id:"cursor",name:"Cursor",icon:"⟐",desc:"AIコードエディタ",copy:JSON.stringify({mcpServers:{"hubspot-ma":{type:"http",url:MCP_URL,headers:{Authorization:`Bearer ${TOKEN_PH}`}}}},null,2),label:"JSONをコピー",steps:["Settings→Tools & Integrations→New MCP Server"]},
+  {id:"vscode",name:"VS Code",icon:"⬡",desc:"Copilot Chat",copy:JSON.stringify({mcpServers:{"hubspot-ma":{type:"http",url:MCP_URL,headers:{Authorization:`Bearer ${TOKEN_PH}`}}}},null,2),label:"JSONをコピー",steps:[".vscode/mcp.json に貼り付け"]},
+  {id:"windsurf",name:"Windsurf",icon:"◆",desc:"AIコードエディタ",copy:JSON.stringify({mcpServers:{"hubspot-ma":{command:"npx",args:["mcp-remote",MCP_URL,"--header",`Authorization:Bearer ${TOKEN_PH}`]}}},null,2),label:"JSONをコピー",steps:["Cascade→MCP servers→Add Server"]},
+  {id:"api",name:"Anthropic API",icon:"⬢",desc:"MCP Connector Beta",copy:JSON.stringify({mcp_servers:[{type:"url",url:MCP_URL,name:"hubspot-ma",authorization_token:`Bearer ${TOKEN_PH}`}],tools:[{type:"mcp_toolset",mcp_server_name:"hubspot-ma"}]},null,2),label:"JSONをコピー",steps:['messages API bodyに追加','"anthropic-beta": "mcp-client-2025-11-20"']},
+];
+
+const SCOPES=[
+  {scope:"crm.objects.contacts.read / .write",tools:"contact_*",req:true},
+  {scope:"crm.objects.companies.read / .write",tools:"company_*",req:true},
+  {scope:"crm.objects.deals.read / .write",tools:"deal_*",req:true},
+  {scope:"crm.objects.line_items.read / .write",tools:"lineitem_*",req:true},
+  {scope:"e-commerce (products)",tools:"product_*",req:true},
+  {scope:"tickets",tools:"ticket_*",req:true},
+  {scope:"crm.schemas.*.read / .write",tools:"property_*, pipeline_*",req:true},
+  {scope:"automation",tools:"workflow_*",req:true},
+  {scope:"content",tools:"cms_blog_*, cms_page_*",req:false},
+];
+
+const TOOL_CATEGORIES=[{category:"Workflow（Automation v4）",color:"#FF7A59",tools:[{name:"workflow_list",desc:"一覧取得",icon:"📋",api:"GET /automation/v4/flows",params:[]},{name:"workflow_get",desc:"詳細取得",icon:"🔍",api:"GET /automation/v4/flows/{id}",params:[{name:"flowId",required:true,desc:"ID"}]},{name:"workflow_create",desc:"作成",icon:"✨",api:"POST /automation/v4/flows",params:[{name:"name",required:true,desc:"名前"}]},{name:"workflow_update",desc:"更新",icon:"🔄",api:"PUT /automation/v4/flows/{id}",params:[{name:"flowId",required:true,desc:"ID"}]},{name:"workflow_delete",desc:"削除",icon:"🗑",api:"DELETE /automation/v4/flows/{id}",params:[{name:"flowId",required:true,desc:"ID"}]},{name:"workflow_batch_read",desc:"一括取得",icon:"📦",api:"POST /automation/v4/flows/batch/read",params:[{name:"flowIds",required:true,desc:"ID配列"}]}]},{category:"CRM Contacts（v3）",color:"#00A4BD",tools:[{name:"contact_search",desc:"検索",icon:"🔎",api:"POST /crm/v3/objects/contacts/search",params:[]},{name:"contact_get",desc:"取得",icon:"👤",api:"GET /crm/v3/objects/contacts/{id}",params:[{name:"contactId",required:true,desc:"ID"}]},{name:"contact_create",desc:"作成",icon:"➕",api:"POST /crm/v3/objects/contacts",params:[{name:"email",required:true,desc:"メール"}]},{name:"contact_update",desc:"更新",icon:"✏️",api:"PATCH /crm/v3/objects/contacts/{id}",params:[{name:"contactId",required:true,desc:"ID"}]},{name:"contact_delete",desc:"削除",icon:"🗑",api:"DELETE /crm/v3/objects/contacts/{id}",params:[{name:"contactId",required:true,desc:"ID"}]}]},{category:"CRM Companies（v3）",color:"#00BDA5",tools:[{name:"company_search",desc:"検索",icon:"🔎",api:"POST /crm/v3/objects/companies/search",params:[]},{name:"company_get",desc:"取得",icon:"🏢",api:"GET /crm/v3/objects/companies/{id}",params:[{name:"companyId",required:true,desc:"ID"}]},{name:"company_create",desc:"作成",icon:"➕",api:"POST /crm/v3/objects/companies",params:[{name:"name",required:true,desc:"会社名"}]},{name:"company_update",desc:"更新",icon:"✏️",api:"PATCH /crm/v3/objects/companies/{id}",params:[{name:"companyId",required:true,desc:"ID"}]},{name:"company_delete",desc:"削除",icon:"🗑",api:"DELETE /crm/v3/objects/companies/{id}",params:[{name:"companyId",required:true,desc:"ID"}]}]},{category:"CRM Deals（v3）",color:"#FF8F59",tools:[{name:"deal_search",desc:"検索",icon:"🔎",api:"POST /crm/v3/objects/deals/search",params:[]},{name:"deal_get",desc:"取得",icon:"💰",api:"GET /crm/v3/objects/deals/{id}",params:[{name:"dealId",required:true,desc:"ID"}]},{name:"deal_create",desc:"作成",icon:"➕",api:"POST /crm/v3/objects/deals",params:[{name:"dealname",required:true,desc:"名前"}]},{name:"deal_update",desc:"更新",icon:"✏️",api:"PATCH /crm/v3/objects/deals/{id}",params:[{name:"dealId",required:true,desc:"ID"}]},{name:"deal_delete",desc:"削除",icon:"🗑",api:"DELETE /crm/v3/objects/deals/{id}",params:[{name:"dealId",required:true,desc:"ID"}]}]},{category:"CRM Tickets（v3）",color:"#7C98B6",tools:[{name:"ticket_search",desc:"検索",icon:"🔎",api:"POST /crm/v3/objects/tickets/search",params:[]},{name:"ticket_get",desc:"取得",icon:"🎫",api:"GET /crm/v3/objects/tickets/{id}",params:[{name:"ticketId",required:true,desc:"ID"}]},{name:"ticket_create",desc:"作成",icon:"➕",api:"POST /crm/v3/objects/tickets",params:[{name:"subject",required:true,desc:"件名"}]},{name:"ticket_update",desc:"更新",icon:"✏️",api:"PATCH /crm/v3/objects/tickets/{id}",params:[{name:"ticketId",required:true,desc:"ID"}]},{name:"ticket_delete",desc:"削除",icon:"🗑",api:"DELETE /crm/v3/objects/tickets/{id}",params:[{name:"ticketId",required:true,desc:"ID"}]}]},{category:"Engagements（Notes/Tasks/Emails/Meetings/Calls）",color:"#6B48FF",tools:[{name:"note_*",desc:"ノート CRUD",icon:"📝",api:"v3 notes",params:[]},{name:"task_*",desc:"タスク CRUD",icon:"✅",api:"v3 tasks",params:[]},{name:"email_*",desc:"メール CRUD",icon:"📧",api:"v3 emails",params:[]},{name:"meeting_*",desc:"ミーティング CRUD",icon:"📅",api:"v3 meetings",params:[]},{name:"call_*",desc:"通話 CRUD",icon:"📞",api:"v3 calls",params:[]}]},{category:"Associations（v4）",color:"#F5C26B",tools:[{name:"association_list",desc:"一覧",icon:"🔗",api:"GET v4 associations",params:[]},{name:"association_create",desc:"作成",icon:"➕",api:"PUT v4 associations",params:[]},{name:"association_delete",desc:"削除",icon:"🗑",api:"DELETE v4 associations",params:[]},{name:"association_labels",desc:"ラベル取得",icon:"🏷",api:"GET v4 labels",params:[]}]},{category:"Properties / Pipelines（v3）",color:"#33475B",tools:[{name:"properties_list",desc:"プロパティ一覧",icon:"📋",api:"GET /crm/v3/properties/{type}",params:[]},{name:"property_create",desc:"作成",icon:"➕",api:"POST /crm/v3/properties/{type}",params:[]},{name:"pipeline_list",desc:"パイプライン一覧",icon:"📋",api:"GET /crm/v3/pipelines/{type}",params:[]},{name:"pipeline_create",desc:"作成",icon:"➕",api:"POST /crm/v3/pipelines/{type}",params:[]}]},{category:"Products / Line Items（v3）",color:"#00A4BD",tools:[{name:"product_*",desc:"製品 CRUD + 検索",icon:"📦",api:"v3 products",params:[]},{name:"lineitem_*",desc:"品目 CRUD + 検索",icon:"📋",api:"v3 line_items",params:[]}]},{category:"Forms / Lists / Marketing Emails",color:"#FF7A59",tools:[{name:"form_*",desc:"フォーム CRUD (5)",icon:"📝",api:"Marketing Forms v3",params:[]},{name:"list_*",desc:"リスト CRUD + メンバー管理 (7)",icon:"📋",api:"Lists v3",params:[]},{name:"marketing_email_*",desc:"メール CRUD + 配信 (7)",icon:"📧",api:"Marketing Emails v3",params:[]}]},{category:"Campaigns / Single-Send / Custom Events",color:"#F5A623",tools:[{name:"campaign_*",desc:"キャンペーン CRUD (5)",icon:"📊",api:"Campaigns v3",params:[]},{name:"single_send_*",desc:"1通送信 + ステータス (2)",icon:"✉️",api:"Single-Send v4",params:[]},{name:"custom_event_*",desc:"カスタムイベント (4)",icon:"⚡",api:"Events v3",params:[]}]},{category:"その他（Owners/CMS/Quotes/Goals/Marketing Events）",color:"#7C98B6",tools:[{name:"owner_*",desc:"オーナー (2)",icon:"👥",api:"v3 owners",params:[]},{name:"cms_*",desc:"CMS Blog & Pages (4)",icon:"🌐",api:"CMS v3",params:[]},{name:"quote_*",desc:"見積もり 読取専用 (2)",icon:"💰",api:"v3 quotes",params:[]},{name:"hubspot_goals_*",desc:"目標 読取専用 (3)",icon:"🎯",api:"v3 goal_targets",params:[]},{name:"marketing_event_*",desc:"マーケティングイベント (5+)",icon:"📅",api:"v3 marketing-events",params:[]}]},{category:"Knowledge Store & Review",color:"#4A90D9",tools:[{name:"hubspot_knowledge_setup",desc:"初回セットアップ",icon:"🔧",api:"内部",params:[]},{name:"hubspot_knowledge_build",desc:"自動分析→下書き",icon:"🧠",api:"内部",params:[]},{name:"hubspot_knowledge_get",desc:"読込",icon:"📖",api:"内部",params:[]},{name:"hubspot_knowledge_update",desc:"更新",icon:"✏️",api:"内部",params:[]},{name:"hubspot_context_snapshot",desc:"全設定スナップショット",icon:"📸",api:"内部(複数API)",params:[]},{name:"hubspot_marketing_review",desc:"実績レビュー",icon:"📊",api:"内部",params:[]}]}];
+
+// Render scope table
+document.getElementById("scope-table").innerHTML=SCOPES.map(r=>`<tr style="border-bottom:1px solid var(--hs-border)"><td style="padding:8px 14px;font-family:'SF Mono','Fira Code',monospace;font-size:12px">${r.scope}</td><td style="padding:8px 14px;color:var(--hs-text-light)">${r.tools}</td><td style="padding:8px 14px;text-align:center">${r.req?'<span style="color:#E8603C;font-weight:700">✓</span>':'<span style="color:var(--hs-text-light)">任意</span>'}</td></tr>`).join("");
+
+// Render clients
+const chevronSvg='<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+document.getElementById("clients-container").innerHTML=CLIENTS.map((c,i)=>`<div class="hs-accordion" id="client-${i}"><button class="hs-accordion__trigger" onclick="toggleAccordion('client-${i}')"><span class="hs-accordion__icon">${c.icon}</span><span class="hs-accordion__content"><strong>${c.name}</strong><span class="hs-accordion__desc">${c.desc}</span></span><span class="hs-accordion__chevron">${chevronSvg}</span></button><div class="hs-accordion__body" style="display:none"><ol class="hs-steps">${c.steps.map(s=>`<li>${s}</li>`).join("")}</ol>${c.note?`<div class="hs-callout">${c.note}</div>`:""}<pre class="hs-code"><code>${escHtml(c.copy)}</code></pre><button class="hs-btn hs-btn--primary" style="gap:6px" onclick="copyText(CLIENTS[${i}].copy,this)">${c.label}</button></div></div>`).join("");
+
+function toggleAccordion(id){const el=document.getElementById(id);const body=el.querySelector(".hs-accordion__body");const chev=el.querySelector(".hs-accordion__chevron");const open=body.style.display!=="none";body.style.display=open?"none":"block";chev.classList.toggle("hs-accordion__chevron--open",!open)}
+
+// Render tools
+const iconMap={"Workflow":"⚡","Contacts":"👤","Companies":"🏢","Deals":"💰","Tickets":"🎫","Notes":"📝","Tasks":"✅","Associations":"🔗","Properties":"🏷","Pipelines":"🔧","Line Items":"📋","Products":"📦","CMS":"🌐","Owners":"👥","Forms":"📝","Lists":"📋","Emails":"📧","Marketing Emails":"📧","Campaigns":"📊","Custom Events":"⚡","Quotes":"💰","Goals":"🎯","Marketing Events":"📅","Knowledge":"🧠"};
+let totalTools=0;
+document.getElementById("tools-container").innerHTML=TOOL_CATEGORIES.map((cat,ci)=>{totalTools+=cat.tools.length;const catKey=Object.keys(iconMap).find(k=>cat.category.includes(k))||"";const icon=iconMap[catKey]||"🔧";return`<div class="hs-category-card" id="cat-${ci}"><button class="hs-category-card__header" onclick="toggleCategory(${ci})"><div class="hs-category-card__icon" style="background:${cat.color}14;color:${cat.color}">${icon}</div><div class="hs-category-card__info"><div class="hs-category-card__title">${cat.category}</div><div class="hs-category-card__count">${cat.tools.length} tools</div></div><span class="hs-category-card__chevron">${chevronSvg}</span></button><div class="hs-category-card__body">${cat.tools.map((t,ti)=>`<div class="hs-tool-card" id="tool-${ci}-${ti}" onclick="toggleTool(${ci},${ti},'${cat.color}')"><div style="display:flex;align-items:center;justify-content:space-between"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:18px">${t.icon}</span><div><div class="hs-tool-card__name">${t.name}</div><div class="hs-tool-card__desc">${t.desc}</div></div></div></div><div class="hs-tool-card__detail"><div style="font-family:'SF Mono','Fira Code',monospace;font-size:12px;color:${cat.color};margin-bottom:10px;font-weight:600">${t.api}</div>${t.params.length?`<div style="display:flex;flex-direction:column;gap:6px">${t.params.map(p=>`<div style="display:flex;align-items:baseline;gap:8px;font-size:12px"><code style="background:var(--hs-bg);padding:2px 6px;border-radius:4px;font-weight:600">${p.name}</code>${p.required?'<span style="color:var(--hs-orange);font-weight:700;font-size:10px">必須</span>':''}<span style="color:var(--hs-text-light)">${p.desc}</span></div>`).join("")}</div>`:""}</div></div>`).join("")}</div></div>`}).join("");
+document.getElementById("total-tools-count").textContent=`— ${totalTools} tools`;
+
+function toggleCategory(ci){const el=document.getElementById(`cat-${ci}`);el.classList.toggle("hs-category-card--open");el.querySelector(".hs-category-card__chevron").classList.toggle("hs-category-card__chevron--open")}
+function toggleTool(ci,ti,color){const el=document.getElementById(`tool-${ci}-${ti}`);const isOpen=el.classList.contains("open");el.classList.toggle("open",!isOpen);el.style.borderColor=!isOpen?color:"";el.style.boxShadow=!isOpen?`0 4px 16px ${color}18`:""}
+</script>
+</body>
+</html>

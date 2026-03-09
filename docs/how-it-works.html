@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>仕組み — HubSpot MA MCP Server</title>
+<meta name="description" content="3層アーキテクチャ、セキュリティ、初回オンボーディングの仕組みを解説。">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg"><symbol id="sprocket" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#FF7A59"/><g transform="translate(4,4)" stroke="#fff" stroke-width="1.8" stroke-linecap="round" fill="none"><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1.5" fill="#fff"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="19.1" y1="4.9" x2="17" y2="7"/><line x1="7" y1="17" x2="4.9" y2="19.1"/><circle cx="3" cy="3" r="1.8" fill="#fff" stroke="none"/><circle cx="21" cy="21" r="1.8" fill="#fff" stroke="none"/><circle cx="21" cy="3" r="1.8" fill="#fff" stroke="none"/></g></symbol></svg>
+
+<nav class="hs-nav"><div class="hs-nav__inner">
+  <a href="index.html" class="hs-nav__brand"><svg width="28" height="28"><use href="#sprocket"/></svg>HubSpot MA</a>
+  <ul class="hs-nav__links">
+    <li><a href="index.html">価値</a></li>
+    <li><a href="how-it-works.html" class="active">仕組み</a></li>
+    <li><a href="getting-started.html">始め方</a></li>
+    <li><a href="https://github.com/DaisukeHori/hubspot-ma-mcp/releases/download/v1.0.0/hubspot-ma-operator.zip">Skill DL</a></li>
+    <li><a href="https://github.com/DaisukeHori/hubspot-ma-mcp" target="_blank">GitHub</a></li>
+  </ul>
+  <span class="hs-badge"><span class="hs-badge__dot"></span> Operational</span>
+</div></nav>
+
+<div class="hs-page-header">
+  <h1>仕組み</h1>
+  <p>3層アーキテクチャ、セキュリティ設計、初回オンボーディングの流れ。</p>
+</div>
+
+<div class="hs-divider"></div>
+
+<!-- 3層アーキテクチャ -->
+<section class="hs-section">
+  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> ARCHITECTURE</div>
+  <h2 class="hs-section__title">3層アーキテクチャ</h2>
+  <p class="hs-section__desc">Skill（固定・全企業共通）+ Knowledge Store（可変・企業固有）+ MCPツール（API操作）の3層で構成。</p>
+  <div style="display:grid;gap:16px;max-width:640px;margin:0 auto">
+    <div class="hs-auth-card" style="border-left:3px solid var(--hs-orange)"><h4>🎯 Claude Skill（判断規範）</h4><p>MA担当者としての行動規範。「Knowledge Storeを毎回読め」「記載がないことは推測するな」「施策後は必ず記録しろ」。<strong>全企業共通。書き換え不要。</strong></p></div>
+    <div class="hs-auth-card" style="border-left:3px solid #4A90D9"><h4>🧠 Knowledge Store（企業の記憶）</h4><p>設計判断・命名規則・手順書・禁止事項・過去施策等の12カテゴリ。<strong>HubSpot内のCRMノートに保存。追加インフラ不要。</strong>初回は自動分析+質問で構築、以降は施策実行のたびに自動成長。</p></div>
+    <div class="hs-auth-card" style="border-left:3px solid #10B981"><h4>🔧 128 MCPツール（操作能力）</h4><p>CRM・フォーム・リスト・メール・WF・キャンペーン・イベント等、HubSpot APIを完全カバー。Skillの指示とKnowledgeの知識に基づいて動く「手足」。</p></div>
+  </div>
+</section>
+
+<div class="hs-divider"></div>
+
+<!-- セキュリティ -->
+<section class="hs-section">
+  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> SECURITY</div>
+  <h2 class="hs-section__title">🔒 セキュリティ</h2>
+  <p class="hs-section__desc">公開エンドポイントにHubSpotトークンを送る安全性について</p>
+  <div style="display:grid;gap:12px;max-width:640px;margin:0 auto">
+    <div class="hs-auth-card"><h4>✅ HTTPS（TLS暗号化）で保護</h4><p>全通信はHTTPS上で暗号化されます。トークンが平文で流れることはありません。</p></div>
+    <div class="hs-auth-card"><h4>✅ ステートレス — 保存もログもしない</h4><p>トークンはリクエスト処理中にのみ使用され、終了と同時に破棄されます。データベースもログ出力もありません。</p></div>
+    <div class="hs-auth-card"><h4>✅ ソースコード全公開</h4><p>処理の全てを <a href="https://github.com/DaisukeHori/hubspot-ma-mcp" target="_blank" style="color:var(--hs-orange)">GitHub</a> で確認できます。</p></div>
+    <div class="hs-auth-card"><h4>🏢 不安な場合は自分でデプロイ</h4><p><a href="getting-started.html" style="color:var(--hs-orange)">Vercel/Cloudflareにデプロイ</a>して <code>api_key</code> モードで運用すれば、トークンをサーバー環境変数に固定。外部に一切送信しません。</p></div>
+  </div>
+</section>
+
+<div class="hs-divider"></div>
+
+<!-- 初回オンボーディング -->
+<section class="hs-section">
+  <div class="hs-section__label"><svg width="14" height="14"><use href="#sprocket"/></svg> FIRST SESSION</div>
+  <h2 class="hs-section__title">初回オンボーディング</h2>
+  <p class="hs-section__desc">セットアップ完了後、最初の会話でAIが自動的にあなたのHubSpotを学習します。</p>
+  <div style="max-width:640px;margin:0 auto">
+    <div style="display:grid;gap:2px">
+      <div class="hs-auth-card" style="border-left:3px solid var(--hs-orange);border-radius:8px 8px 0 0">
+        <h4 style="display:flex;align-items:center;gap:8px"><span style="background:var(--hs-orange);color:white;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">1</span>AIが自動分析を開始</h4>
+        <p style="margin-left:32px">最初の指示で、AIがKnowledge Storeが空であることを検知。<code>hubspot_knowledge_build</code> を自動実行し、あなたのHubSpotの全設定を一括スキャンします。</p>
+      </div>
+      <div class="hs-auth-card" style="border-left:3px solid #4A90D9;border-radius:0">
+        <h4 style="display:flex;align-items:center;gap:8px"><span style="background:#4A90D9;color:white;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">2</span>12カテゴリの下書きを自動生成</h4>
+        <p style="margin-left:32px">スキャン結果から下書きを自動生成。さらにAIが<strong>自己検証ループ</strong>を実行し、自力で答えを出せるものは全て解決します。</p>
+      </div>
+      <div class="hs-auth-card" style="border-left:3px solid #8B5CF6;border-radius:0">
+        <h4 style="display:flex;align-items:center;gap:8px"><span style="background:#8B5CF6;color:white;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">3</span>AIからあなたへ質問</h4>
+        <p style="margin-left:32px"><strong>本当に自分では判断できないことだけ</strong>が仮説付きYes/Noで質問されます。例：</p>
+        <ul style="margin-left:32px;font-size:13px;color:var(--hs-text-light);line-height:1.8">
+          <li>「パイプラインが1本のみ。統合運用している認識で合っていますか？」</li>
+          <li>「過去メールの件名が【レヴォル】で始まるルール。踏襲してよろしいですか？」</li>
+        </ul>
+      </div>
+      <div class="hs-auth-card" style="border-left:3px solid #10B981;border-radius:0">
+        <h4 style="display:flex;align-items:center;gap:8px"><span style="background:#10B981;color:white;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">4</span>あなたが回答 → Knowledge完成</h4>
+        <p style="margin-left:32px">回答をもとにKnowledge Storeを補完。口頭で伝えるだけでAIが整形して保存します。</p>
+      </div>
+      <div class="hs-auth-card" style="border-left:3px solid var(--hs-orange);border-radius:0 0 8px 8px">
+        <h4 style="display:flex;align-items:center;gap:8px"><span style="background:var(--hs-orange);color:white;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">5</span>MA担当者として稼働開始</h4>
+        <p style="margin-left:32px">以降はAIが毎回Knowledge Storeを読み込み、あなたの会社のやり方に従って施策を提案・実行。<strong>使うほど賢くなります</strong>。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hs-divider"></div>
+
+<section class="hs-section" style="text-align:center">
+  <div class="hs-cta-banner">
+    <h3>使い始める準備はできましたか？</h3>
+    <p>3つのデプロイ方法から選んで、すぐに始められます。</p>
+    <a href="getting-started.html" class="hs-btn hs-btn--primary" style="font-size:15px;padding:12px 28px">🚀 始め方へ</a>
+  </div>
+</section>
+
+<footer class="hs-footer"><a href="https://github.com/DaisukeHori/hubspot-ma-mcp" target="_blank">GitHub</a> · <a href="https://revol.co.jp" target="_blank">Revol Co., Ltd.</a> · MIT License</footer>
+</body>
+</html>
