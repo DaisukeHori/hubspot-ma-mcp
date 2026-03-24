@@ -4,7 +4,7 @@ import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
 
 const BASE_URL = "https://api.hubapi.com";
-const KNOWLEDGE_EMAIL = "mcp-knowledge@system.internal";
+const KNOWLEDGE_EMAIL = "mcp-knowledge-store@hubspot-ma.internal.revol.co.jp";
 const CATEGORIES = ["design_decisions", "naming_conventions", "property_annotations", "workflow_annotations", "playbooks", "guardrails", "history", "contacts_segments", "brand_voice", "integrations", "goals", "calendar"];
 
 async function fetchJson<T>(url: string, options: RequestInit): Promise<T> {
@@ -27,7 +27,7 @@ export function registerHubspotKnowledgeSetup(server: McpServer) {
     `HubSpot Knowledge Store の初回セットアップを行う。AIがMA担当者として機能するための「暗黙知」保存基盤を構築する。
 
 実行内容:
-1. 専用コンタクト（mcp-knowledge@system.internal）を作成（既存なら再利用）
+1. 専用コンタクト（mcp-knowledge-store@hubspot-ma.internal.revol.co.jp）を作成（既存なら再利用）
 2. 7カテゴリの空ナレッジノートを作成
 
 カテゴリ（12種）:
