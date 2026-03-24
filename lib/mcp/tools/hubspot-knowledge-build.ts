@@ -4,7 +4,7 @@ import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
 
 const BASE_URL = "https://api.hubapi.com";
-const KNOWLEDGE_EMAIL = "mcp-knowledge@system.internal";
+const KNOWLEDGE_EMAIL = "mcp-knowledge-store@hubspot-ma.internal.revol.co.jp";
 
 async function fetchJson<T>(url: string, options: RequestInit): Promise<T> {
   const response = await fetch(url, options);
