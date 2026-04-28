@@ -1,7 +1,21 @@
+/**
+ * form_update ツール
+ * HubSpot フォームの定義を全体置換で更新する（PUT /marketing/v3/forms/{formId}）。
+ *
+ * Zod スキーマは form-create と完全に同じ共通スキーマ（_form-schemas.ts）を参照する。
+ * 2026-04-28 に form-create と同等に完全書き直し。
+ */
+
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import {
+  FieldGroupSchema,
+  ConfigurationSchema,
+  DisplayOptionsSchema,
+  LegalConsentOptionsSchema,
+} from "./_form-schemas";
 
 const BASE_URL = "https://api.hubapi.com";
 
@@ -9,7 +23,12 @@ async function fetchJson<T>(url: string, options: RequestInit): Promise<T> {
   const response = await fetch(url, options);
   if (!response.ok) {
     let message = response.statusText;
-    try { const body = await response.json(); message = body.message || JSON.stringify(body); } catch { /* ignore */ }
+    try {
+      const body = await response.json();
+      message = body.message || JSON.stringify(body);
+    } catch {
+      /* ignore */
+    }
     throw new HubSpotError(response.status, message);
   }
   return response.json() as Promise<T>;
@@ -28,32 +47,44 @@ export function registerFormUpdate(server: McpServer) {
     `HubSpot フォームの定義を全体置換で更新する（PUT）。フィールド構成・設定・表示オプション等を変更可能。
 
 注意: このAPIはPUT（全体置換）のため、省略したフィールドグループは削除される。更新前にform_getで現在の定義を取得し、変更箇所のみ修正して全体を送信すること。
+
+スキーマは form_create と完全に同じ。validation/options/notifyRecipients/embedType/postSubmitAction.type="redirect_url" 等を全てサポート。
+
 返却: 更新後のフォーム完全定義。`,
     {
-      formId: z.string().describe("フォームID（UUID形式）。form_listの返却値のidフィールドから取得"),
+      formId: z
+        .string()
+        .describe(
+          "フォームID（UUID形式）。form_listの返却値のidフィールドから取得"
+        ),
       name: z.string().describe("フォーム名"),
-      formType: z.enum(["hubspot", "captured", "flow", "blog_comment"]).describe("フォームタイプ"),
-      fieldGroups: z.array(z.object({
-        groupType: z.string().optional().describe("グループタイプ"),
-        richTextType: z.string().optional().describe("リッチテキストタイプ"),
-        richText: z.string().optional().describe("リッチテキスト（HTML）"),
-        fields: z.array(z.object({
-          objectTypeId: z.string().describe("オブジェクトタイプID（0-1=コンタクト等）"),
-          name: z.string().describe("プロパティ内部名"),
-          label: z.string().describe("表示ラベル"),
-          fieldType: z.string().describe("入力タイプ"),
-          required: z.boolean().describe("必須かどうか"),
-          hidden: z.boolean().optional().describe("非表示かどうか"),
-          placeholder: z.string().optional().describe("プレースホルダー"),
-          description: z.string().optional().describe("ヘルプテキスト"),
-          defaultValue: z.string().optional().describe("デフォルト値"),
-        })).describe("フィールド定義の配列"),
-      })).describe("フィールドグループの配列（PUT=全体置換。既存フィールドも全て含めること）"),
-      configuration: z.record(z.unknown()).optional().describe("フォーム設定（language, postSubmitAction, lifecycleStages等）"),
-      displayOptions: z.record(z.unknown()).optional().describe("表示オプション（theme, submitButtonText, cssClass, style等）。form_getで取得した値を参照"),
-      legalConsentOptions: z.record(z.unknown()).optional().describe("法的同意オプション（GDPR対応。{type: 'none'|'legitimate_interest'|'consent'}）"),
+      formType: z
+        .enum(["hubspot", "captured", "flow", "blog_comment"])
+        .describe("フォームタイプ"),
+      fieldGroups: z
+        .array(FieldGroupSchema)
+        .describe(
+          "フィールドグループの配列（PUT=全体置換。既存フィールドも全て含めること）"
+        ),
+      configuration: ConfigurationSchema.optional().describe(
+        "フォームの設定（言語、送信後アクション、ライフサイクルステージ、通知先等）"
+      ),
+      displayOptions: DisplayOptionsSchema.optional().describe(
+        "フォームの表示オプション（テーマ・ボタンテキスト・CSSスタイル設定）。form_getで取得した値を参照"
+      ),
+      legalConsentOptions: LegalConsentOptionsSchema.optional().describe(
+        "法的同意オプション（GDPR対応。type=none で同意不要）"
+      ),
     },
-    async ({ formId, name, formType, fieldGroups, configuration, displayOptions, legalConsentOptions }) => {
+    async ({
+      formId,
+      name,
+      formType,
+      fieldGroups,
+      configuration,
+      displayOptions,
+      legalConsentOptions,
+    }) => {
       try {
         const body: Record<string, unknown> = { name, formType, fieldGroups };
         if (configuration) body.configuration = configuration;
@@ -70,13 +101,19 @@ export function registerFormUpdate(server: McpServer) {
         );
 
         return {
-          content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
+          content: [
+            { type: "text" as const, text: JSON.stringify(result, null, 2) },
+          ],
         };
       } catch (error) {
-        const message = error instanceof HubSpotError
-          ? `HubSpot API エラー (${error.status}): ${error.message}`
-          : String(error);
-        return { content: [{ type: "text" as const, text: message }], isError: true };
+        const message =
+          error instanceof HubSpotError
+            ? `HubSpot API エラー (${error.status}): ${error.message}`
+            : String(error);
+        return {
+          content: [{ type: "text" as const, text: message }],
+          isError: true,
+        };
       }
     }
   );
