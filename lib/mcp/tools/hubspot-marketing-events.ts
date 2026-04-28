@@ -193,7 +193,12 @@ joinedAt/leftAtで参加・退出時刻も記録可能。
 スコープ: crm.objects.marketing_events.write`,
     {
       objectId: z.string().describe("マーケティングイベントのobjectId"),
-      subscriberState: z.enum(["REGISTERED", "ATTENDED", "CANCELLED"]).describe("参加状態"),
+      subscriberState: z.enum(["REGISTERED", "ATTENDED", "CANCELLED"]).describe(
+        "参加状態（3値）: " +
+          "REGISTERED=登録済み（イベントに申込み済みだがまだ参加していない）, " +
+          "ATTENDED=参加済み（実際にイベントに参加した）, " +
+          "CANCELLED=キャンセル（登録後にキャンセルされた）"
+      ),
       contactIds: z.array(z.number()).optional().describe("コンタクトIDの配列（vid）"),
       emails: z.array(z.string()).optional().describe("メールアドレスの配列（contactIdsの代わり）"),
       joinedAt: z.string().optional().describe("参加日時（ISO8601）— ATTENDED時"),

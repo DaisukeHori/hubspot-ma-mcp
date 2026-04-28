@@ -86,8 +86,10 @@ filterGroups/sorts/propertiesはCRM Search API標準形式。`,
       })).optional().describe("検索フィルタ"),
       query: z.string().optional().describe("キーワード検索"),
       sorts: z.array(z.object({
-        propertyName: z.string(),
-        direction: z.enum(["ASCENDING", "DESCENDING"]),
+        propertyName: z.string().describe("ソート対象プロパティ名"),
+        direction: z.enum(["ASCENDING", "DESCENDING"]).describe(
+          "ソート方向: ASCENDING=昇順（小→大、古→新）, DESCENDING=降順（大→小、新→古）"
+        ),
       })).optional().describe("ソート（例: [{propertyName:'hs_start_datetime', direction:'DESCENDING'}]）"),
       limit: z.number().optional().describe("取得件数（デフォルト10）"),
       after: z.string().optional().describe("ページネーションカーソル"),

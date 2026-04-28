@@ -28,7 +28,12 @@ export function registerListSearch(server: McpServer) {
 additionalPropertiesにhs_list_size（メンバー数）等が含まれる。`,
     {
       query: z.string().optional().describe("リスト名のキーワード検索（部分一致）"),
-      processingTypes: z.array(z.enum(["MANUAL", "DYNAMIC", "SNAPSHOT"])).optional().describe("処理タイプでフィルタ（複数指定可）"),
+      processingTypes: z.array(z.enum(["MANUAL", "DYNAMIC", "SNAPSHOT"])).optional().describe(
+        "処理タイプでフィルタ（複数指定可、3値）: " +
+          "MANUAL=手動メンバー追加（list_members_addで追加可能） / " +
+          "DYNAMIC=動的フィルタ（条件に合致するレコードを自動メンバー化、メンバーの手動追加不可） / " +
+          "SNAPSHOT=作成時点のメンバーで固定（list_members_addで追加可能）"
+      ),
       objectTypeId: z.string().optional().describe("オブジェクトタイプでフィルタ。0-1=コンタクト, 0-2=会社, 0-3=取引"),
       offset: z.number().optional().describe("ページネーション用オフセット"),
     },

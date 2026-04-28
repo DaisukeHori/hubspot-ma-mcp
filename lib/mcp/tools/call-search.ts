@@ -22,7 +22,7 @@ export function registerCallSearch(server: McpServer) {
     after: z.string().optional().describe("ページネーション用カーソル（前回レスポンスのpaging.next.afterの値を指定）"),
     sorts: z.array(z.object({
       propertyName: z.string().describe("ソート対象プロパティ名"),
-      direction: z.enum(["ASCENDING", "DESCENDING"]).describe("ソート方向"),
+      direction: z.enum(["ASCENDING", "DESCENDING"]).describe("ソート方向: ASCENDING=昇順（小→大、古→新）, DESCENDING=降順（大→小、新→古）"),
     })).optional().describe("ソート条件（1つのみ指定可能）"),
   },
   async ({ query, filterGroups, properties, limit, after, sorts }) => {

@@ -43,7 +43,22 @@ export function registerHubspotKnowledgeGet(server: McpServer) {
 返却: カテゴリ名をキー、内容を値としたオブジェクト。`,
     {
       category: z.enum(["design_decisions", "naming_conventions", "property_annotations", "workflow_annotations", "playbooks", "guardrails", "history", "contacts_segments", "brand_voice", "integrations", "goals", "calendar"]).optional()
-        .describe("取得するカテゴリ。省略時は全カテゴリを一括取得"),
+        .describe(
+          "取得するカテゴリ（12値）: " +
+            "design_decisions=設計思想・なぜこの構成か / " +
+            "naming_conventions=命名規則・接頭辞ルール / " +
+            "property_annotations=プロパティ補足説明 / " +
+            "workflow_annotations=ワークフロー補足説明 / " +
+            "playbooks=施策パターン・手順 / " +
+            "guardrails=禁止事項・触ってはいけない領域 / " +
+            "history=過去の意思決定履歴 / " +
+            "contacts_segments=ターゲットセグメント定義 / " +
+            "brand_voice=コピーガイド・トーン&マナー / " +
+            "integrations=連携システム情報 / " +
+            "goals=KPI目標 / " +
+            "calendar=施策カレンダー。" +
+            "省略時は全カテゴリを一括取得"
+        ),
     },
     async ({ category }) => {
       try {

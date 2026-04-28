@@ -10,7 +10,10 @@ export function registerTaskCreate(server: McpServer) {
     {
       subject: z.string().describe("タスクの件名（例: '顧客フォローアップ電話'）"),
       body: z.string().optional().describe("タスクの詳細（HTML可）"),
-      status: z.enum(["NOT_STARTED", "IN_PROGRESS", "WAITING", "COMPLETED"]).optional().describe("ステータス（デフォルト NOT_STARTED）"),
+      status: z.enum(["NOT_STARTED", "IN_PROGRESS", "WAITING", "COMPLETED"]).optional().describe(
+        "ステータス（4値、デフォルト NOT_STARTED）: " +
+          "NOT_STARTED=未開始, IN_PROGRESS=進行中, WAITING=待機中（他者対応待ち等）, COMPLETED=完了"
+      ),
       priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional().describe("優先度（NONE / LOW / MEDIUM / HIGH）"),
       taskType: z.enum(["TODO", "CALL", "EMAIL"]).optional().describe("タスクタイプ: TODO（やること）, CALL（電話）, EMAIL（メール）。デフォルト: TODO"),
       timestamp: z.string().optional().describe("期日（ISO8601）"),
