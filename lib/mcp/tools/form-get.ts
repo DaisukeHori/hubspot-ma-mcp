@@ -44,8 +44,15 @@ export function registerFormGet(server: McpServer) {
           { method: "GET", headers: getHeaders() }
         );
 
+        // インデント整形を削除してレスポンスサイズを20-40%削減。
+        // Claude.ai (web/desktop) の MCP 接続層は ~50KB 超のペイロードで intermittently
+        // "Tool result could not be submitted" エラーを起こす既知のバグがある
+        // (anthropics/claude-ai-mcp Issue #211)。
+        // form_get は fieldGroups + 選択肢 + style 設定で容易に 50KB を超えるため、
+        // インデント削除でサイズを抑える。LLM側はJSON構造として解釈するため、
+        // インデント有無による可読性への影響は無視できる。
         return {
-          content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
+          content: [{ type: "text" as const, text: JSON.stringify(result) }],
         };
       } catch (error) {
         const message = error instanceof HubSpotError
