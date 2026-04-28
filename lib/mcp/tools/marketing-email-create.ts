@@ -37,12 +37,15 @@ export function registerMarketingEmailCreate(server: McpServer) {
       from: z.object({
         fromName: z.string().optional().describe("送信者名（例: 'レヴォル株式会社'）"),
         fromAddress: z.string().optional().describe("送信元メールアドレス"),
-      }).optional().describe("送信者情報"),
+        replyTo: z.string().optional().describe("返信先メールアドレス（省略時はfromAddressと同じ）"),
+        customReplyTo: z.string().optional().describe("カスタム返信先メールアドレス"),
+      }).passthrough().optional().describe("送信者情報"),
       to: z.object({
         contactIdsInclude: z.array(z.number()).optional().describe("送信対象コンタクトIDの配列"),
+        contactIdsExclude: z.array(z.number()).optional().describe("除外コンタクトIDの配列"),
         contactListIdsInclude: z.array(z.number()).optional().describe("送信対象リスト（ILS ID）の配列"),
         contactListIdsExclude: z.array(z.number()).optional().describe("除外リスト（ILS ID）の配列"),
-      }).optional().describe("送信対象設定（コンタクトID / リストID指定）"),
+      }).passthrough().optional().describe("送信対象設定（コンタクトID / リストID指定）"),
       additionalProperties: z.record(z.unknown()).optional().describe("追加プロパティ（JSON）。businessUnitId等"),
     },
     async ({ name, subject, templatePath, content, from, to, additionalProperties }) => {
