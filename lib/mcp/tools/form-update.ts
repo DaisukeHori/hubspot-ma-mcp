@@ -86,7 +86,15 @@ export function registerFormUpdate(server: McpServer) {
       legalConsentOptions,
     }) => {
       try {
-        const body: Record<string, unknown> = { name, formType, fieldGroups };
+        // form-create と同じく、HubSpot Forms v3 API は updatedAt を要求する。
+        // PUT (全体置換) のため、現在時刻で更新する。
+        const now = new Date().toISOString();
+        const body: Record<string, unknown> = {
+          name,
+          formType,
+          fieldGroups,
+          updatedAt: now,
+        };
         if (configuration) body.configuration = configuration;
         if (displayOptions) body.displayOptions = displayOptions;
         if (legalConsentOptions) body.legalConsentOptions = legalConsentOptions;

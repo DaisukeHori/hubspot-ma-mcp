@@ -101,12 +101,21 @@ fieldType="radio" / "multiple_checkboxes" / "dropdown" → options: [{ label, va
       legalConsentOptions,
     }) => {
       try {
+        // HubSpot Forms v3 API は createdAt / updatedAt をリクエスト時に必須として要求する
+        // （公式ガイド本文には記載が無いが、API リクエストスキーマでは必須扱い。
+        // 公式 curl 例にも含まれている: https://developers.hubspot.com/docs/api-reference/marketing-forms-v3/forms/post-marketing-v3-forms-）
+        // ユーザーが毎回指定する必要は無いため、サーバ側で現在時刻を自動補完する。
+        const now = new Date().toISOString();
         const body: Record<string, unknown> = {
           name,
           formType: formType ?? "hubspot",
           fieldGroups,
+          createdAt: now,
+          updatedAt: now,
+          archived: false,
         };
-        if (configuration) body.configuration = configuration;
+        // configuration も実物では必須扱いのため、未指定時は空オブジェクトを補完
+        body.configuration = configuration ?? {};
         if (displayOptions) body.displayOptions = displayOptions;
         if (legalConsentOptions) body.legalConsentOptions = legalConsentOptions;
 
