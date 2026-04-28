@@ -21,7 +21,7 @@ export function registerTaskCreate(server: McpServer) {
             to: z.object({ id: z.string().describe("関連先レコードID") }).describe("関連先レコード"),
             types: z.array(
               z.object({
-                associationCategory: z.string().describe("HUBSPOT_DEFINED（標準ラベル）/ USER_DEFINED（カスタムラベル）"),
+                associationCategory: z.enum(["HUBSPOT_DEFINED", "USER_DEFINED"]).describe("HUBSPOT_DEFINED=標準ラベル / USER_DEFINED=カスタムラベル（公式仕様準拠）"),
                 associationTypeId: z.number().describe("関連タイプID（例: 204=task→contact, 192=task→company, 216=task→deal）。association_labelsツールのlistで取得可能"),
               })
             ).describe("関連タイプ定義の配列。各要素にassociationCategory + associationTypeIdを指定"),

@@ -11,7 +11,7 @@ export function registerEmailCreate(server: McpServer) {
     associations: z.array(z.object({
       to: z.object({ id: z.string().describe("関連先レコードID") }).describe("関連先レコード"),
       types: z.array(z.object({
-        associationCategory: z.string().describe("HUBSPOT_DEFINED（標準ラベル）/ USER_DEFINED（カスタムラベル）"),
+        associationCategory: z.enum(["HUBSPOT_DEFINED", "USER_DEFINED"]).describe("HUBSPOT_DEFINED=標準ラベル / USER_DEFINED=カスタムラベル（公式仕様準拠）"),
         associationTypeId: z.number().describe("関連タイプID。association_labelsツールのlistで取得可能"),
       })).describe("関連タイプ定義の配列"),
     })).optional().describe("関連付け先レコードの配列"),

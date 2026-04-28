@@ -23,7 +23,7 @@ dealstageはpipeline_listツールで取得したステージIDを指定。addit
             to: z.object({ id: z.string().describe("関連先レコードID（数値文字列）") }).describe("関連先レコード"),
             types: z.array(
               z.object({
-                associationCategory: z.string().describe("HUBSPOT_DEFINED（標準ラベル）/ USER_DEFINED（カスタムラベル）"),
+                associationCategory: z.enum(["HUBSPOT_DEFINED", "USER_DEFINED"]).describe("HUBSPOT_DEFINED=標準ラベル / USER_DEFINED=カスタムラベル（公式仕様準拠）"),
                 associationTypeId: z.number().describe("関連タイプID。association_labelsツールのlistで取得可能。主要デフォルト値: contact→company=279, company→contact=280, deal→contact=3, deal→company=5, ticket→contact=16, ticket→company=26"),
               })
             ).describe("関連タイプ定義の配列"),
