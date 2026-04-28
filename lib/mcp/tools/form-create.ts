@@ -11,6 +11,14 @@
  *   - phone field の validation: { minAllowedDigits, maxAllowedDigits }
  *   - radio/checkbox/dropdown の options[]: { label, value, description, displayOrder }
  *   - configuration に notifyRecipients, recaptchaEnabled, embedType="V3" 等が必要
+ *
+ * 2026-04-28 追加修正（公式OpenAPI spec準拠）:
+ *   - displayOptions.theme を z.enum(["canvas","default_style","legacy","linear","round","sharp"]) に厳密化
+ *     （旧説明文に存在しない "none" が含まれていたのを削除）
+ *   - configuration.embedType を z.enum(["V3","V4"]) に厳密化
+ *
+ * 公式仕様の参照先:
+ *   https://raw.githubusercontent.com/HubSpot/HubSpot-public-api-spec-collection/main/PublicApiSpecs/Marketing/Forms/Rollouts/144909/v3/forms.json
  */
 
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";

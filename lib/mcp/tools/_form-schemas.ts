@@ -226,10 +226,10 @@ export const ConfigurationSchema = z
         "既知の値をリセットするリンクを表示するか（デフォルト false）"
       ),
     embedType: z
-      .string()
+      .enum(["V3", "V4"])
       .optional()
       .describe(
-        "埋め込みタイプ。新規作成は通常 'V3'。HubSpot側で自動設定される場合もある"
+        "埋め込みタイプ。V3=従来のフォームビルダー、V4=新フォームビルダー。新規作成は通常 'V3'。HubSpot側で自動設定される場合もある（公式OpenAPI spec: HubSpotFormConfiguration.embedType enum=['V3','V4']）"
       ),
   })
   .passthrough();
@@ -249,10 +249,10 @@ export const DisplayOptionsSchema = z
       .optional()
       .describe("生HTMLでレンダリングするか（デフォルト false）"),
     theme: z
-      .string()
+      .enum(["canvas", "default_style", "legacy", "linear", "round", "sharp"])
       .optional()
       .describe(
-        "テーマ。'default_style' / 'canvas' / 'round' / 'none' 等。HubSpot UIで設定可能なテーマ名"
+        "テーマ。canvas / default_style / legacy / linear / round / sharp の6種から選択（公式OpenAPI spec: FormDisplayOptions.theme enum）。'none' は仕様に存在しないので使えない。"
       ),
     submitButtonText: z
       .string()
