@@ -266,13 +266,40 @@ export const DisplayOptionsSchema = z
   })
   .passthrough();
 
-/** legalConsentOptions（GDPR） */
+/** legalConsentOptions（GDPR）
+
+公式仕様（HubSpot/HubSpot-public-api-spec-collection）:
+  type は LegalConsentOptionsNone / LegalConsentOptionsLegitimateInterest /
+  LegalConsentOptionsExplicitConsentToProcess / LegalConsentOptionsImplicitConsentToProcess
+  の oneOf。各サブタイプの type プロパティの enum:
+    - "none"
+    - "legitimate_interest"
+    - "explicit_consent_to_process"
+    - "implicit_consent_to_process"
+
+旧スキーマでは "consent" という値が含まれていたが、これは公式仕様に存在しないので削除。
+explicit / implicit に分かれている。
+
+各 type ごとに必須フィールドが異なる:
+  - none:                          type のみ
+  - legitimate_interest:           type, lawfulBasis (enum: client/lead/other), privacyText, subscriptionTypeIds
+  - explicit_consent_to_process:   type, communicationsCheckboxes, privacyText
+  - implicit_consent_to_process:   type, communicationsCheckboxes, privacyText
+（passthrough のため明示プロパティは type のみ。残りは素通し）
+*/
 export const LegalConsentOptionsSchema = z
   .object({
     type: z
-      .enum(["none", "legitimate_interest", "consent"])
+      .enum([
+        "none",
+        "legitimate_interest",
+        "explicit_consent_to_process",
+        "implicit_consent_to_process",
+      ])
       .describe(
-        "同意タイプ: none=なし, legitimate_interest=正当な利益, consent=明示的同意（GDPR）"
+        "同意タイプ: none=なし / legitimate_interest=正当な利益（GDPR Art.6(1)(f)） / " +
+          "explicit_consent_to_process=明示的同意 / implicit_consent_to_process=暗黙的同意。" +
+          "公式OpenAPI specのenum 4値。'consent' は仕様に存在しないので使えない。"
       ),
   })
   .passthrough();
