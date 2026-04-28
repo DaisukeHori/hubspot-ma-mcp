@@ -122,3 +122,40 @@ for t in data['result']['tools']:
 - `embedType.enum`: `["V3", "V4"]`
 
 説明文に存在しない `"none"` が記載されていたのを削除。
+
+### 2026-04-28: legalConsentOptions.type の enum 修正
+
+`_form-schemas.ts` の `LegalConsentOptions.type` enum 値が公式仕様と不一致だった。
+
+- 旧: `["none", "legitimate_interest", "consent"]`
+- 新: `["none", "legitimate_interest", "explicit_consent_to_process", "implicit_consent_to_process"]`
+
+公式仕様では `consent` という値は存在しない。`explicit_consent_to_process`（明示的同意）と `implicit_consent_to_process`（暗黙的同意）の2値に分かれている。これは `postSubmitAction.type=redirect` と全く同じパターンの誤り。
+
+### 2026-04-28: custom_event_define の required 不足
+
+`ExternalBehavioralEventTypeDefinitionEgg.required = ['includeDefaultProperties', 'label', 'propertyDefinitions']` の3項目が必須なのに、`includeDefaultProperties` と `propertyDefinitions` が optional になっていた。`propertyDefinitions[].type` も z.enum() ではなく z.string() で受けていたため、誤った型を指定するとエラー。`form_create configuration` 不足と完全に同じパターン。
+
+### 2026-04-28: marketing_email_create の構造書き直し
+
+`EmailCreateRequest` の公式構造と全く異なる属性が定義されていた:
+
+- 旧 `to.contactIdsInclude/Exclude` → 公式は `to.contactIds.include/exclude`（PublicEmailRecipients を使用）
+- 旧 `from.fromAddress` → 公式 `PublicEmailFromDetails` には存在しない
+- 旧 `templatePath`（トップレベル）→ 公式は `content.templatePath`
+
+宛先や送信者名が実は API 経由で全く設定できていなかった可能性がある。
+
+### 2026-04-28: associationCategory の enum 化（9ファイル）
+
+`call-create`, `company-create`, `contact-create`, `deal-create`, `email-create`, `meeting-create`, `note-create`, `task-create`, `ticket-create` の各ツールで `associationCategory: z.string()` だったのを `z.enum(["HUBSPOT_DEFINED", "USER_DEFINED"])` に厳密化。
+
+### 2026-04-28: property_create / property_update の enum 化
+
+PropertyCreate / PropertyUpdate の主要 enum が z.string() で曖昧定義だった:
+
+- `type`: 公式7値 `[bool, date, datetime, enumeration, number, phone_number, string]` → 旧コードは説明文に5値（bool, phone_number 不足）
+- `fieldType`: 公式12値 → 旧コードは説明文に7値（booleancheckbox, calculation_equation, file, html, phonenumber 不足）
+- `options[]` の `hidden` が公式 required にもかかわらず未定義、`displayOrder` が誤って required になっていた
+
+これらを全て公式 spec 準拠に修正、加えて `dataSensitivity`, `numberDisplayHint`, `hidden`, `formField`, `displayOrder`, `calculationFormula` 等も追加。
