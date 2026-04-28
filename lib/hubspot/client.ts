@@ -129,6 +129,15 @@ export async function getFlow(flowId: string): Promise<HubSpotFlow> {
 
 /**
  * 複数のワークフローをIDで一括取得する
+ *
+ * HubSpot Automation v4 API 仕様:
+ *   POST /automation/v4/flows/batch/read
+ *   body: { inputs: [{ flowId: string, type: "FLOW_ID" }, ...] }
+ *
+ * 参考: https://developers.hubspot.com/docs/api-reference/automation-automation-v4-v4/guide
+ *
+ * 注意: 当初 `{ id }` で送っていたが HubSpot API は `flowId` をキーとして要求し、
+ * かつ各要素に `type: "FLOW_ID"` が必須のため 400 エラーで失敗していた（2026-04-28修正）。
  */
 export async function batchReadFlows(
   flowIds: string[]
@@ -138,7 +147,9 @@ export async function batchReadFlows(
     {
       method: "POST",
       headers: getHeaders(),
-      body: JSON.stringify({ inputs: flowIds.map((id) => ({ id })) }),
+      body: JSON.stringify({
+        inputs: flowIds.map((id) => ({ flowId: id, type: "FLOW_ID" })),
+      }),
     }
   );
   return data.results;
