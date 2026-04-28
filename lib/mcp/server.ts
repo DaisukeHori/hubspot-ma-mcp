@@ -92,6 +92,7 @@ import { registerCmsBlogList } from "./tools/cms-blog-list";
 import { registerCmsBlogUpdate } from "./tools/cms-blog-update";
 import { registerCmsPageList } from "./tools/cms-page-list";
 import { registerCmsPageUpdate } from "./tools/cms-page-update";
+import { registerCmsPageReplaceFormWidget } from "./tools/cms-page-replace-form-widget";
 // ── Owners ──
 import { registerOwnerList } from "./tools/owner-list";
 import { registerOwnerGet } from "./tools/owner-get";
@@ -246,11 +247,12 @@ export function registerAllTools(server: McpServer) {
   registerAssociationDelete(server);
   registerAssociationLabels(server);
 
-  // CMS（4 tools）
+  // CMS（5 tools）
   registerCmsBlogList(server);
   registerCmsBlogUpdate(server);
   registerCmsPageList(server);
   registerCmsPageUpdate(server);
+  registerCmsPageReplaceFormWidget(server);
 
   // Owners（2 tools）
   registerOwnerList(server);

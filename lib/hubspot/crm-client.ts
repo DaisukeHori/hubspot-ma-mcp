@@ -421,6 +421,96 @@ export async function updateCmsPage(
   );
 }
 
+/**
+ * CMSページを取得する（公開ページ）。
+ * widgets / widgetContainers / layoutSections も含む完全な Page オブジェクトが返る。
+ *
+ * 公式仕様:
+ *   GET /cms/v3/pages/{landing-pages|site-pages}/{objectId}
+ */
+export async function getCmsPage(
+  pageType: "landing-pages" | "site-pages",
+  pageId: string
+): Promise<CmsPage> {
+  return fetchWithRetry<CmsPage>(
+    `${BASE_URL}/cms/v3/pages/${pageType}/${pageId}`,
+    { method: "GET", headers: getHeaders() }
+  );
+}
+
+/**
+ * CMSページの draft を取得する。
+ *
+ * draft が存在しない場合は published 版がそのまま draft として返る挙動。
+ *
+ * 公式仕様:
+ *   GET /cms/v3/pages/{landing-pages|site-pages}/{objectId}/draft
+ */
+export async function getCmsPageDraft(
+  pageType: "landing-pages" | "site-pages",
+  pageId: string
+): Promise<CmsPage> {
+  return fetchWithRetry<CmsPage>(
+    `${BASE_URL}/cms/v3/pages/${pageType}/${pageId}/draft`,
+    { method: "GET", headers: getHeaders() }
+  );
+}
+
+/**
+ * CMSページの draft を更新する。
+ *
+ * 公式ドキュメント抜粋:
+ *   "The properties provided in the supplied payload will override the existing
+ *    draft properties without any complex merging logic. Consequently, when
+ *    updating nested properties such as those within the widgets, widgetContainers,
+ *    or layoutSections of the page, you must include the full definition of the object."
+ *
+ * → 子要素（widgets/widgetContainers/layoutSections）を一部書き換える時は、
+ *   必ずページ全体を取得して、変更したい箇所のみ書き換え、構造全体を送信する必要がある。
+ *
+ * 公式仕様:
+ *   PATCH /cms/v3/pages/{landing-pages|site-pages}/{objectId}/draft
+ */
+export async function updateCmsPageDraft(
+  pageType: "landing-pages" | "site-pages",
+  pageId: string,
+  updates: Record<string, unknown>
+): Promise<CmsPage> {
+  return fetchWithRetry<CmsPage>(
+    `${BASE_URL}/cms/v3/pages/${pageType}/${pageId}/draft`,
+    {
+      method: "PATCH",
+      headers: getHeaders(),
+      body: JSON.stringify(updates),
+    }
+  );
+}
+
+/**
+ * CMSページの draft を本番（published）に反映する。
+ *
+ * 公式ドキュメント:
+ *   "Take any changes from the draft version of the Landing Page and apply them
+ *    to the live version."
+ *
+ * 公式仕様:
+ *   POST /cms/v3/pages/{landing-pages|site-pages}/{objectId}/draft/push-live
+ *   requestBody: なし（空オブジェクトを送る）
+ */
+export async function pushCmsPageDraftLive(
+  pageType: "landing-pages" | "site-pages",
+  pageId: string
+): Promise<unknown> {
+  return fetchWithRetry<unknown>(
+    `${BASE_URL}/cms/v3/pages/${pageType}/${pageId}/draft/push-live`,
+    {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify({}),
+    }
+  );
+}
+
 
 // ── Associations API（v4）──
 
