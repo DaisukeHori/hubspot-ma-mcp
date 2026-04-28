@@ -6,7 +6,14 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerPropertiesList(server: McpServer) {
   server.tool(
     "properties_list",
-    "HubSpot オブジェクトのプロパティ定義一覧を取得する。カスタムプロパティも含む。",
+    `HubSpot オブジェクトのプロパティ定義一覧を取得する。標準・カスタム両方のプロパティを含む。
+返却: 各プロパティの name（内部名、API送信時に使う）, label（UI表示名）, type（データ型）,
+fieldType（UIフィールド種別）, groupName（プロパティグループ）, description, options（enum型の選択肢）。
+用途:
+- contact_create / deal_update 等で渡す properties のキー名を確認
+- カスタムプロパティが既に存在するかチェック（重複作成回避）
+- enumeration型プロパティの有効な value 一覧を取得
+公式: GET /crm/v3/properties/{objectType}`,
     {
       objectType: z.enum(["contacts", "companies", "deals", "tickets"]).describe("オブジェクトタイプ: contacts, companies, deals, tickets のいずれか"),
     },

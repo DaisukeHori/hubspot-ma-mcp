@@ -60,7 +60,13 @@ export function registerFormUpdate(server: McpServer) {
       name: z.string().describe("フォーム名"),
       formType: z
         .enum(["hubspot", "captured", "flow", "blog_comment"])
-        .describe("フォームタイプ"),
+        .describe(
+          "フォームタイプ（4値）: " +
+            "hubspot=通常のマーケティングフォーム / " +
+            "captured=外部HTMLフォーム（HubSpot外で作成され追跡対象として登録されたもの） / " +
+            "flow=ポップアップフォーム / " +
+            "blog_comment=ブログコメントフォーム"
+        ),
       fieldGroups: z
         .array(FieldGroupSchema)
         .describe(

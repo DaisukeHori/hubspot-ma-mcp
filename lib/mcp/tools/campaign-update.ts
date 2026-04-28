@@ -22,9 +22,21 @@ function getHeaders(): Record<string, string> {
 export function registerCampaignUpdate(server: McpServer) {
   server.tool(
     "campaign_update",
-    `HubSpot キャンペーンを部分更新する（PATCH）。指定したプロパティのみ上書き。
+    `HubSpot マーケティングキャンペーンを部分更新する（PATCH=指定プロパティのみ上書き）。
+キャンペーンはメール・フォーム・リスト・ワークフロー・広告等を束ねる上位概念。
 
-スコープ: marketing.campaigns.write`,
+主要プロパティ:
+- hs_name（キャンペーン名）
+- hs_start_date, hs_end_date（開始日・終了日 YYYY-MM-DD 形式）
+- hs_notes（メモ・備考）
+- hs_color（色 HEX形式 '#RRGGBB'）
+- hs_owner（オーナーID = HubSpotユーザーID）
+- hs_audience（ターゲット記述テキスト）
+- hs_goal（目標記述テキスト）
+- hs_utm（UTMパラメータ オブジェクト: {utm_campaign, utm_source, utm_medium, utm_content}, 2025/7以降読み書き対応）
+キャンペーンへのアセット紐付けは campaign_asset_associate を別途使用。
+スコープ: marketing.campaigns.write
+公式: PATCH /marketing/v3/campaigns/{campaignId}`,
     {
       campaignId: z.string().describe("キャンペーンGUID（UUID形式）"),
       properties: z.record(z.unknown()).describe("更新するプロパティ（JSON）。hs_name, hs_start_date, hs_end_date, hs_notes, hs_utm等"),

@@ -14,8 +14,12 @@ export function registerWorkflowList(server: McpServer) {
     {
       title: "ワークフロー一覧取得",
       description:
-        "HubSpotアカウント内の全ワークフローを一覧取得する。" +
-        "名前、ID、有効/無効状態、対象オブジェクトタイプを表示する。",
+        "HubSpotアカウント内の全ワークフロー（Automation v4 flows）を一覧取得する。" +
+        "返却: 各ワークフローの id, name, isEnabled（有効/無効）, " +
+        "objectTypeId（対象オブジェクト 0-1=コンタクト, 0-2=会社, 0-3=取引, 0-5=チケット）, actions数。" +
+        "詳細を取得するには workflow_get または workflow_batch_read を使用。" +
+        "ID指定で更新: workflow_update。複製・編集の元として使う。" +
+        "公式: GET /automation/v4/flows",
       inputSchema: {},
     },
     async () => {

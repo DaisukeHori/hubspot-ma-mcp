@@ -15,9 +15,12 @@ export function registerWorkflowDelete(server: McpServer) {
     {
       title: "ワークフロー削除",
       description:
-        "ワークフローを削除する。この操作は復元不可。" +
-        "復元にはHubSpotサポートへの連絡が必要。" +
-        "confirm=true を必ず指定すること。",
+        "⚠️ ワークフローを完全削除する。この操作は取り消し不可で、復元にはHubSpotサポートへの連絡が必要。" +
+        "他のCRUDツール（contact_delete, deal_delete 等の'ゴミ箱に移動して30日保持'）と異なり、" +
+        "ワークフロー削除は即時かつ復元不能。" +
+        "confirm=true を必ず指定（false/省略時は拒否）。" +
+        "削除前に workflow_get で内容を必ず確認すること。" +
+        "公式: DELETE /automation/v4/flows/{flowId}",
       inputSchema: {
         flowId: z.string().describe("削除対象のワークフローID"),
         confirm: z

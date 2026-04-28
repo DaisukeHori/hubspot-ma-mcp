@@ -46,7 +46,15 @@ mode:
 施策実行後に「今回のパターンを記録して」と言われたら、historyにappendし、必要に応じてpatternsもreplaceで更新する。`,
     {
       category: z.enum(["design_decisions", "naming_conventions", "property_annotations", "workflow_annotations", "playbooks", "guardrails", "history", "contacts_segments", "brand_voice", "integrations", "goals", "calendar"])
-        .describe("更新するカテゴリ"),
+        .describe(
+          "更新するカテゴリ（12値）: " +
+            "design_decisions=設計思想 / naming_conventions=命名規則 / " +
+            "property_annotations=プロパティ補足 / workflow_annotations=ワークフロー補足 / " +
+            "playbooks=施策パターン / guardrails=禁止事項 / " +
+            "history=意思決定履歴 / contacts_segments=ターゲットセグメント / " +
+            "brand_voice=トーン&マナー / integrations=連携情報 / " +
+            "goals=KPI目標 / calendar=施策カレンダー"
+        ),
       content: z.string().describe("更新する内容（Markdown形式推奨）"),
       mode: z.enum(["replace", "append"]).describe("replace=丸ごと上書き, append=末尾に追記"),
     },

@@ -15,8 +15,11 @@ export function registerWorkflowBatchRead(server: McpServer) {
     {
       title: "ワークフロー一括取得",
       description:
-        "複数のワークフローをIDで一括取得する。" +
-        "個別に取得するより効率的。",
+        "複数のワークフローをIDで一括取得する（最大100件まで）。" +
+        "個別に workflow_get を呼ぶより効率的（往復削減）。" +
+        "返却: 各ワークフローの id, name, isEnabled, objectTypeId, actions数 を一覧表示。" +
+        "詳細（actions, enrollmentCriteria 等）は workflow_get で個別取得。" +
+        "公式: POST /automation/v4/flows/batch/read（リクエストボディは inputs[].flowId と type:'FLOW_ID' が必須）",
       inputSchema: {
         flowIds: z
           .array(z.string())

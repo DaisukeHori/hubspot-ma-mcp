@@ -155,7 +155,19 @@ sections省略で全セクション取得（コンテキスト消費大）。必
 hubspot_knowledge_getと組み合わせて使用: knowledgeが「なぜ」、snapshotが「今どうなっているか」。`,
     {
       sections: z.array(z.enum(["properties_custom", "workflows", "pipelines", "forms", "lists", "emails", "campaigns", "events", "owners"])).optional()
-        .describe("取得するセクション。省略時は全セクション"),
+        .describe(
+          "取得するセクション（9値）: " +
+            "properties_custom=カスタムプロパティ定義 / " +
+            "workflows=ワークフロー一覧 / " +
+            "pipelines=パイプライン定義 / " +
+            "forms=フォーム一覧 / " +
+            "lists=リスト一覧 / " +
+            "emails=マーケティングメール一覧 / " +
+            "campaigns=キャンペーン一覧 / " +
+            "events=カスタムイベント定義 / " +
+            "owners=オーナー（担当者）一覧。" +
+            "省略時は全セクション（コンテキスト消費大なので必要なセクションだけ指定推奨）"
+        ),
     },
     async ({ sections }) => {
       try {

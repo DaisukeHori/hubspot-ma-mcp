@@ -61,7 +61,19 @@ label、description、groupName、選択肢（options）等の変更が可能。
         ])
         .optional()
         .describe(
-          "フィールド種別（公式OpenAPI spec準拠の12値）。" +
+          "フィールド種別（公式OpenAPI spec準拠の12値）: " +
+            "booleancheckbox=単一チェックボックス（はい/いいえ）, " +
+            "calculation_equation=計算式（calculationFormulaと併用）, " +
+            "checkbox=複数選択チェックボックス, " +
+            "date=日付ピッカー, " +
+            "file=ファイルアップロード, " +
+            "html=リッチテキスト/HTML, " +
+            "number=数値入力, " +
+            "phonenumber=電話番号, " +
+            "radio=ラジオボタン（単一選択）, " +
+            "select=ドロップダウン（単一選択）, " +
+            "text=1行テキスト, " +
+            "textarea=複数行テキスト。" +
             "type自体は変更不可だが、互換性のあるfieldTypeなら変更可能（例: select↔radio）"
         ),
       hidden: z.boolean().optional().describe("UIで非表示にするか"),
@@ -84,7 +96,16 @@ label、description、groupName、選択肢（options）等の変更が可能。
           "unformatted",
         ])
         .optional()
-        .describe("数値表示ヒント（公式OpenAPI spec準拠の6値）"),
+        .describe(
+          "数値表示ヒント（公式OpenAPI spec準拠の6値）: " +
+            "currency=通貨表記（showCurrencySymbol/currencyPropertyName と併用）, " +
+            "duration=期間表記（時:分:秒）, " +
+            "formatted=区切り記号付き数値, " +
+            "percentage=パーセント表記, " +
+            "probability=確率表記, " +
+            "unformatted=書式なし整数。" +
+            "type=number のときのみ有効。"
+        ),
       showCurrencySymbol: z
         .boolean()
         .optional()

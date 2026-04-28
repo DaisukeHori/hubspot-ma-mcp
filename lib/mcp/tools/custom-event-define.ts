@@ -126,7 +126,12 @@ export function registerCustomEventDefine(server: McpServer) {
         .enum(["CONTACT", "COMPANY", "DEAL", "TICKET"])
         .optional()
         .describe(
-          "関連付けるオブジェクトタイプ。省略時は CONTACT 扱いになる場合あり"
+          "関連付けるオブジェクトタイプ（4値）: " +
+            "CONTACT=コンタクト（最も一般的、メールアドレスでマッチング）, " +
+            "COMPANY=会社, " +
+            "DEAL=取引, " +
+            "TICKET=チケット。" +
+            "省略時は CONTACT 扱いになる場合あり"
         ),
       description: z.string().optional().describe("イベントの説明"),
       customMatchingId: z

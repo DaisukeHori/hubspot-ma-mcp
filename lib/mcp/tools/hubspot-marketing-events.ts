@@ -159,8 +159,16 @@ objectId指定のエンドポイントはどのアプリからでもアクセス
   // --- marketing_event_delete ---
   server.tool(
     "marketing_event_delete",
-    `HubSpot のマーケティングイベントを削除する（objectId指定）。
-成功時は204 No Content。この操作は取り消し不可。`,
+    `⚠️ HubSpot のマーケティングイベント（セミナー・ウェビナー等）を削除する（objectId指定）。
+成功時は 204 No Content。この操作は取り消し不可。
+削除すると以下が同時に発生:
+- イベントに紐付いた参加履歴（attendance データ: REGISTERED / ATTENDED / CANCELLED）も全て消失
+- キャンペーン紐付けも解除される（campaign_asset_associate で再紐付け不可、イベントが存在しないため）
+削除前に marketing_event_get で内容確認を強く推奨。
+participations データを保持したい場合は、削除前に marketing_event_participations で集計を取得・保存しておくこと。
+confirm=true が必須（false/省略時は実行されない）。
+スコープ: crm.objects.marketing_events.write
+公式: DELETE /marketing/v3/marketing-events/{objectId}`,
     {
       objectId: z.string().describe("マーケティングイベントのobjectId"),
       confirm: z.boolean().describe("削除を確認する（trueを指定）"),
@@ -193,7 +201,12 @@ joinedAt/leftAtで参加・退出時刻も記録可能。
 スコープ: crm.objects.marketing_events.write`,
     {
       objectId: z.string().describe("マーケティングイベントのobjectId"),
-      subscriberState: z.enum(["REGISTERED", "ATTENDED", "CANCELLED"]).describe("参加状態"),
+      subscriberState: z.enum(["REGISTERED", "ATTENDED", "CANCELLED"]).describe(
+        "参加状態（3値）: " +
+          "REGISTERED=登録済み（イベントに申込み済みだがまだ参加していない）, " +
+          "ATTENDED=参加済み（実際にイベントに参加した）, " +
+          "CANCELLED=キャンセル（登録後にキャンセルされた）"
+      ),
       contactIds: z.array(z.number()).optional().describe("コンタクトIDの配列（vid）"),
       emails: z.array(z.string()).optional().describe("メールアドレスの配列（contactIdsの代わり）"),
       joinedAt: z.string().optional().describe("参加日時（ISO8601）— ATTENDED時"),
