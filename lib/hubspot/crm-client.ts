@@ -294,7 +294,23 @@ export async function createProperty(
     groupName: string;
     description?: string;
     hasUniqueValue?: boolean;
-    options?: Array<{ label: string; value: string; displayOrder: number }>;
+    hidden?: boolean;
+    formField?: boolean;
+    displayOrder?: number;
+    dataSensitivity?: string;
+    numberDisplayHint?: string;
+    showCurrencySymbol?: boolean;
+    currencyPropertyName?: string;
+    calculationFormula?: string;
+    referencedObjectType?: string;
+    externalOptions?: boolean;
+    options?: Array<{
+      label: string;
+      value: string;
+      hidden: boolean;
+      displayOrder?: number;
+      description?: string;
+    }>;
   }
 ): Promise<CrmProperty> {
   return fetchWithRetry<CrmProperty>(
