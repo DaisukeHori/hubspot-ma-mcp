@@ -6,7 +6,13 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerTaskCreate(server: McpServer) {
   server.tool(
     "task_create",
-    "HubSpot タスクを作成する。コンタクト・会社・取引等への関連付けも可能。",
+    `HubSpot タスク（Task エンゲージメント）を作成する。担当者にアサインしフォローアップを管理。
+必須: subject（件名）。
+推奨: ownerId（担当者）, timestamp（期日 ISO 8601）, associations（関連レコード）を渡す。
+status のデフォルトは NOT_STARTED。期日が来ると HubSpot UI で通知される。
+返却: 作成されたタスクの id, properties, createdAt。
+よくある関連タイプID: 204=task→contact, 192=task→company, 216=task→deal, 230=task→ticket。
+公式: POST /crm/v3/objects/tasks`,
     {
       subject: z.string().describe("タスクの件名（例: '顧客フォローアップ電話'）"),
       body: z.string().optional().describe("タスクの詳細（HTML可）"),

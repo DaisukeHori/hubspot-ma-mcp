@@ -6,7 +6,14 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerProductDelete(server: McpServer) {
   server.tool(
     "product_delete",
-    `HubSpot 商品を削除する。confirm=trueが必須。この商品を参照している明細行は影響を受ける可能性あり。`,
+    `HubSpot 商品（Product）を削除する（ゴミ箱へ移動）。
+このツールはアーカイブ（論理削除）であり、HubSpot UIのゴミ箱から復元可能。
+注意:
+- 過去にこの商品を参照して作成された明細行（Line Item）はスナップショットを保持しているので残るが、
+  hs_product_id の参照先がデッドリンクになる
+- 既存の取引・見積もり等の集計には影響しない（明細行が独立しているため）
+confirm=true が必須。
+公式: DELETE /crm/v3/objects/products/{productId}`,
     {
       productId: z.string().describe("商品レコードID（数値文字列）。product_searchやproduct_createの返却値のidフィールドから取得"),
       confirm: z.literal(true).describe("削除確認（true を指定）"),

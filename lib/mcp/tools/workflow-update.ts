@@ -15,8 +15,13 @@ export function registerWorkflowUpdate(server: McpServer) {
     {
       title: "ワークフロー更新",
       description:
-        "既存ワークフローを更新する。revisionId は内部で最新を自動取得する。" +
-        "名前変更、有効/無効切り替え、アクション変更、トリガー条件変更が可能。",
+        "既存ワークフローを更新する（PUT=全体置換）。" +
+        "サーバ側でまず GET /automation/v4/flows/{flowId} で現在のflowを取得し、" +
+        "createdAt/updatedAt を除去 → updates をマージ → revisionId を維持して PUT。" +
+        "更新可能: name（名前変更）, isEnabled（有効/無効切り替え）, actions（アクション配列）, " +
+        "enrollmentCriteria（トリガー条件）, associations 等。" +
+        "PUT のため、actions を渡す場合は省略したアクションは削除される点に注意。" +
+        "公式: PUT /automation/v4/flows/{flowId}",
       inputSchema: {
         flowId: z.string().describe("更新対象のワークフローID"),
         updates: z

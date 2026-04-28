@@ -6,7 +6,13 @@ import { HubSpotError } from "@/lib/hubspot/errors";
 export function registerTaskGet(server: McpServer) {
   server.tool(
     "task_get",
-    "HubSpot タスクの詳細を取得する。関連レコードの取得も可能。",
+    `HubSpot タスク（Task エンゲージメント）の詳細を取得する。
+返却: id, properties（hs_task_subject=件名, hs_task_body=本文, hs_task_status=ステータス,
+hs_task_priority=優先度, hs_task_type=タイプ（CALL/EMAIL/TODO等）, hs_timestamp=期日,
+hubspot_owner_id=担当者）。
+properties 省略時は主要プロパティのみ取得。
+associations でコンタクト・会社・取引等の関連レコードIDを取得。
+公式: GET /crm/v3/objects/tasks/{taskId}`,
     {
       taskId: z.string().describe("タスクのエンゲージメントID（数値文字列）。task_searchやtask_createの返却値のidフィールドから取得"),
       properties: z.array(z.string()).optional().describe("取得するプロパティ名の配列"),

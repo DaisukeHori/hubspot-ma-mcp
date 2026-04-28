@@ -15,7 +15,12 @@ export function registerWorkflowGet(server: McpServer) {
     {
       title: "ワークフロー詳細取得",
       description:
-        "指定したワークフローの全詳細（アクション、トリガー条件含む）を取得する。",
+        "指定したワークフローの完全定義を取得する。" +
+        "返却: id, name, isEnabled, objectTypeId, revisionId（更新時に必要）, " +
+        "actions[]（各アクションの type, actionTypeId, fields, connection）, " +
+        "enrollmentCriteria（トリガー条件）, dataSources, associations 等。" +
+        "ワークフローを複製・編集するときは、まずこれで取得→構造を把握→workflow_update。" +
+        "公式: GET /automation/v4/flows/{flowId}",
       inputSchema: {
         flowId: z.string().describe("ワークフローID"),
       },

@@ -5,7 +5,13 @@ import { updateBlogPost } from "../../hubspot/crm-client";
 export function registerCmsBlogUpdate(server: McpServer) {
   server.tool(
     "cms_blog_update",
-    "HubSpot CMS のブログ記事を更新する（タイトル・本文・メタ情報・公開状態等）",
+    `HubSpot CMS のブログ記事を部分更新する（PATCH=指定フィールドのみ上書き）。
+更新可能: name（タイトル）, postBody（本文HTML）, metaDescription（SEOメタ説明）,
+slug（URLパス）, state（DRAFT / PUBLISHED）。
+公開記事を更新するときも state="DRAFT" にせず直接更新可能だが、
+本文を大きく書き換える場合は draft 経由（HubSpot UI）の方が安全。
+additionalUpdates で htmlTitle, featuredImage, tagIds, blogAuthorId 等を渡せる。
+公式: PATCH /cms/v3/blogs/posts/{postId}`,
     {
       postId: z.string().describe("ブログ記事 ID"),
       name: z.string().optional().describe("ブログ記事タイトル（例: '2026年のヘアトレンド予測'）"),
