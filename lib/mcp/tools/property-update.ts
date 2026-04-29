@@ -24,6 +24,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { updateProperty } from "../../hubspot/crm-client";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerPropertyUpdate(server: McpServer) {
   server.tool(
@@ -144,14 +145,16 @@ label、description、groupName、選択肢（options）等の変更が可能。
         .describe(
           "選択肢の配列（type=enumeration用）。各要素に label, value, hidden が必須"
         ),
-    },
-    async ({ objectType, propertyName, ...updates }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ objectType, propertyName, pretty, ...updates }) => {
       const cleanUpdates = Object.fromEntries(
         Object.entries(updates).filter(([, v]) => v !== undefined)
       );
       const result = await updateProperty(objectType, propertyName, cleanUpdates);
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text", text: formatToolResult(result, pretty) }],
       };
     }
   );

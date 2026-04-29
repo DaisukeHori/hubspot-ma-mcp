@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { deleteAssociation, removeAssociationLabels } from "@/lib/hubspot/crm-client";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerAssociationDelete(server: McpServer) {
   server.tool(
@@ -20,17 +21,19 @@ export function registerAssociationDelete(server: McpServer) {
         associationCategory: z.enum(["HUBSPOT_DEFINED", "USER_DEFINED"]).describe("HUBSPOT_DEFINED（標準ラベル）または USER_DEFINED（カスタムラベル）"),
         associationTypeId: z.number().describe("削除するラベルのtypeId（association_labelsツールのlistで取得可能）"),
       })).optional().describe("削除するラベルの配列。省略時は全関連を削除。例: [{associationCategory:'USER_DEFINED', associationTypeId:37}]"),
-    },
-    async ({ fromObjectType, fromObjectId, toObjectType, toObjectId, labelsToRemove }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ fromObjectType, fromObjectId, toObjectType, toObjectId, labelsToRemove, pretty }) => {
       try {
         if (labelsToRemove && labelsToRemove.length > 0) {
           // Remove specific labels only
           const result = await removeAssociationLabels(fromObjectType, toObjectType, fromObjectId, toObjectId, labelsToRemove);
-          return { content: [{ type: "text" as const, text: JSON.stringify({
+          return { content: [{ type: "text" as const, text: formatToolResult({
             action: "特定ラベル解除",
             removedLabels: labelsToRemove,
             result,
-          }, null, 2) }] };
+          }, pretty) }] };
         } else {
           // Delete all associations between the two records
           await deleteAssociation(fromObjectType, fromObjectId, toObjectType, toObjectId);

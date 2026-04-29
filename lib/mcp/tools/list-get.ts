@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 const BASE_URL = "https://api.hubapi.com";
 
@@ -29,8 +30,10 @@ includeFilters=trueでフィルタ定義の詳細も返る。`,
     {
       listId: z.string().describe("ILS List ID（数値文字列）。list_searchまたはlist_createの返却値から取得"),
       includeFilters: z.boolean().optional().describe("フィルタ定義を含めるか（デフォルト false。DYNAMICリストの条件確認時にtrue指定）"),
-    },
-    async ({ listId, includeFilters }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ listId, includeFilters, pretty }) => {
       try {
         const params = new URLSearchParams();
         if (includeFilters) params.set("includeFilters", "true");
@@ -40,7 +43,7 @@ includeFilters=trueでフィルタ定義の詳細も返る。`,
           `${BASE_URL}/crm/v3/lists/${listId}${qs}`,
           { method: "GET", headers: getHeaders() }
         );
-        return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(result, pretty) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);
         return { content: [{ type: "text" as const, text: message }], isError: true };

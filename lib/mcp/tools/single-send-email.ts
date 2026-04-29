@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 const BASE_URL = "https://api.hubapi.com";
 
@@ -43,8 +44,10 @@ export function registerSingleSendEmail(server: McpServer) {
       bcc: z.array(z.string()).optional().describe("BCCアドレスの配列"),
       contactProperties: z.record(z.string()).optional().describe("コンタクトプロパティ（{key: value}形式）。送信時にコンタクトレコードに設定される。テンプレート内で {{contact.KEY}} で参照可能。例: {firstname: '太郎', last_paid_date: '2026-03-01'}。v4 APIではフラットオブジェクト形式"),
       customProperties: z.record(z.unknown()).optional().describe("カスタムプロパティ（{key: value}形式）。テンプレート内で {{custom.KEY}} で参照可能。コンタクトレコードには保存されない。配列もサポート（Programmable Email Content使用時、HubL forループで展開可能）。v4 APIではフラットオブジェクト形式"),
-    },
-    async ({ emailId, to, from, sendId, replyTo, replyToList, cc, bcc, contactProperties, customProperties }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ emailId, to, from, sendId, replyTo, replyToList, cc, bcc, contactProperties, customProperties, pretty }) => {
       try {
         const message: Record<string, unknown> = { to };
         if (from) message.from = from;
@@ -62,7 +65,7 @@ export function registerSingleSendEmail(server: McpServer) {
           `${BASE_URL}/marketing/v4/email/single-send`,
           { method: "POST", headers: getHeaders(), body: JSON.stringify(body) }
         );
-        return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(result, pretty) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);
         return { content: [{ type: "text" as const, text: message }], isError: true };

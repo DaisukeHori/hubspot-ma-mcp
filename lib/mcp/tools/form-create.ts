@@ -25,6 +25,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 import {
   FieldGroupSchema,
   ConfigurationSchema,
@@ -99,14 +100,16 @@ fieldType="radio" / "multiple_checkboxes" / "dropdown" → options: [{ label, va
       legalConsentOptions: LegalConsentOptionsSchema.optional().describe(
         "法的同意オプション（GDPR対応。type=none で同意不要）"
       ),
-    },
+    
+      pretty: prettyParam,
+},
     async ({
       name,
       formType,
       fieldGroups,
       configuration,
       displayOptions,
-      legalConsentOptions,
+      legalConsentOptions, pretty,
     }) => {
       try {
         // HubSpot Forms v3 API は createdAt / updatedAt をリクエスト時に必須として要求する
@@ -138,7 +141,7 @@ fieldType="radio" / "multiple_checkboxes" / "dropdown" → options: [{ label, va
 
         return {
           content: [
-            { type: "text" as const, text: JSON.stringify(result, null, 2) },
+            { type: "text" as const, text: formatToolResult(result, pretty) },
           ],
         };
       } catch (error) {

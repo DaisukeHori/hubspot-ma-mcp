@@ -10,6 +10,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 import {
   FieldGroupSchema,
   ConfigurationSchema,
@@ -81,7 +82,9 @@ export function registerFormUpdate(server: McpServer) {
       legalConsentOptions: LegalConsentOptionsSchema.optional().describe(
         "法的同意オプション（GDPR対応。type=none で同意不要）"
       ),
-    },
+    
+      pretty: prettyParam,
+},
     async ({
       formId,
       name,
@@ -89,7 +92,7 @@ export function registerFormUpdate(server: McpServer) {
       fieldGroups,
       configuration,
       displayOptions,
-      legalConsentOptions,
+      legalConsentOptions, pretty,
     }) => {
       try {
         // form-create と同じく、HubSpot Forms v3 API は updatedAt を要求する。
@@ -116,7 +119,7 @@ export function registerFormUpdate(server: McpServer) {
 
         return {
           content: [
-            { type: "text" as const, text: JSON.stringify(result, null, 2) },
+            { type: "text" as const, text: formatToolResult(result, pretty) },
           ],
         };
       } catch (error) {

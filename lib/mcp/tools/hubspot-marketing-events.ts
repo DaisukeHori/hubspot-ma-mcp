@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 const BASE_URL = "https://api.hubapi.com";
 
@@ -34,8 +35,10 @@ Marketing Events v3 API。イベント名・日時・開催者・URL・参加者
     {
       limit: z.number().optional().describe("取得件数（デフォルト10）"),
       after: z.string().optional().describe("ページネーションカーソル"),
-    },
-    async ({ limit, after }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ limit, after, pretty }) => {
       try {
         const params = new URLSearchParams({ limit: String(limit || 10) });
         if (after) params.set("after", after);
@@ -43,7 +46,7 @@ Marketing Events v3 API。イベント名・日時・開催者・URL・参加者
           `${BASE_URL}/marketing/v3/marketing-events?${params}`,
           { method: "GET", headers: getHeaders() }
         );
-        return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(data, pretty) }] };
       } catch (error) { return handleError(error); }
     }
   );
@@ -55,14 +58,15 @@ Marketing Events v3 API。イベント名・日時・開催者・URL・参加者
 返却: eventName, eventType, eventOrganizer, eventDescription, eventUrl, startDateTime, endDateTime, eventCancelled, registrants, attendees, cancellations, noShows。`,
     {
       objectId: z.string().describe("マーケティングイベントのobjectId（Record ID）"),
+      pretty: prettyParam,
     },
-    async ({ objectId }) => {
+    async ({ objectId, pretty }) => {
       try {
         const data = await fetchJson<Record<string, unknown>>(
           `${BASE_URL}/marketing/v3/marketing-events/${objectId}`,
           { method: "GET", headers: getHeaders() }
         );
-        return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(data, pretty) }] };
       } catch (error) { return handleError(error); }
     }
   );
@@ -94,9 +98,11 @@ objectId指定のエンドポイントはどのアプリからでもアクセス
         name: z.string(),
         value: z.string(),
       })).optional().describe("カスタムプロパティ"),
+      pretty: prettyParam,
     },
     async (params) => {
       try {
+        const { pretty } = params;
         const body: Record<string, unknown> = {
           eventName: params.eventName,
           externalEventId: params.externalEventId,
@@ -115,7 +121,7 @@ objectId指定のエンドポイントはどのアプリからでもアクセス
           `${BASE_URL}/marketing/v3/marketing-events/events`,
           { method: "POST", headers: getHeaders(), body: JSON.stringify(body) }
         );
-        return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(data, pretty) }] };
       } catch (error) { return handleError(error); }
     }
   );
@@ -140,8 +146,9 @@ objectId指定のエンドポイントはどのアプリからでもアクセス
         name: z.string(),
         value: z.string(),
       })).optional().describe("カスタムプロパティ"),
+      pretty: prettyParam,
     },
-    async ({ objectId, ...props }) => {
+    async ({ objectId, pretty, ...props }) => {
       try {
         const body: Record<string, unknown> = {};
         for (const [key, value] of Object.entries(props)) {
@@ -151,7 +158,7 @@ objectId指定のエンドポイントはどのアプリからでもアクセス
           `${BASE_URL}/marketing/v3/marketing-events/${objectId}`,
           { method: "PATCH", headers: getHeaders(), body: JSON.stringify(body) }
         );
-        return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(data, pretty) }] };
       } catch (error) { return handleError(error); }
     }
   );
@@ -172,8 +179,9 @@ confirm=true が必須（false/省略時は実行されない）。
     {
       objectId: z.string().describe("マーケティングイベントのobjectId"),
       confirm: z.boolean().describe("削除を確認する（trueを指定）"),
+      pretty: prettyParam,
     },
-    async ({ objectId, confirm }) => {
+    async ({ objectId, confirm, pretty }) => {
       if (!confirm) {
         return { content: [{ type: "text" as const, text: "削除を実行するには confirm: true を指定してください。" }] };
       }
@@ -212,8 +220,9 @@ joinedAt/leftAtで参加・退出時刻も記録可能。
       joinedAt: z.string().optional().describe("参加日時（ISO8601）— ATTENDED時"),
       leftAt: z.string().optional().describe("退出日時（ISO8601）— ATTENDED時"),
       interactionDateTime: z.number().optional().describe("インタラクション日時（UNIXミリ秒）"),
+      pretty: prettyParam,
     },
-    async ({ objectId, subscriberState, contactIds, emails, joinedAt, leftAt, interactionDateTime }) => {
+    async ({ objectId, subscriberState, contactIds, emails, joinedAt, leftAt, interactionDateTime, pretty }) => {
       try {
         // コンタクトIDを使うパスかメールを使うパスか
         const useEmail = !contactIds && emails && emails.length > 0;
@@ -249,7 +258,7 @@ joinedAt/leftAtで参加・退出時刻も記録可能。
           headers: getHeaders(),
           body: JSON.stringify({ inputs }),
         });
-        return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(data, pretty) }] };
       } catch (error) { return handleError(error); }
     }
   );
@@ -264,8 +273,9 @@ joinedAt/leftAtで参加・退出時刻も記録可能。
     {
       externalEventId: z.string().describe("外部イベントID（marketing_event_createで指定したもの）"),
       externalAccountId: z.string().describe("外部アカウントID（marketing_event_createで指定したもの）"),
+      pretty: prettyParam,
     },
-    async ({ externalEventId, externalAccountId }) => {
+    async ({ externalEventId, externalAccountId, pretty }) => {
       try {
         const data = await fetchJson<Record<string, unknown>>(
           `${BASE_URL}/marketing/v3/marketing-events/events/${encodeURIComponent(externalEventId)}/complete`,
@@ -275,7 +285,7 @@ joinedAt/leftAtで参加・退出時刻も記録可能。
             body: JSON.stringify({ externalAccountId }),
           }
         );
-        return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(data, pretty) }] };
       } catch (error) { return handleError(error); }
     }
   );
@@ -292,8 +302,9 @@ Participant State API（2024年6月リリース）。`,
       mode: z.enum(["byEvent", "byContact"]).describe("取得モード: byEvent=イベント別集計 / byContact=コンタクト別履歴"),
       marketingEventId: z.string().optional().describe("byEvent時: マーケティングイベントのobjectId"),
       contactIdentifier: z.string().optional().describe("byContact時: コンタクトIDまたはメールアドレス"),
+      pretty: prettyParam,
     },
-    async ({ mode, marketingEventId, contactIdentifier }) => {
+    async ({ mode, marketingEventId, contactIdentifier, pretty }) => {
       try {
         let url: string;
         if (mode === "byEvent") {
@@ -311,7 +322,7 @@ Participant State API（2024年6月リリース）。`,
           method: "GET",
           headers: getHeaders(),
         });
-        return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(data, pretty) }] };
       } catch (error) { return handleError(error); }
     }
   );

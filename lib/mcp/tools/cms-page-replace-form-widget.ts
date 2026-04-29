@@ -43,6 +43,7 @@
 
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 import {
   getCmsPage,
   getCmsPageDraft,
@@ -175,8 +176,10 @@ export function registerCmsPageReplaceFormWidget(server: McpServer) {
           "useDraft=true のときのみ有効。true=draft更新後に自動で push-live を実行する。" +
             "デフォルト false（draftだけ作って手動で push-live する想定）。"
         ),
-    },
-    async ({ pageType, pageId, oldFormId, newFormId, useDraft, pushLive }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ pageType, pageId, oldFormId, newFormId, useDraft, pushLive, pretty }) => {
       try {
         // ① ページ取得（draft or published）
         const page = useDraft
@@ -256,7 +259,7 @@ export function registerCmsPageReplaceFormWidget(server: McpServer) {
                 `ページ: ${pageId} (${pageType})\n` +
                 `モード: ${useDraft ? "draft" : "published（即時反映）"}\n` +
                 `${useDraft && pushLive ? "→ push-live まで実行済み\n" : ""}\n` +
-                `詳細:\n${JSON.stringify(summary, null, 2)}`,
+                `詳細:\n${formatToolResult(summary, pretty)}`,
             },
           ],
         };

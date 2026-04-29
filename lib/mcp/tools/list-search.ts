@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 const BASE_URL = "https://api.hubapi.com";
 
@@ -36,8 +37,10 @@ additionalPropertiesにhs_list_size（メンバー数）等が含まれる。`,
       ),
       objectTypeId: z.string().optional().describe("オブジェクトタイプでフィルタ。0-1=コンタクト, 0-2=会社, 0-3=取引"),
       offset: z.number().optional().describe("ページネーション用オフセット"),
-    },
-    async ({ query, processingTypes, objectTypeId, offset }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ query, processingTypes, objectTypeId, offset, pretty }) => {
       try {
         const body: Record<string, unknown> = {};
         if (query) body.query = query;
@@ -49,7 +52,7 @@ additionalPropertiesにhs_list_size（メンバー数）等が含まれる。`,
           `${BASE_URL}/crm/v3/lists/search`,
           { method: "POST", headers: getHeaders(), body: JSON.stringify(body) }
         );
-        return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(result, pretty) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);
         return { content: [{ type: "text" as const, text: message }], isError: true };

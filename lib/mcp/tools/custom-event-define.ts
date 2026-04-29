@@ -27,6 +27,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 const BASE_URL = "https://api.hubapi.com";
 
@@ -154,7 +155,9 @@ export function registerCustomEventDefine(server: McpServer) {
           "カスタムマッチングルール。イベントプロパティ値でCRMレコードを特定する場合に使用" +
             "（例: イベントの email_address プロパティでコンタクトの email にマッチ）"
         ),
-    },
+    
+      pretty: prettyParam,
+},
     async ({
       label,
       includeDefaultProperties,
@@ -162,7 +165,7 @@ export function registerCustomEventDefine(server: McpServer) {
       name,
       primaryObject,
       description,
-      customMatchingId,
+      customMatchingId, pretty,
     }) => {
       try {
         // 公式仕様 ExternalBehavioralEventTypeDefinitionEgg.required の3項目は常に送信
@@ -182,7 +185,7 @@ export function registerCustomEventDefine(server: McpServer) {
         );
         return {
           content: [
-            { type: "text" as const, text: JSON.stringify(result, null, 2) },
+            { type: "text" as const, text: formatToolResult(result, pretty) },
           ],
         };
       } catch (error) {

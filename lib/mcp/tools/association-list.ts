@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { listAssociations } from "@/lib/hubspot/crm-client";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerAssociationList(server: McpServer) {
   server.tool(
@@ -21,14 +22,16 @@ export function registerAssociationList(server: McpServer) {
       toObjectType: z.string().describe("関連先オブジェクトタイプ: contacts, companies, deals, tickets, notes, tasks, line_items, products, 又はカスタムオブジェクトID"),
       limit: z.number().min(1).max(500).optional().describe("取得件数（デフォルト100、最大500）"),
       after: z.string().optional().describe("ページネーション用カーソル（前回レスポンスのpaging.next.afterを指定）"),
-    },
-    async ({ fromObjectType, fromObjectId, toObjectType, limit, after }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ fromObjectType, fromObjectId, toObjectType, limit, after, pretty }) => {
       try {
         const result = await listAssociations(fromObjectType, fromObjectId, toObjectType, limit, after);
         return {
           content: [{
             type: "text" as const,
-            text: JSON.stringify(result, null, 2),
+            text: formatToolResult(result, pretty),
           }],
         };
       } catch (error) {

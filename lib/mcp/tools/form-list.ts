@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 const BASE_URL = "https://api.hubapi.com";
 
@@ -37,8 +38,10 @@ export function registerFormList(server: McpServer) {
       after: z.string().optional().describe("ページネーション用カーソル（前回レスポンスのpaging.next.afterの値）"),
       formTypes: z.array(z.enum(["hubspot", "captured", "flow", "blog_comment"])).optional().describe("フォームタイプでフィルタ。hubspot=通常フォーム, captured=外部HTMLフォーム, flow=ポップアップ, blog_comment=ブログコメント"),
       archived: z.boolean().optional().describe("アーカイブ済みフォームを含めるか（デフォルト false）"),
-    },
-    async ({ limit, after, formTypes, archived }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ limit, after, formTypes, archived, pretty }) => {
       try {
         const params = new URLSearchParams();
         if (limit) params.set("limit", String(limit));
@@ -59,12 +62,12 @@ export function registerFormList(server: McpServer) {
         return {
           content: [{
             type: "text" as const,
-            text: JSON.stringify({
+            text: formatToolResult({
               total: result.total,
               count: result.results.length,
               paging: result.paging,
               results: result.results,
-            }, null, 2),
+            }, pretty),
           }],
         };
       } catch (error) {

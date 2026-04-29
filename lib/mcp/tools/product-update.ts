@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { crmUpdate } from "@/lib/hubspot/crm-client";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerProductUpdate(server: McpServer) {
   server.tool(
@@ -18,11 +19,13 @@ export function registerProductUpdate(server: McpServer) {
     {
       productId: z.string().describe("商品レコードID（数値文字列）。product_searchやproduct_createの返却値のidフィールドから取得"),
       properties: z.record(z.string()).describe("更新するプロパティ（キー:値）"),
-    },
-    async ({ productId, properties }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ productId, properties, pretty }) => {
       try {
         const result = await crmUpdate("products", productId, properties);
-        return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(result, pretty) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);
         return { content: [{ type: "text" as const, text: message }], isError: true };

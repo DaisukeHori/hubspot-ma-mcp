@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { crmGet } from "@/lib/hubspot/crm-client";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerContactGet(server: McpServer) {
   server.tool(
@@ -14,8 +15,10 @@ associations指定時は関連オブジェクトのID一覧も返る。`,
       contactId: z.string().describe("コンタクトレコードID（数値文字列）。contact_searchやcontact_createの返却値のidフィールドから取得"),
       properties: z.array(z.string()).optional().describe("取得するプロパティ名の配列"),
       associations: z.array(z.string()).optional().describe("関連オブジェクト（companies, deals, tickets）"),
-    },
-    async ({ contactId, properties, associations }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ contactId, properties, associations, pretty }) => {
       try {
         const defaultProps = properties ?? [
           "email", "firstname", "lastname", "company", "phone", "jobtitle",
@@ -23,7 +26,7 @@ associations指定時は関連オブジェクトのID一覧も返る。`,
           "createdate", "lastmodifieddate",
         ];
         const result = await crmGet("contacts", contactId, defaultProps, associations);
-        return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(result, pretty) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);
         return { content: [{ type: "text" as const, text: message }], isError: true };

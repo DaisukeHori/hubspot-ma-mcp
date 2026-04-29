@@ -8,6 +8,7 @@ import { z } from "zod";
 import { getFlow } from "@/lib/hubspot/client";
 import { OBJECT_TYPE_LABELS } from "@/lib/hubspot/types";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerWorkflowGet(server: McpServer) {
   server.registerTool(
@@ -23,9 +24,10 @@ export function registerWorkflowGet(server: McpServer) {
         "公式: GET /automation/v4/flows/{flowId}",
       inputSchema: {
         flowId: z.string().describe("ワークフローID"),
+        pretty: prettyParam,
       },
     },
-    async ({ flowId }) => {
+    async ({ flowId, pretty }) => {
       try {
         const flow = await getFlow(flowId);
 
@@ -47,7 +49,7 @@ export function registerWorkflowGet(server: McpServer) {
           "",
           "### 詳細データ (JSON)",
           "```json",
-          JSON.stringify(flow, null, 2),
+          formatToolResult(flow, pretty),
           "```",
         ].join("\n");
 

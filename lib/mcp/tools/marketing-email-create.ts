@@ -28,6 +28,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 const BASE_URL = "https://api.hubapi.com";
 
@@ -289,7 +290,9 @@ content.templatePath でDnDテンプレートを指定可能（旧形式の temp
         .describe(
           "その他の追加プロパティ。state（enum 32値）, subcategory（enum 78値）等を直接渡したい場合に使用"
         ),
-    },
+    
+      pretty: prettyParam,
+},
     async ({
       name,
       subject,
@@ -310,7 +313,7 @@ content.templatePath でDnDテンプレートを指定可能（旧形式の temp
       rssData,
       feedbackSurveyId,
       activeDomain,
-      additionalProperties,
+      additionalProperties, pretty,
     }) => {
       try {
         const body: Record<string, unknown> = { name };
@@ -342,7 +345,7 @@ content.templatePath でDnDテンプレートを指定可能（旧形式の temp
         );
         return {
           content: [
-            { type: "text" as const, text: JSON.stringify(result, null, 2) },
+            { type: "text" as const, text: formatToolResult(result, pretty) },
           ],
         };
       } catch (error) {

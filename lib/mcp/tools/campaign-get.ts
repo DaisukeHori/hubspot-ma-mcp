@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 const BASE_URL = "https://api.hubapi.com";
 
@@ -28,8 +29,10 @@ export function registerCampaignGet(server: McpServer) {
     {
       campaignId: z.string().describe("キャンペーンGUID（UUID形式）。campaign_listの返却値のidフィールドから取得"),
       properties: z.array(z.string()).optional().describe("取得するプロパティ名の配列"),
-    },
-    async ({ campaignId, properties }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ campaignId, properties, pretty }) => {
       try {
         const params = new URLSearchParams();
         if (properties) properties.forEach(p => params.append("properties", p));
@@ -39,7 +42,7 @@ export function registerCampaignGet(server: McpServer) {
           `${BASE_URL}/marketing/v3/campaigns/${campaignId}${qs}`,
           { method: "GET", headers: getHeaders() }
         );
-        return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(result, pretty) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);
         return { content: [{ type: "text" as const, text: message }], isError: true };

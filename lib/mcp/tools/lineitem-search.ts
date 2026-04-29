@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { crmSearch } from "../../hubspot/crm-client";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 const DEFAULT_PROPS = ["name", "quantity", "price", "amount", "hs_product_id", "description", "hs_recurring_billing_period", "createdate"];
 
@@ -29,10 +30,12 @@ export function registerLineItemSearch(server: McpServer) {
         direction: z.enum(["ASCENDING", "DESCENDING"]).describe("ソート方向: ASCENDING（昇順）/ DESCENDING（降順）"),
       })).optional().describe("ソート条件（1つのみ指定可能）。省略時はcreatedate昇順"),
       after: z.string().optional().describe("ページネーション"),
-    },
-    async ({ query, filterGroups, properties, limit, after, sorts }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ query, filterGroups, properties, limit, after, sorts, pretty }) => {
       const result = await crmSearch("line_items", query || "", properties || DEFAULT_PROPS, filterGroups, limit || 10, after, sorts);
-      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      return { content: [{ type: "text", text: formatToolResult(result, pretty) }] };
     }
   );
 }

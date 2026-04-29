@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { crmCreate } from "@/lib/hubspot/crm-client";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerDealCreate(server: McpServer) {
   server.tool(
@@ -32,8 +33,10 @@ dealstageはpipeline_listツールで取得したステージIDを指定。addit
         .optional()
         .describe("作成と同時に関連付けるレコードの配列（任意）。後からassociation_createでも紐付け可能"),
       additionalProperties: z.record(z.string()).optional().describe("追加プロパティ（キー:値）。カスタムプロパティ名はproperties_listツールで確認可能"),
-    },
-    async ({ dealname, amount, dealstage, pipeline, closedate, hubspot_owner_id, associations, additionalProperties }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ dealname, amount, dealstage, pipeline, closedate, hubspot_owner_id, associations, additionalProperties, pretty }) => {
       try {
         const properties: Record<string, string> = { dealname };
         if (amount) properties.amount = amount;
@@ -43,7 +46,7 @@ dealstageはpipeline_listツールで取得したステージIDを指定。addit
         if (hubspot_owner_id) properties.hubspot_owner_id = hubspot_owner_id;
         if (additionalProperties) Object.assign(properties, additionalProperties);
         const result = await crmCreate("deals", properties, associations);
-        return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(result, pretty) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);
         return { content: [{ type: "text" as const, text: message }], isError: true };

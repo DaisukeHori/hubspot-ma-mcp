@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 const BASE_URL = "https://api.hubapi.com";
 
@@ -37,8 +38,10 @@ includeStats=trueで開封率・クリック率等の送信統計も含まれる
       updatedAfter: z.string().optional().describe("この日時以降に更新されたメールのみ（ISO8601形式）"),
       updatedBefore: z.string().optional().describe("この日時以前に更新されたメールのみ（ISO8601形式）"),
       includeStats: z.boolean().optional().describe("送信統計（opens, clicks, bounces, unsubscribes等）を含めるか（デフォルト false）"),
-    },
-    async ({ limit, after, archived, type, createdAfter, createdBefore, updatedAfter, updatedBefore, includeStats }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ limit, after, archived, type, createdAfter, createdBefore, updatedAfter, updatedBefore, includeStats, pretty }) => {
       try {
         const params = new URLSearchParams();
         if (limit) params.set("limit", String(limit));
@@ -56,7 +59,7 @@ includeStats=trueで開封率・クリック率等の送信統計も含まれる
           `${BASE_URL}/marketing/v3/emails${qs}`,
           { method: "GET", headers: getHeaders() }
         );
-        return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(result, pretty) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);
         return { content: [{ type: "text" as const, text: message }], isError: true };

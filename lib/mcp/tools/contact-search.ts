@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { crmSearch } from "@/lib/hubspot/crm-client";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerContactSearch(server: McpServer) {
   server.tool(
@@ -35,8 +36,10 @@ export function registerContactSearch(server: McpServer) {
         direction: z.enum(["ASCENDING", "DESCENDING"]).describe("ソート方向: ASCENDING（昇順）/ DESCENDING（降順）"),
       })).optional().describe("ソート条件（1つのみ指定可能）。省略時はcreatedate昇順"),
       after: z.string().optional().describe("ページネーション用カーソル（前回レスポンスのpaging.next.afterの値を指定）"),
-    },
-    async ({ query, filterGroups, properties, limit, after, sorts }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ query, filterGroups, properties, limit, after, sorts, pretty }) => {
       try {
         const defaultProps = properties ?? [
           "email", "firstname", "lastname", "company", "phone",
@@ -48,10 +51,8 @@ export function registerContactSearch(server: McpServer) {
           content: [
             {
               type: "text" as const,
-              text: JSON.stringify(
-                { total: result.total, count: result.results.length, paging: result.paging, results: result.results },
-                null, 2
-              ),
+              text: formatToolResult(
+                { total: result.total, count: result.results.length, paging: result.paging, results: result.results }, pretty),
             },
           ],
         };

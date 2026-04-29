@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { listAssociationLabels, createAssociationLabel, updateAssociationLabel, deleteAssociationLabel } from "@/lib/hubspot/crm-client";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerAssociationLabels(server: McpServer) {
   server.tool(
@@ -25,8 +26,10 @@ export function registerAssociationLabels(server: McpServer) {
       name: z.string().optional().describe("内部名（create時に必須。英数字snake_case。例: 'distributor'）"),
       inverseLabel: z.string().optional().describe("ペアラベル作成時のみ。to→from方向のラベル名（例: '直送先'）。省略すると両方向同じラベル名になる"),
       associationTypeId: z.number().optional().describe("update/delete時に必須。対象ラベルのtypeId（listで取得）"),
-    },
-    async ({ fromObjectType, toObjectType, action, label, name, inverseLabel, associationTypeId }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ fromObjectType, toObjectType, action, label, name, inverseLabel, associationTypeId, pretty }) => {
       try {
         switch (action) {
           case "list": {
@@ -34,12 +37,12 @@ export function registerAssociationLabels(server: McpServer) {
             return {
               content: [{
                 type: "text" as const,
-                text: JSON.stringify({
+                text: formatToolResult({
                   description: `${fromObjectType} → ${toObjectType} の関連ラベル定義`,
                   note: "方向が逆（to→from）のラベルは fromObjectType と toObjectType を入れ替えて再取得してください",
                   total: result.results.length,
                   labels: result.results,
-                }, null, 2),
+                }, pretty),
               }],
             };
           }
@@ -51,12 +54,12 @@ export function registerAssociationLabels(server: McpServer) {
             return {
               content: [{
                 type: "text" as const,
-                text: JSON.stringify({
+                text: formatToolResult({
                   description: inverseLabel
                     ? `ペアラベル作成完了: ${fromObjectType}→${toObjectType}="${label}", ${toObjectType}→${fromObjectType}="${inverseLabel}"`
                     : `単一ラベル作成完了: "${label}"`,
                   results: result.results,
-                }, null, 2),
+                }, pretty),
               }],
             };
           }
@@ -65,7 +68,7 @@ export function registerAssociationLabels(server: McpServer) {
               return { content: [{ type: "text" as const, text: "エラー: update には label と associationTypeId が必須です。" }], isError: true };
             }
             const result = await updateAssociationLabel(fromObjectType, toObjectType, associationTypeId, label, inverseLabel);
-            return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+            return { content: [{ type: "text" as const, text: formatToolResult(result, pretty) }] };
           }
           case "delete": {
             if (associationTypeId === undefined) {

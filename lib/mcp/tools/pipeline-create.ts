@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { createPipeline } from "../../hubspot/crm-client";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerPipelineCreate(server: McpServer) {
   server.tool(
@@ -17,14 +18,16 @@ export function registerPipelineCreate(server: McpServer) {
         displayOrder: z.number().describe("表示順"),
         metadata: z.record(z.string()).optional().describe("メタデータ（例: { \"probability\": \"0.5\", \"isClosed\": \"false\" }）"),
       })).describe("ステージ定義の配列。各要素: {label: ステージ名, displayOrder: 表示順, metadata:{probability: 成約確率0.0-1.0(deals必須), ticketState: OPEN/CLOSED(tickets用)}}"),
-    },
-    async ({ objectType, label, displayOrder, stages }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ objectType, label, displayOrder, stages, pretty }) => {
       const stagesWithMeta = stages.map(s => ({
         ...s,
         metadata: s.metadata || {},
       }));
       const result = await createPipeline(objectType, label, displayOrder ?? 0, stagesWithMeta);
-      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      return { content: [{ type: "text", text: formatToolResult(result, pretty) }] };
     }
   );
 }

@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 const BASE_URL = "https://api.hubapi.com";
 
@@ -30,8 +31,10 @@ export function registerMarketingEmailClone(server: McpServer) {
     {
       emailId: z.string().describe("複製元のマーケティングメールID（数値文字列）"),
       name: z.string().optional().describe("複製後のメール名（省略時は元の名前に' (copy)'が付く）"),
-    },
-    async ({ emailId, name }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ emailId, name, pretty }) => {
       try {
         const body: Record<string, unknown> = {};
         if (name) body.name = name;
@@ -40,7 +43,7 @@ export function registerMarketingEmailClone(server: McpServer) {
           `${BASE_URL}/marketing/v3/emails/${emailId}/clone`,
           { method: "POST", headers: getHeaders(), body: JSON.stringify(body) }
         );
-        return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(result, pretty) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);
         return { content: [{ type: "text" as const, text: message }], isError: true };
