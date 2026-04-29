@@ -1,6 +1,6 @@
 /**
  * MCP サーバー初期化
- * 全ツールを一括登録する（129 tools）
+ * 全ツールを一括登録する（131 tools）
  */
 
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -9,6 +9,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { registerWorkflowList } from "./tools/workflow-list";
 import { registerWorkflowGet } from "./tools/workflow-get";
 import { registerWorkflowCreate } from "./tools/workflow-create";
+import { registerWorkflowClone } from "./tools/workflow-clone";
 import { registerWorkflowUpdate } from "./tools/workflow-update";
 import { registerWorkflowDelete } from "./tools/workflow-delete";
 import { registerWorkflowBatchRead } from "./tools/workflow-batch-read";
@@ -131,6 +132,7 @@ import { registerListCreate } from "./tools/list-create";
 import { registerListSearch } from "./tools/list-search";
 import { registerListGet } from "./tools/list-get";
 import { registerListDelete } from "./tools/list-delete";
+import { registerListUpdateFilters } from "./tools/list-update-filters";
 import { registerListMembersGet } from "./tools/list-members-get";
 import { registerListMembersAdd } from "./tools/list-members-add";
 import { registerListMembersRemove } from "./tools/list-members-remove";
@@ -166,10 +168,11 @@ import { registerHubspotMarketingEvents } from "./tools/hubspot-marketing-events
  * MCP サーバーに全ツールを登録する
  */
 export function registerAllTools(server: McpServer) {
-  // Workflow（6 tools）
+  // Workflow（7 tools）
   registerWorkflowList(server);
   registerWorkflowGet(server);
   registerWorkflowCreate(server);
+  registerWorkflowClone(server);
   registerWorkflowUpdate(server);
   registerWorkflowDelete(server);
   registerWorkflowBatchRead(server);
@@ -296,6 +299,7 @@ export function registerAllTools(server: McpServer) {
   registerListSearch(server);
   registerListGet(server);
   registerListDelete(server);
+  registerListUpdateFilters(server);
   registerListMembersGet(server);
   registerListMembersAdd(server);
   registerListMembersRemove(server);

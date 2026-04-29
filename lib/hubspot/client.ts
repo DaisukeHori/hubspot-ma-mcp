@@ -157,20 +157,45 @@ export async function batchReadFlows(
 
 /**
  * 新しいワークフローを作成する
+ *
+ * 必須フィールド (name, type, objectTypeId) 以外のすべてのフィールドを
+ * リクエストボディに含めて HubSpot API に送る。これにより、workflow_get で
+ * 取得した完全なWF定義から「読み取り専用フィールド」だけを除去して渡せば
+ * 既存WFを完全コピーできる。
+ *
+ * 公式: POST /automation/v4/flows
+ *
+ * 隠れ仕様メモ:
+ *  - actionId は WF 内部の識別子。複製時に source と同じ値を使っても
+ *    新WFは別 flowId なので衝突しない。HubSpot 側で内部的に新採番される。
+ *  - nextAvailableActionId は actions[] の最大値 + 1 にしておくのが安全。
+ *    省略するとサーバ側で自動計算される。
+ *  - description は短くしないと UI 上で切れることがある（実害なし）。
  */
 export async function createFlow(
   input: CreateFlowInput
 ): Promise<HubSpotFlow> {
-  const body = {
+  // 必須フィールドを明示的にセット
+  const body: Record<string, unknown> = {
     name: input.name,
     type: input.type,
     objectTypeId: input.objectTypeId,
     isEnabled: input.isEnabled ?? false,
-    ...(input.actions && { actions: input.actions }),
-    ...(input.enrollmentCriteria && {
-      enrollmentCriteria: input.enrollmentCriteria,
-    }),
   };
+
+  // オプションフィールドを条件付きでマージ（undefined は API に送らない）
+  // CreateFlowInput の [key: string]: unknown により将来追加フィールドも自動的に通る
+  for (const [key, value] of Object.entries(input)) {
+    if (
+      key !== "name" &&
+      key !== "type" &&
+      key !== "objectTypeId" &&
+      key !== "isEnabled" &&
+      value !== undefined
+    ) {
+      body[key] = value;
+    }
+  }
 
   return fetchWithRetry<HubSpotFlow>(
     `${BASE_URL}/automation/v4/flows`,
@@ -178,6 +203,98 @@ export async function createFlow(
       method: "POST",
       headers: getHeaders(),
       body: JSON.stringify(body),
+    }
+  );
+}
+
+/**
+ * 既存ワークフローを複製する（GET → strip → POST のヘルパー）
+ *
+ * ① getFlow(sourceFlowId) で完全な定義を取得
+ * ② 読み取り専用フィールド（id, revisionId, createdAt, updatedAt, migrationStatus）を除去
+ * ③ overrides をマージ（name は必須なので呼び出し側で必ず指定）
+ * ④ createFlow で POST
+ *
+ * 用途:
+ *  - LINE QR WFの月次バリエーション作成（テンプレートから新月版を量産）
+ *  - 同じロジックの別WFを作る場合の雛形コピー
+ *
+ * 注意:
+ *  - isEnabled は明示的に false にしてある（うっかり本番起動を防ぐ）。
+ *    overrides で true を指定すれば有効化された状態で作成される。
+ *  - 複製先WFはあくまで「別物」なので、source 側の動作には影響しない。
+ *  - HubSpot UI 上で「複製」ボタンを押した場合と同等の挙動を API で再現する。
+ */
+export async function cloneFlow(
+  sourceFlowId: string,
+  newName: string,
+  overrides?: Record<string, unknown>
+): Promise<HubSpotFlow> {
+  // ① ソース WF を完全取得
+  const source = await getFlow(sourceFlowId);
+
+  // ② 読み取り専用フィールドを除去
+  //    HubSpot 側で自動採番される、または不変のフィールドを落とす
+  const {
+    id: _id,
+    revisionId: _revisionId,
+    createdAt: _createdAt,
+    updatedAt: _updatedAt,
+    migrationStatus: _migrationStatus,
+    ...cleanFlow
+  } = source as Record<string, unknown>;
+
+  // ③ overrides を上書きマージ（newName は最優先）
+  //    isEnabled はデフォルトで false（事故防止）。overrides で上書き可能。
+  const newFlow: CreateFlowInput = {
+    ...(cleanFlow as CreateFlowInput),
+    ...(overrides || {}),
+    name: newName,
+    isEnabled: overrides?.isEnabled === true ? true : false,
+    // 必須フィールドの型保証（cleanFlow に含まれているはずだが TS 的にも明示）
+    type: cleanFlow.type as "CONTACT_FLOW" | "PLATFORM_FLOW",
+    objectTypeId: cleanFlow.objectTypeId as string,
+  };
+
+  // ④ POST して新WFを作成
+  return createFlow(newFlow);
+}
+
+/**
+ * DYNAMIC リストのフィルタ条件を更新する
+ *
+ * 公式: PUT /crm/v3/lists/{listId}/update-list-filters
+ * リクエストボディ: { filterBranch: {...} }
+ * クエリオプション: ?enrollObjectsInWorkflows=true|false
+ *   → 新たにリストに含まれることになったレコードを、リスト連動WFに自動エンロールするか
+ *
+ * 制約:
+ *  - DYNAMIC リスト（processingType: "DYNAMIC"）専用
+ *  - MANUAL / SNAPSHOT リストには使えない（HubSpot側でエラーが返る）
+ *  - フィルタ更新後、メンバーシップは非同期で再評価される（即時反映ではない）
+ *
+ * filterBranch 構造の取得方法:
+ *  - list_get(listId, includeFilters=true) で既存リストの filterBranch をそのまま参考にする
+ *  - 新規構築する場合は HubSpot 公式ガイド参照:
+ *    https://developers.hubspot.com/docs/api-reference/crm-lists-v3/list-filters
+ */
+export async function updateListFilters(
+  listId: string,
+  filterBranch: Record<string, unknown>,
+  enrollObjectsInWorkflows?: boolean
+): Promise<Record<string, unknown>> {
+  const params = new URLSearchParams();
+  if (enrollObjectsInWorkflows !== undefined) {
+    params.set("enrollObjectsInWorkflows", String(enrollObjectsInWorkflows));
+  }
+  const qs = params.toString() ? `?${params.toString()}` : "";
+
+  return fetchWithRetry<Record<string, unknown>>(
+    `${BASE_URL}/crm/v3/lists/${listId}/update-list-filters${qs}`,
+    {
+      method: "PUT",
+      headers: getHeaders(),
+      body: JSON.stringify({ filterBranch }),
     }
   );
 }
