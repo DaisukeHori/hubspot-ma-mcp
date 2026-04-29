@@ -125,6 +125,7 @@ import { registerFormList } from "./tools/form-list";
 import { registerFormGet } from "./tools/form-get";
 import { registerFormCreate } from "./tools/form-create";
 import { registerFormUpdate } from "./tools/form-update";
+import { registerFormPatch } from "./tools/form-patch";
 import { registerFormDelete } from "./tools/form-delete";
 import { registerListCreate } from "./tools/list-create";
 import { registerListSearch } from "./tools/list-search";
@@ -288,6 +289,7 @@ export function registerAllTools(server: McpServer) {
   registerFormGet(server);
   registerFormCreate(server);
   registerFormUpdate(server);
+  registerFormPatch(server);
   registerFormDelete(server);
   // Lists (Segments) API v3
   registerListCreate(server);
