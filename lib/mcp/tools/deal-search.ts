@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { crmSearch } from "@/lib/hubspot/crm-client";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerDealSearch(server: McpServer) {
   server.tool(
@@ -22,15 +23,17 @@ export function registerDealSearch(server: McpServer) {
         direction: z.enum(["ASCENDING", "DESCENDING"]).describe("ソート方向: ASCENDING（昇順）/ DESCENDING（降順）"),
       })).optional().describe("ソート条件（1つのみ指定可能）。省略時はcreatedate昇順"),
       after: z.string().optional().describe("ページネーション用カーソル（前回レスポンスのpaging.next.afterの値）"),
-    },
-    async ({ query, filterGroups, properties, limit, after, sorts }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ query, filterGroups, properties, limit, after, sorts, pretty }) => {
       try {
         const defaultProps = properties ?? [
           "dealname", "amount", "dealstage", "pipeline", "closedate",
           "hubspot_owner_id", "createdate",
         ];
         const result = await crmSearch("deals", query ?? "", defaultProps, filterGroups, limit ?? 10, after, sorts);
-        return { content: [{ type: "text" as const, text: JSON.stringify({ total: result.total, count: result.results.length, paging: result.paging, results: result.results }, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult({ total: result.total, count: result.results.length, paging: result.paging, results: result.results }, pretty) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);
         return { content: [{ type: "text" as const, text: message }], isError: true };

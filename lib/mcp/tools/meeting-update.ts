@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { crmUpdate } from "@/lib/hubspot/crm-client";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerMeetingUpdate(server: McpServer) {
   server.tool(
@@ -18,11 +19,13 @@ export function registerMeetingUpdate(server: McpServer) {
   {
     meetingId: z.string().describe("ミーティングのエンゲージメントID（数値文字列）。meeting_searchの返却値のidフィールドから取得"),
     properties: z.record(z.string()).describe("更新するプロパティ（キー:値）。省略したプロパティは変更されない"),
-  },
-  async ({ meetingId, properties }) => {
+  
+      pretty: prettyParam,
+},
+  async ({ meetingId, properties, pretty }) => {
     const result = await crmUpdate("meetings", meetingId, properties);
     return {
-      content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
+      content: [{ type: "text" as const, text: formatToolResult(result, pretty) }],
     };
   }
 );

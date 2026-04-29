@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { crmCreate } from "../../hubspot/crm-client";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerProductCreate(server: McpServer) {
   server.tool(
@@ -16,8 +17,10 @@ export function registerProductCreate(server: McpServer) {
       hs_cost_of_goods_sold: z.string().optional().describe("原価（文字列。例: '2000'）"),
       hs_recurring_billing_period: z.string().optional().describe("請求周期（例: P12M）"),
       additionalProperties: z.record(z.string()).optional().describe("追加プロパティ（キー:値）。カスタムプロパティ名はproperties_listツールで確認可能"),
-    },
-    async ({ name, price, description, hs_sku, hs_cost_of_goods_sold, hs_recurring_billing_period, additionalProperties }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ name, price, description, hs_sku, hs_cost_of_goods_sold, hs_recurring_billing_period, additionalProperties, pretty }) => {
       const properties: Record<string, string> = { name };
       if (price) properties.price = price;
       if (description) properties.description = description;
@@ -27,7 +30,7 @@ export function registerProductCreate(server: McpServer) {
       if (additionalProperties) Object.assign(properties, additionalProperties);
 
       const result = await crmCreate("products", properties);
-      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      return { content: [{ type: "text", text: formatToolResult(result, pretty) }] };
     }
   );
 }

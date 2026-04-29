@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 const BASE_URL = "https://api.hubapi.com";
 
@@ -35,8 +36,10 @@ export function registerCustomEventGetOccurrences(server: McpServer) {
       after: z.string().optional().describe("ページネーション用カーソル"),
       sort: z.string().optional().describe("ソート順。'-occurredAt'=新しい順（デフォルト）、'occurredAt'=古い順"),
       objectPropertyEmail: z.string().optional().describe("コンタクトのメールアドレスでイベント検索（objectType=contactと併用。objectIdの代わりにメールアドレスでフィルタ）"),
-    },
-    async ({ eventType, objectType, objectId, occurredAfter, occurredBefore, limit, after, sort, objectPropertyEmail }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ eventType, objectType, objectId, occurredAfter, occurredBefore, limit, after, sort, objectPropertyEmail, pretty }) => {
       try {
         const params = new URLSearchParams();
         if (eventType) params.set("eventType", eventType);
@@ -54,7 +57,7 @@ export function registerCustomEventGetOccurrences(server: McpServer) {
           `${BASE_URL}/events/v3/events${qs}`,
           { method: "GET", headers: getHeaders() }
         );
-        return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(result, pretty) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);
         return { content: [{ type: "text" as const, text: message }], isError: true };

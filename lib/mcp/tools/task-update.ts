@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { crmUpdate } from "@/lib/hubspot/crm-client";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerTaskUpdate(server: McpServer) {
   server.tool(
@@ -18,11 +19,13 @@ export function registerTaskUpdate(server: McpServer) {
     {
       taskId: z.string().describe("タスクのエンゲージメントID（数値文字列）。task_searchやtask_createの返却値のidフィールドから取得"),
       properties: z.record(z.string()).describe("更新するプロパティ（hs_task_subject, hs_task_status, hs_task_priority 等）"),
-    },
-    async ({ taskId, properties }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ taskId, properties, pretty }) => {
       try {
         const result = await crmUpdate("tasks" as any, taskId, properties);
-        return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(result, pretty) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);
         return { content: [{ type: "text" as const, text: message }], isError: true };

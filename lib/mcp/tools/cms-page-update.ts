@@ -1,5 +1,6 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 import {
   updateCmsPage,
   updateCmsPageDraft,
@@ -99,6 +100,7 @@ layoutSections = {
         .describe(
           "useDraft=true のときのみ有効。true=draft更新後に自動で push-live を実行。デフォルト false。"
         ),
+      pretty: prettyParam,
     },
     async ({
       pageType,
@@ -113,7 +115,7 @@ layoutSections = {
       widgetContainers,
       additionalUpdates,
       useDraft,
-      pushLive,
+      pushLive, pretty,
     }) => {
       const updates: Record<string, unknown> = {};
       if (name !== undefined) updates.name = name;
@@ -146,7 +148,7 @@ layoutSections = {
         };
         return {
           content: [
-            { type: "text", text: JSON.stringify(summary, null, 2) },
+            { type: "text", text: formatToolResult(summary, pretty) },
           ],
         };
       } catch (error) {

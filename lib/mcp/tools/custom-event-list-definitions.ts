@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 const BASE_URL = "https://api.hubapi.com";
 
@@ -28,8 +29,10 @@ export function registerCustomEventListDefinitions(server: McpServer) {
 fullyQualifiedNameをcustom_event_sendのeventNameパラメータに使用。`,
     {
       searchString: z.string().optional().describe("イベント名でフィルタ（部分一致）"),
-    },
-    async ({ searchString }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ searchString, pretty }) => {
       try {
         const params = new URLSearchParams();
         if (searchString) params.set("searchString", searchString);
@@ -39,7 +42,7 @@ fullyQualifiedNameをcustom_event_sendのeventNameパラメータに使用。`,
           `${BASE_URL}/events/v3/event-definitions${qs}`,
           { method: "GET", headers: getHeaders() }
         );
-        return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(result, pretty) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);
         return { content: [{ type: "text" as const, text: message }], isError: true };

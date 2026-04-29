@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { listProperties } from "@/lib/hubspot/crm-client";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerPropertiesList(server: McpServer) {
   server.tool(
@@ -16,8 +17,10 @@ fieldType（UIフィールド種別）, groupName（プロパティグループ�
 公式: GET /crm/v3/properties/{objectType}`,
     {
       objectType: z.enum(["contacts", "companies", "deals", "tickets"]).describe("オブジェクトタイプ: contacts, companies, deals, tickets のいずれか"),
-    },
-    async ({ objectType }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ objectType, pretty }) => {
       try {
         const result = await listProperties(objectType);
         const summary = result.map((p) => ({
@@ -29,7 +32,7 @@ fieldType（UIフィールド種別）, groupName（プロパティグループ�
           description: p.description || undefined,
           options: p.options?.length ? p.options : undefined,
         }));
-        return { content: [{ type: "text" as const, text: JSON.stringify({ total: summary.length, properties: summary }, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult({ total: summary.length, properties: summary }, pretty) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);
         return { content: [{ type: "text" as const, text: message }], isError: true };

@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 const BASE_URL = "https://api.hubapi.com";
 
@@ -59,8 +60,10 @@ export function registerHubspotKnowledgeGet(server: McpServer) {
             "calendar=施策カレンダー。" +
             "省略時は全カテゴリを一括取得"
         ),
-    },
-    async ({ category }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ category, pretty }) => {
       try {
         const headers = getHeaders();
 
@@ -107,7 +110,7 @@ export function registerHubspotKnowledgeGet(server: McpServer) {
         }
 
         return {
-          content: [{ type: "text" as const, text: JSON.stringify(knowledge, null, 2) }],
+          content: [{ type: "text" as const, text: formatToolResult(knowledge, pretty) }],
         };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);

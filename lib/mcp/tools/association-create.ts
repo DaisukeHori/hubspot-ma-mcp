@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { createAssociation } from "@/lib/hubspot/crm-client";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerAssociationCreate(server: McpServer) {
   server.tool(
@@ -31,14 +32,16 @@ export function registerAssociationCreate(server: McpServer) {
       toObjectId: z.string().describe("関連先レコード ID"),
       associationCategory: z.enum(["HUBSPOT_DEFINED", "USER_DEFINED"]).optional().describe("関連カテゴリ。HUBSPOT_DEFINED=標準ラベル、USER_DEFINED=カスタムラベル。省略するとデフォルト（ラベルなし）関連を作成"),
       associationTypeId: z.number().optional().describe("関連タイプ ID（方向ごとに異なる）。association_labelsツールのlistで確認可能"),
-    },
-    async ({ fromObjectType, fromObjectId, toObjectType, toObjectId, associationCategory, associationTypeId }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ fromObjectType, fromObjectId, toObjectType, toObjectId, associationCategory, associationTypeId, pretty }) => {
       try {
         const result = await createAssociation(
           fromObjectType, fromObjectId, toObjectType, toObjectId,
           associationCategory, associationTypeId
         );
-        return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(result, pretty) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);
         return { content: [{ type: "text" as const, text: message }], isError: true };

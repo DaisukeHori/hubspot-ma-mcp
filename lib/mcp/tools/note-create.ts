@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { crmCreate } from "@/lib/hubspot/crm-client";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerNoteCreate(server: McpServer) {
   server.tool(
@@ -31,8 +32,10 @@ export function registerNoteCreate(server: McpServer) {
         )
         .optional()
         .describe("関連付け先レコードの配列。各要素にto（レコードID）とtypes（関連タイプ定義: associationCategory + associationTypeId）を指定"),
-    },
-    async ({ body, timestamp, ownerId, associations }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ body, timestamp, ownerId, associations, pretty }) => {
       try {
         const properties: Record<string, string> = {
           hs_note_body: body,
@@ -40,7 +43,7 @@ export function registerNoteCreate(server: McpServer) {
         };
         if (ownerId) properties.hubspot_owner_id = ownerId;
         const result = await crmCreate("notes" as any, properties, associations);
-        return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(result, pretty) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);
         return { content: [{ type: "text" as const, text: message }], isError: true };

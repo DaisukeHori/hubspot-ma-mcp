@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { updatePipeline } from "../../hubspot/crm-client";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerPipelineUpdate(server: McpServer) {
   server.tool(
@@ -17,14 +18,16 @@ export function registerPipelineUpdate(server: McpServer) {
         displayOrder: z.number().describe("表示順"),
         metadata: z.record(z.string()).optional().describe("メタデータ"),
       })).optional().describe("ステージ定義の配列（全置換）。各要素: {label, displayOrder, metadata:{probability}}"),
-    },
-    async ({ objectType, pipelineId, label, displayOrder, stages }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ objectType, pipelineId, label, displayOrder, stages, pretty }) => {
       const updates: Record<string, unknown> = {};
       if (label !== undefined) updates.label = label;
       if (displayOrder !== undefined) updates.displayOrder = displayOrder;
       if (stages !== undefined) updates.stages = stages.map(s => ({ ...s, metadata: s.metadata || {} }));
       const result = await updatePipeline(objectType, pipelineId, updates as Parameters<typeof updatePipeline>[2]);
-      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      return { content: [{ type: "text", text: formatToolResult(result, pretty) }] };
     }
   );
 }

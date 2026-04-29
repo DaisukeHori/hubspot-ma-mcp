@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 const BASE_URL = "https://api.hubapi.com";
 const KNOWLEDGE_EMAIL = "mcp-knowledge-store@hubspot-ma.internal.revol.co.jp";
@@ -45,8 +46,10 @@ export function registerHubspotKnowledgeSetup(server: McpServer) {
 - calendar: 施策カレンダー（月単位のスケジュール・準備タスク）
 
 セットアップ済みの場合はスキップされる。2回目以降は安全に実行可能。`,
-    {},
-    async () => {
+    {
+      pretty: prettyParam,
+    },
+    async ({ pretty }) => {
       try {
         const headers = getHeaders();
 
@@ -159,7 +162,7 @@ export function registerHubspotKnowledgeSetup(server: McpServer) {
         return {
           content: [{
             type: "text" as const,
-            text: JSON.stringify({
+            text: formatToolResult({
               status: "success",
               contactId,
               contactEmail: KNOWLEDGE_EMAIL,
@@ -168,7 +171,7 @@ export function registerHubspotKnowledgeSetup(server: McpServer) {
               message: created.length > 0
                 ? `セットアップ完了。${created.length}カテゴリを作成しました。hubspot_knowledge_updateで各カテゴリの内容を記述してください。`
                 : "セットアップ済みです。全カテゴリが既に存在します。",
-            }, null, 2),
+            }, pretty),
           }],
         };
       } catch (error) {

@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 const BASE_URL = "https://api.hubapi.com";
 
@@ -29,8 +30,10 @@ export function registerMarketingEmailGet(server: McpServer) {
     {
       emailId: z.string().describe("マーケティングメールID（数値文字列）。marketing_email_listの返却値のidフィールドから取得"),
       includeStats: z.boolean().optional().describe("送信統計を含めるか（デフォルト false）"),
-    },
-    async ({ emailId, includeStats }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ emailId, includeStats, pretty }) => {
       try {
         const params = new URLSearchParams();
         if (includeStats) params.set("includeStats", "true");
@@ -40,7 +43,7 @@ export function registerMarketingEmailGet(server: McpServer) {
           `${BASE_URL}/marketing/v3/emails/${emailId}${qs}`,
           { method: "GET", headers: getHeaders() }
         );
-        return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(result, pretty) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);
         return { content: [{ type: "text" as const, text: message }], isError: true };

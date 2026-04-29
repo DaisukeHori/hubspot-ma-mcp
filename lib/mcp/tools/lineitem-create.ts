@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { crmCreate } from "../../hubspot/crm-client";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerLineItemCreate(server: McpServer) {
   server.tool(
@@ -17,8 +18,10 @@ export function registerLineItemCreate(server: McpServer) {
       description: z.string().optional().describe("明細の説明テキスト"),
       dealId: z.string().optional().describe("紐付ける取引 ID"),
       additionalProperties: z.record(z.string()).optional().describe("追加プロパティ（キー:値）。カスタムプロパティ名はproperties_listツールで確認可能"),
-    },
-    async ({ name, quantity, price, hs_product_id, description, dealId, additionalProperties }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ name, quantity, price, hs_product_id, description, dealId, additionalProperties, pretty }) => {
       const properties: Record<string, string> = { name };
       if (quantity) properties.quantity = quantity;
       if (price) properties.price = price;
@@ -32,7 +35,7 @@ export function registerLineItemCreate(server: McpServer) {
       }] : undefined;
 
       const result = await crmCreate("line_items", properties, associations);
-      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      return { content: [{ type: "text", text: formatToolResult(result, pretty) }] };
     }
   );
 }

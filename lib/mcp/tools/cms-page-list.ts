@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { listCmsPages } from "../../hubspot/crm-client";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerCmsPageList(server: McpServer) {
   server.tool(
@@ -16,10 +17,12 @@ cms_page_replace_form_widget で form_id を一括置換。
       pageType: z.enum(["landing-pages", "site-pages"]).describe("ページ種別: landing-pages（ランディングページ）または site-pages（サイトページ）"),
       limit: z.number().optional().describe("取得件数（デフォルト20、最大100）"),
       after: z.string().optional().describe("ページネーション"),
-    },
-    async ({ pageType, limit, after }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ pageType, limit, after, pretty }) => {
       const result = await listCmsPages(pageType, limit || 20, after);
-      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      return { content: [{ type: "text", text: formatToolResult(result, pretty) }] };
     }
   );
 }

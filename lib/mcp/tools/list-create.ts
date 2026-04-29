@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 const BASE_URL = "https://api.hubapi.com";
 
@@ -34,8 +35,10 @@ DYNAMICリストはフィルタ条件に基づき自動更新される。`,
       objectTypeId: z.string().describe("対象オブジェクトタイプID。0-1=コンタクト, 0-2=会社, 0-3=取引, 0-5=チケット"),
       processingType: z.enum(["MANUAL", "DYNAMIC", "SNAPSHOT"]).describe("処理タイプ。MANUAL=手動管理（メンバーをAPIで追加/削除）, DYNAMIC=フィルタ条件で自動更新, SNAPSHOT=作成時のフィルタ結果を固定"),
       filterBranch: z.record(z.unknown()).optional().describe("DYNAMIC/SNAPSHOT用フィルタ定義（JSON）。filterBranchType（OR/AND）とfilters配列を含むツリー構造。list_getで既存リストのフィルタ構造を参照可能"),
-    },
-    async ({ name, objectTypeId, processingType, filterBranch }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ name, objectTypeId, processingType, filterBranch, pretty }) => {
       try {
         const body: Record<string, unknown> = { name, objectTypeId, processingType };
         if (filterBranch) body.filterBranch = filterBranch;
@@ -44,7 +47,7 @@ DYNAMICリストはフィルタ条件に基づき自動更新される。`,
           `${BASE_URL}/crm/v3/lists`,
           { method: "POST", headers: getHeaders(), body: JSON.stringify(body) }
         );
-        return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(result, pretty) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);
         return { content: [{ type: "text" as const, text: message }], isError: true };

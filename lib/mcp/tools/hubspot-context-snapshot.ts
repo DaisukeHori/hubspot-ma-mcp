@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 const BASE_URL = "https://api.hubapi.com";
 
@@ -168,8 +169,10 @@ hubspot_knowledge_getと組み合わせて使用: knowledgeが「なぜ」、sna
             "owners=オーナー（担当者）一覧。" +
             "省略時は全セクション（コンテキスト消費大なので必要なセクションだけ指定推奨）"
         ),
-    },
-    async ({ sections }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ sections, pretty }) => {
       try {
         const headers = getHeaders();
         const targetSections = sections || ALL_SECTIONS;
@@ -181,7 +184,7 @@ hubspot_knowledge_getと組み合わせて使用: knowledgeが「なぜ」、sna
         }
 
         return {
-          content: [{ type: "text" as const, text: JSON.stringify(snapshot, null, 2) }],
+          content: [{ type: "text" as const, text: formatToolResult(snapshot, pretty) }],
         };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);

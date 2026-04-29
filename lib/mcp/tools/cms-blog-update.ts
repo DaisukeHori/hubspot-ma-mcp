@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { updateBlogPost } from "../../hubspot/crm-client";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerCmsBlogUpdate(server: McpServer) {
   server.tool(
@@ -20,8 +21,10 @@ additionalUpdates で htmlTitle, featuredImage, tagIds, blogAuthorId 等を渡�
       slug: z.string().optional().describe("スラグ（URLパス）"),
       state: z.enum(["DRAFT", "PUBLISHED"]).optional().describe("公開状態（DRAFT / PUBLISHED / SCHEDULED）"),
       additionalUpdates: z.record(z.unknown()).optional().describe("その他の更新フィールド"),
-    },
-    async ({ postId, name, postBody, metaDescription, slug, state, additionalUpdates }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ postId, name, postBody, metaDescription, slug, state, additionalUpdates, pretty }) => {
       const updates: Record<string, unknown> = {};
       if (name !== undefined) updates.name = name;
       if (postBody !== undefined) updates.postBody = postBody;
@@ -30,7 +33,7 @@ additionalUpdates で htmlTitle, featuredImage, tagIds, blogAuthorId 等を渡�
       if (state !== undefined) updates.state = state;
       if (additionalUpdates) Object.assign(updates, additionalUpdates);
       const result = await updateBlogPost(postId, updates);
-      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      return { content: [{ type: "text", text: formatToolResult(result, pretty) }] };
     }
   );
 }

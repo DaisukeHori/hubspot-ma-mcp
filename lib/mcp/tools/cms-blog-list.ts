@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { listBlogPosts } from "../../hubspot/crm-client";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerCmsBlogList(server: McpServer) {
   server.tool(
@@ -11,10 +12,12 @@ export function registerCmsBlogList(server: McpServer) {
     {
       limit: z.number().optional().describe("取得件数（デフォルト20、最大100）"),
       after: z.string().optional().describe("ページネーション"),
-    },
-    async ({ limit, after }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ limit, after, pretty }) => {
       const result = await listBlogPosts(limit || 20, after);
-      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      return { content: [{ type: "text", text: formatToolResult(result, pretty) }] };
     }
   );
 }

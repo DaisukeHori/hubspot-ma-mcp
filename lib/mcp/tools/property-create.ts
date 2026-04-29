@@ -24,6 +24,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { createProperty } from "../../hubspot/crm-client";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerPropertyCreate(server: McpServer) {
   server.tool(
@@ -178,7 +179,9 @@ export function registerPropertyCreate(server: McpServer) {
         )
         .optional()
         .describe("選択肢（type=enumeration の場合）"),
-    },
+    
+      pretty: prettyParam,
+},
     async ({
       objectType,
       name,
@@ -198,7 +201,7 @@ export function registerPropertyCreate(server: McpServer) {
       calculationFormula,
       referencedObjectType,
       externalOptions,
-      options,
+      options, pretty,
     }) => {
       const result = await createProperty(objectType, {
         name,
@@ -221,7 +224,7 @@ export function registerPropertyCreate(server: McpServer) {
         ...(options && { options }),
       });
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text", text: formatToolResult(result, pretty) }],
       };
     }
   );

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { crmSearch } from "@/lib/hubspot/crm-client";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerEmailSearch(server: McpServer) {
   server.tool(
@@ -24,11 +25,13 @@ export function registerEmailSearch(server: McpServer) {
       propertyName: z.string().describe("ソート対象プロパティ名"),
       direction: z.enum(["ASCENDING", "DESCENDING"]).describe("ソート方向: ASCENDING=昇順（小→大、古→新）, DESCENDING=降順（大→小、新→古）"),
     })).optional().describe("ソート条件（1つのみ指定可能）"),
-  },
-  async ({ query, filterGroups, properties, limit, after, sorts }) => {
+  
+      pretty: prettyParam,
+},
+  async ({ query, filterGroups, properties, limit, after, sorts, pretty }) => {
     const result = await crmSearch("emails", query || "", properties, filterGroups, limit || 10, after, sorts);
     return {
-      content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
+      content: [{ type: "text" as const, text: formatToolResult(result, pretty) }],
     };
   }
 );

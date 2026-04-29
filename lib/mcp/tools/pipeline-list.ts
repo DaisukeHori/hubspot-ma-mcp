@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { listPipelines } from "@/lib/hubspot/crm-client";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerPipelineList(server: McpServer) {
   server.tool(
@@ -16,11 +17,13 @@ stages[]（ステージID, label, displayOrder, metadata）。
 公式: GET /crm/v3/pipelines/{objectType}`,
     {
       objectType: z.enum(["deals", "tickets"]).describe("オブジェクトタイプ（deals または tickets）"),
-    },
-    async ({ objectType }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ objectType, pretty }) => {
       try {
         const result = await listPipelines(objectType);
-        return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(result, pretty) }] };
       } catch (error) {
         const message = error instanceof HubSpotError ? `HubSpot API エラー (${error.status}): ${error.message}` : String(error);
         return { content: [{ type: "text" as const, text: message }], isError: true };

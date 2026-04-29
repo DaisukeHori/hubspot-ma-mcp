@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getHubSpotToken } from "@/lib/hubspot/auth-context";
 import { HubSpotError } from "@/lib/hubspot/errors";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 const BASE_URL = "https://api.hubapi.com";
 const GOAL_PROPS = "hs_goal_name,hs_target_amount,hs_start_datetime,hs_end_datetime,hs_created_by_user_id";
@@ -35,8 +36,10 @@ export function registerHubspotGoals(server: McpServer) {
     {
       limit: z.number().optional().describe("取得件数（デフォルト20、最大100）"),
       after: z.string().optional().describe("ページネーションカーソル"),
-    },
-    async ({ limit, after }) => {
+    
+      pretty: prettyParam,
+},
+    async ({ limit, after, pretty }) => {
       try {
         const params = new URLSearchParams({ properties: GOAL_PROPS, limit: String(limit || 20) });
         if (after) params.set("after", after);
@@ -44,7 +47,7 @@ export function registerHubspotGoals(server: McpServer) {
           `${BASE_URL}/crm/v3/objects/goal_targets?${params}`,
           { method: "GET", headers: getHeaders() }
         );
-        return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(data, pretty) }] };
       } catch (error) { return handleError(error); }
     }
   );
@@ -57,15 +60,16 @@ export function registerHubspotGoals(server: McpServer) {
     {
       goalId: z.string().describe("目標ID"),
       properties: z.string().optional().describe("追加取得するプロパティ（カンマ区切り）"),
+      pretty: prettyParam,
     },
-    async ({ goalId, properties }) => {
+    async ({ goalId, properties, pretty }) => {
       try {
         const props = properties ? `${GOAL_PROPS},${properties}` : GOAL_PROPS;
         const data = await fetchJson<Record<string, unknown>>(
           `${BASE_URL}/crm/v3/objects/goal_targets/${goalId}?properties=${encodeURIComponent(props)}`,
           { method: "GET", headers: getHeaders() }
         );
-        return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(data, pretty) }] };
       } catch (error) { return handleError(error); }
     }
   );
@@ -93,8 +97,9 @@ filterGroups/sorts/propertiesはCRM Search API標準形式。`,
       })).optional().describe("ソート（例: [{propertyName:'hs_start_datetime', direction:'DESCENDING'}]）"),
       limit: z.number().optional().describe("取得件数（デフォルト10）"),
       after: z.string().optional().describe("ページネーションカーソル"),
+      pretty: prettyParam,
     },
-    async ({ filterGroups, query, sorts, limit, after }) => {
+    async ({ filterGroups, query, sorts, limit, after, pretty }) => {
       try {
         const body: Record<string, unknown> = {
           properties: GOAL_PROPS.split(","),
@@ -108,7 +113,7 @@ filterGroups/sorts/propertiesはCRM Search API標準形式。`,
           `${BASE_URL}/crm/v3/objects/goal_targets/search`,
           { method: "POST", headers: getHeaders(), body: JSON.stringify(body) }
         );
-        return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
+        return { content: [{ type: "text" as const, text: formatToolResult(data, pretty) }] };
       } catch (error) { return handleError(error); }
     }
   );

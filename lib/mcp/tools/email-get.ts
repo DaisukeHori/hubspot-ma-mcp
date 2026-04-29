@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { crmGet } from "@/lib/hubspot/crm-client";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerEmailGet(server: McpServer) {
   server.tool(
@@ -10,11 +11,13 @@ export function registerEmailGet(server: McpServer) {
     emailId: z.string().describe("メールのエンゲージメントID（数値文字列）。email_searchの返却値のidフィールドから取得"),
     properties: z.array(z.string()).optional().describe("取得するプロパティ名の配列。省略時はデフォルトプロパティのみ"),
     associations: z.array(z.string()).optional().describe("取得する関連オブジェクト（例: ['contacts','companies','deals']）"),
-  },
-  async ({ emailId, properties, associations }) => {
+  
+      pretty: prettyParam,
+},
+  async ({ emailId, properties, associations, pretty }) => {
     const result = await crmGet("emails", emailId, properties, associations);
     return {
-      content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
+      content: [{ type: "text" as const, text: formatToolResult(result, pretty) }],
     };
   }
 );

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { crmCreate } from "@/lib/hubspot/crm-client";
+import { formatToolResult, prettyParam } from "@/lib/mcp/utils/format-result";
 
 export function registerEmailCreate(server: McpServer) {
   server.tool(
@@ -24,11 +25,13 @@ hs_email_headers は from/to/cc/bcc を含むJSON文字列で渡す。
         associationTypeId: z.number().describe("関連タイプID。association_labelsツールのlistで取得可能"),
       })).describe("関連タイプ定義の配列"),
     })).optional().describe("関連付け先レコードの配列"),
-  },
-  async ({ properties, associations }) => {
+  
+      pretty: prettyParam,
+},
+  async ({ properties, associations, pretty }) => {
     const result = await crmCreate("emails", properties, associations);
     return {
-      content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
+      content: [{ type: "text" as const, text: formatToolResult(result, pretty) }],
     };
   }
 );
