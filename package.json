@@ -13,7 +13,7 @@
     "cf:secret": "wrangler secret"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.25.2",
+    "@modelcontextprotocol/sdk": "^1.31.0",
     "agents": "^0.7.5",
     "mcp-handler": "^1.0.7",
     "next": "^15",
